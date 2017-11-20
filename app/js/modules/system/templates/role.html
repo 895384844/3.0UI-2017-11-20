@@ -1,0 +1,20 @@
+<div class="content content-column" ng-controller="SystemRoleCtrl">
+	<div class="condition">
+		<div ng-class="{true: 'alwaysShow', false: 'toogleShow'}[isActive]">
+			<div class="toogle-input">
+				<div class="input-group">
+					<span class="input-group-addon add-bg">角色名</span>
+					<input type="text" class="form-control" ng-model="role.name">
+					<i class="fa fa-times empty-input"></i>
+					
+				</div>
+			</div>
+		</div>
+		<button class="btn btn-primary searchBtn" ng-click="search()" style="left: 300px;">查询</button>
+
+		<!--<div ng-click="toogleH()" class="toogle-btn"></div>-->
+
+	</div>
+	
+	<div ui-grid="gridOptions" ui-grid-pagination ui-grid-selection ui-grid-auto-resize ui-grid-resize-columns ui-grid-move-columns auto-height></div>
+</div>

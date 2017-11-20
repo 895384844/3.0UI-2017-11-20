@@ -1,0 +1,40 @@
+<form name="formdata" class="form-horizontal" ng-controller="LicenseCtrl">
+	<div>
+		<div class="alert alert-danger" ng-show="showWarning">{{license.message}}</div>
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th style="width:40%" class="text-info">授权信息</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>硬件ID:</td>
+					<td>{{license.hwid}}</td>
+				</tr>
+				<tr>
+					<td>授权开始时间:</td>
+					<td>{{license.begin_time}}</td>
+				</tr>
+				<tr>
+					<td>授权结束时间:</td>
+					<td>{{license.end_time}}</td>
+				</tr>
+				<tr>
+					<td>授权采集器数量:</td>
+					<td>{{license.client_count}}</td>
+				</tr>
+				<tr>
+					<td>授权服务数量:</td>
+					<td>{{license.service_count}}</td>
+				</tr>
+				<tr>
+					<td>Key:</td>
+					<td>{{license.key}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="modal-footer"><input type="file" ng-model="licenseFile" ng-show="false" ngf-select ngf-change="onFileSelect($file)"> <button id="dialog-btn-primary" type="button" class="btn btn-primary" onclick="$('input[type=file]').click();"><i ng-show="isWaiting" class="fg-loginform-submit__waiting icon-waiting"></i> <i ng-show="!isWaiting" class="icon-folder-open"></i>选择授权文件</button></div>
+</form>

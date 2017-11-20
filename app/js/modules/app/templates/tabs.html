@@ -1,0 +1,31 @@
+<div class="content-wrapper" ng-controller="TabsCtrl">
+	<div class="nav-tabs-custom">
+		<ul class="nav nav-tabs" style="background: #f4f4f4;border-bottom: 1px solid #ccc;">
+			<li class="show-nav-len" ng-repeat="section in sections track by section.id" ng-class="{'active':section.active}" style="text-align:center;">
+				<a data-toggle="tab" ng-click="activeSection(section)" title="{{section.name}}" href="javascript:void(0)">{{section.name}}</a> 
+				<span class="remove-btn text-info" ng-if="!section.default" fastclick ng-click="removeSection(section)">
+					<i class="fa fa-remove" style="cursor:pointer;"></i>
+				</span>
+			</li>
+			<li class="dropdown pull-right" id="more_sections" ng-show="hiddenSections.length>0" style="width: 67px;">
+				<a href="javascript:void(0)" data-toggle="dropdown" class="dropdown-toggle" ariax-expanded="false">更多...<span class="caret"></span></a>
+				<ul class="dropdown-menu" id="removePage">
+					<li role="presentation" ng-repeat="section in hiddenSections track by $index" style="position: relative;font-size: 12px;">
+						<a href="javascript:void(0)" tabindex="-1" ng-click="showSection(section)" role="menuitem">{{section.name}}</a> 
+						<i class="fa fa-remove" ng-click="hiddenSections.splice($index,1)" style="position: absolute;right: 6px; top: 7px;color: #888;cursor:pointer;"></i>
+					</li>
+				</ul>
+			</li>
+			<li class="pull-right text-warning" id="clear_sections" style="margin-right: 8px; width: 30px;height: 46px;">
+				<span href="javascript:void(0)" ng-if="sections.length>1" ng-click="clearSections()" class="text-muted" style="line-height: 40px; display: inline-block; width: 100%;text-align: center;">
+					<i class="fa fa-trash text-warning"></i>
+				</span>
+			</li>
+		</ul>
+		<div class="tab-content" dynamic-height>
+			<div ng-repeat="section in sections track by section.id" id="{{section.id}}" class="tab-pane" ng-class="{'active':section.active}">
+				<div ng-include="section.templateUrl" style="height: 100%;"></div>
+			</div>
+		</div>
+	</div>
+</div>

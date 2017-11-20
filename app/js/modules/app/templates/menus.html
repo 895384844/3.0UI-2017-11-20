@@ -1,0 +1,14 @@
+<aside class="main-sidebar" ng-controller="MenusCtrl" style="z-index: 100; margin-top: 50px;">
+	<section class="sidebar" style="margin-top: -50px;">
+		<ul class="sidebar-menu">
+			<li class="treeview" ng-class="{ active: isActive('/shopmgmt')}" ng-repeat="menu in menus">
+				<a href ng-if="!menu.default"><i class="fa fa-angle-left pull-right"></i> <i class="fa {{menu.icon}}"></i> <span>{{menu.name}}</span></a>
+				<ul class="treeview-menu" ng-if="menu.subMenus && menu.subMenus.length > 0">
+					<li ng-class="{ active: isActive('/shopmgmt/list/')}" ng-repeat="submenu in menu.subMenus">
+						<a myx-fast-click ng-click="addSection(submenu)"><i class="fa fa-circle-o"></i> {{submenu.name}}</a>
+					</li>
+				</ul>
+			</li>
+		</ul>
+	</section>
+</aside>

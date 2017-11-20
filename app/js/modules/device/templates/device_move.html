@@ -1,0 +1,21 @@
+<div class="myx-modal">
+	<div class="myx-modal-box">
+		<div class="box box-primary">
+			<div class="box-header with-border">
+				<h3 class="box-title">设备批量移动</h3><button type="button" class="close" ng-click="close()" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+			<form class="form-horizontal" role="form" name="form">
+				<div class="box-body">
+					<label class="col-sm-2 control-label">设备域组</label>
+						<div class="col-sm-10">
+							<select class="form-control" ng-model="groupName">
+								<option value="{{group.adCode}}" ng-repeat="group in list">{{group.fullPath}}</option>
+							</select>
+						</div>							
+				</div>
+				<div class="box-footer"> 
+					<button id="dialog-btn-primary" type="button" ng-disabled="parentScope.formdata.$invalid" ng-click="sure()" class="btn btn-primary" style="margin-left: 6px;">确定</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

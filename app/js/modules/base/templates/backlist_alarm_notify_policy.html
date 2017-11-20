@@ -1,0 +1,38 @@
+<div class="content content-column" ng-controller="BacklistAlarmNotifyPolicyCtrl">
+	<div class="condition" style="border: 1px solid #ccc;border-bottom: none;">
+		<div ng-class="{true: 'alwaysShow', false: 'toogleShow'}[isActive]">
+			<div class="toogle-input mb-10">
+				<div class="input-group">
+				<span class="input-group-addon add-bg">目标名称</span>
+				<input type="text" class="form-control" ng-model="query.terminalName">
+			</div>
+			</div>
+			<div class="toogle-input mb-10">
+				<div class="input-group">
+					<span class="input-group-addon add-bg">IMSI</span>
+					<input type="number" class="form-control" ng-model="query.imsi" oninput="if(value.length>15)value=value.slice(0,15)">
+				</div>
+			</div>
+			<div class="toogle-input mb-10">
+				<div class="input-group" style="width: 96%;">
+				<span class="input-group-addon add-bg">转发人</span>
+				<select class="form-control" ng-model="query.peopleId">
+					<option value="0">全部</option>
+					<option ng-repeat="person in person" value="{{person.id}}">{{person.name}}</option>
+				</select>
+			</div>
+			</div>
+		</div>
+		<button class="btn btn-primary searchBtn" ng-click="search()" style="margin-right: 20px;">查询</button>
+			
+		<!--查询条件框需折行显示时，将下面代码取消注释-->
+		<div ng-click="toogleH()" class="toogle-btn" ng-if="isShow">
+			<img src="images/down.png" ng-if="isActive"/>
+			<img src="images/up.png" ng-if="!isActive" />
+		</div>
+		
+	</div>
+	<div ui-grid="gridOptions" ui-grid-pagination ui-grid-selection ui-grid-auto-resize ui-grid-resize-columns ui-grid-move-columns class="grid" auto-height></div>
+	
+</div>
+

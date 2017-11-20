@@ -1,0 +1,208 @@
+<div class="myx-modal">
+	<div class="myx-modal-box">
+		<div class="box box-style" style="border-top: 1px solid #eee;">
+			<div class="box-header with-border" style="background: #EFEFEF;padding: 10px;">
+				<h3 class="box-title">新建用户</h3>
+				<button type="button" class="close" ng-click="close()" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+              </button>
+			</div>
+			<form class="form-horizontal" role="form" name="form">
+			<div class="box-body" style="padding: 10 15px;">
+				<div class="box box-primary collapsed-box">
+					<div class="box-header with-border">
+						<h3 class="box-title">基本信息</h3>
+
+						<div class="box-tools pull-right">
+							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
+                </button>
+						</div>
+					</div>
+					<div class="box-body">
+						<div class="form-horizontal">
+							<div class="form-group relative">
+								<label class="col-sm-2 control-label">用户名</label>
+								<div class="col-sm-4">
+									<input type="text" name="name" class="form-control" ng-model="user.account" ng-blur="checkName()" required>
+								</div>
+								<label class="col-sm-1 control-label">密码</label>
+								<div class="col-sm-4">
+									<input type="password" name="psw" class="form-control" ng-model="user.password" ng-blur="checkPsw()" required>
+								</div>
+							</div>
+							<div class="form-group relative">
+								<label class="col-sm-2 control-label">手机</label>
+								<div class="col-sm-4">
+									<input type="text" name="phone" class="form-control" ng-model="user.telNumber" ng-minlength="11" ng-maxlength="11" pattern="1[0-9]{10}" required>
+								</div>
+							</div>
+		                </div>
+					</div>
+					<!-- /.box-body -->
+				</div>
+				<div class="box box-primary collapsed-box">
+					<div class="box-header with-border">
+						<h3 class="box-title">管理域设置</h3>
+
+						<div class="box-tools pull-right">
+							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
+                </button>
+						</div>
+					</div>
+					<div class="box-body">
+						<div class="form-horizontal">
+							<div class="form-group">
+		                        <label class="col-sm-2 control-label">管理域</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" class="dropdown-toggle w100" data-toggle="dropdown">
+									<ul class="dropdown-menu" role="menu" style="background: #fff;border: 1px solid #BBB;margin: 2px 0 0 5%;padding: 10px; width: 90%;">
+										<script type="text/ng-template" id="nodes_renderer.html">
+											<div ui-tree-handle class="tree-node tree-node-content" style="cursor: pointer;" ng-click="con(this)">
+											    {{node.name}}
+											</div>
+											<ol ui-tree-nodes="" ng-model="node.nodes" ng-class="{hidden: collapsed}">
+											    <li ng-repeat="node in node.nodes" ui-tree-node ng-include="'nodes_renderer.html'"></li>
+											</ol>
+										</script>
+										<div ui-tree id="tree-root" data-drag-enabled = false>
+										    <ol ui-tree-nodes ng-model="data">
+										       <li ng-repeat="node in data" ui-tree-node ng-include="'nodes_renderer.html'" style="font-size: 12px; font-weight: normal;"></li>
+										    </ol>
+										</div>
+									</ul>
+									<div ng-repeat="deviceGroup in loc" class="alert alert-info" style="width: 100%; padding: 5px; margin-top: 5px;margin-bottom: 5px">
+										<span class="glyphicon glyphicon-remove text-default" ng-click="removeGroup($index)"></span> {{deviceGroup}}
+									</div>
+		                        </div>
+		                    </div>
+		                </div>
+					</div>
+					<!-- /.box-body -->
+				</div>
+				<div class="box box-primary collapsed-box">
+					<div class="box-header with-border">
+						<h3 class="box-title">权限设置</h3>
+
+						<div class="box-tools pull-right">
+							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
+                </button>
+						</div>
+					</div>
+					<div class="box-body">
+						<div class="form-horizontal">
+							<div class="form-group relative">
+								<label class="col-sm-2 control-label">设备管理</label>
+								<div class="col-sm-4">
+									<select class="form-control" ng-model="permission.device">
+										<option value="0">不可见</option>
+										<option value="1">可读</option>
+										<option value="2">读写</option>
+									</select>
+								</div>
+								<label class="col-sm-2 control-label">信息检索</label>
+								<div class="col-sm-4">
+									<select class="form-control" ng-model="permission.mes">
+										<option value="0">不可见</option>
+										<option value="1">可读</option>
+										<option value="2">读写</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group relative">
+								<label class="col-sm-2 control-label">数据分析</label>
+								<div class="col-sm-4">
+									<select class="form-control" ng-model="permission.data">
+										<option value="0">不可见</option>
+										<option value="1">可读</option>
+										<option value="2">读写</option>
+									</select>
+								</div>
+								<label class="col-sm-2 control-label">布控预警</label>
+								<div class="col-sm-4">
+									<select class="form-control" ng-model="permission.warning">
+										<option value="0">不可见</option>
+										<option value="1">可读</option>
+										<option value="2">读写</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group relative">
+								<label class="col-sm-2 control-label">告警查询</label>
+								<div class="col-sm-4">
+									<select class="form-control" ng-model="permission.query">
+										<option value="0">不可见</option>
+										<option value="1">可读</option>
+										<option value="2">读写</option>
+									</select>
+								</div>
+								<label class="col-sm-2 control-label">地图应用</label>
+								<div class="col-sm-4">
+									<select class="form-control" ng-model="permission.maps">
+										<option value="0">不可见</option>
+										<option value="1">可读</option>
+										<option value="2">读写</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group relative">
+								<label class="col-sm-2 control-label">域组管理</label>
+								<div class="col-sm-4">
+									<select class="form-control" ng-model="permission.domain">
+										<option value="0">不可见</option>
+										<option value="1">可读</option>
+										<option value="2">读写</option>
+									</select>
+								</div>
+								<label class="col-sm-2 control-label">用户管理</label>
+								<div class="col-sm-4">
+									<select class="form-control" ng-model="permission.user">
+										<option value="0">不可见</option>
+										<option value="1">可读</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group relative">
+								<label class="col-sm-2 control-label">系统管理</label>
+								<div class="col-sm-4">
+									<select class="form-control" ng-model="permission.system">
+										<option value="0">不可见</option>
+										<option value="1">可读</option>
+										<option value="2">读写</option>
+									</select>
+								</div>
+								<label class="col-sm-2 control-label">日志审计</label>
+								<div class="col-sm-4">
+									<select class="form-control" ng-model="permission.log">
+										<option value="0">不可见</option>
+										<!--<option value="1">可读</option>
+										<option value="2">读写</option>-->
+									</select>
+								</div>
+							</div>
+							<div class="form-group relative">
+								<label class="col-sm-2 control-label">系统工具</label>
+								<div class="col-sm-4">
+									<select class="form-control" ng-model="permission.tool">
+										<option value="0">不可见</option>
+										<!--<option value="1">可读</option>
+										<option value="2">读写</option>-->
+									</select>
+								</div>
+							</div>
+		                </div>
+					</div>
+					<!-- /.box-body -->
+				</div>
+			</div>
+			</form>
+			<div class="box-footer">
+				<button type="reset" class="btn btn-default" ng-click="close()" style="margin-left: 6px; ">关闭</button> 
+				<button type="button" ng-disabled="!form.$valid" ng-click="sure()" class="btn btn-primary" data-dismiss="modal" style="background: #3c8dbc;">确定</button>
+			</div>
+			<!--loading-->
+			<!--<div class="overlay">
+              <i class="fa fa-refresh fa-spin"></i>
+            </div>-->
+		</div>
+	</div>
+</div>

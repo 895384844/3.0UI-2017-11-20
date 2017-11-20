@@ -1,0 +1,9 @@
+@import '../bower_components/bootstrap/dist/css/bootstrap.css';
+@import '../bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css';
+@import '../bower_components/admin-lte/dist/css/AdminLTE.min.css';
+@import '../bower_components/admin-lte/dist/css/skins/_all-skins.min.css';
+@import '../bower_components/angular-ui-grid/ui-grid.min.css';
+@import '../bower_components/angular-ui-tree/dist/angular-ui-tree.min.css';
+@import 'font-awesome.min.css';
+@import 'icons.css';
+@import 'app.css';

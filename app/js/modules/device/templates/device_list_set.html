@@ -1,0 +1,482 @@
+<div class="myx-modal">
+	<div class="myx-modal-box">
+		<div class="box box-style" style="border-top: 1px solid #eee;">
+			<div class="box-header with-border" style="background: #EFEFEF;padding: 10px;">
+				<h3 class="box-title">设备查询</h3>
+				<button type="button" class="close" ng-click="close()" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+              </button>
+			</div>
+			<div class="box-body" style="padding: 10 15px;">
+				<div class="box box-primary collapsed-box">
+					<div class="box-header with-border">
+						<h3 class="box-title">设备编号</h3>
+						<div class="box-tools pull-right">
+							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
+                			</button>
+						</div>
+					</div>
+					<div class="box-body">
+						<div class="form-horizontal">
+							<div class="form-group">
+		                        <label class="col-sm-2 control-label">设备编号</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                        </div>
+		                    </div>
+	                   </div>
+					</div>
+					<div class="box-footer">
+						<button class="btn btn-default" ng-click="creatTask(13,'power')">获取</button>
+                        <button class="btn btn-default" ng-click="creatTask(12,'power')">设置</button>
+					</div>
+					<!-- /.box-body -->
+				</div>
+				<div class="box box-primary collapsed-box">
+					<div class="box-header with-border">
+						<h3 class="box-title">功率调整</h3>
+
+						<div class="box-tools pull-right">
+							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
+                			</button>
+						</div>
+					</div>
+					<div class="box-body">
+						<div class="form-horizontal">
+							<div class="form-group">
+		                        <label class="col-sm-2 control-label">功率</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                        </div>
+		                    </div>
+	                   </div>
+					</div>
+					<div class="box-footer">
+						<button class="btn btn-default" ng-click="creatTask(13,'power')">获取</button>
+                        <button class="btn btn-default" ng-click="creatTask(12,'power')">设置</button>
+					</div>
+					<!-- /.box-body -->
+				</div>
+				<div class="box box-primary collapsed-box">
+					<div class="box-header with-border">
+						<h3 class="box-title">小区信息</h3>
+						<div class="box-tools pull-right">
+							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+						</div>
+					</div>
+					<div class="box-body">
+						<form class="form-horizontal" role="form" name="form">
+							<div class="form-group">
+		                        <label class="col-sm-2 control-label">手动配置</label>
+		                        <div class="col-sm-10">
+		                            <input type="checkbox" style="margin-top:10px;" ng-model="body.autoConf"/>
+		                        </div>
+		                    </div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label">运营商</label>
+								<div class="col-sm-10">
+									<select class="form-control" ng-model="person.type">
+										<option value="46000FFF">移动</option>
+										<option value="46001FFF">联通</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+		                        <label class="col-sm-2 control-label">小区频点</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">物理小区ID</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">小区ID</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">tac</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">拒绝TAC</label>
+		                        <div class="col-sm-10">
+		                            <input type="checkbox" style="margin-top:10px;" ng-model="body.tac"/>
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">拒绝原因</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+								<label class="col-sm-2 control-label">同步类型</label>
+								<div class="col-sm-10">
+									<select class="form-control" ng-model="person.type">
+										<option value="">No Sync</option>
+										<option value="">GPS</option>
+										<option value="">Air Sync</option>
+										<option value="">Auto Air Sync</option>
+									</select>
+									<!--<select class="form-control" ng-model="cellinfo.sync_type" ng-options='x.value as x.name for x  in cellinfoSyncType'></select>-->
+								</div>
+							</div>
+							<div class="form-group">
+		                        <label class="col-sm-2 control-label">同步频点</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">是否重新获取(s)</label>
+		                        <div class="col-sm-10">
+		                            <input type="checkbox" style="margin-top:10px;" ng-model="recaptureFlag"/>
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">重新捕获周期</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+								<label class="col-sm-2 control-label">系统带宽</label>
+								<div class="col-sm-10">
+									<select class="form-control" ng-model="person.type">
+										<option value="5">5</option>
+										<option value="10">10</option>
+										<option value="20">20</option>
+									</select>
+								</div>
+							</div>
+	                   </form>
+					</div>
+					<div class="box-footer">
+						<button class="btn btn-default" ng-click="creatTask(13,'power')">获取</button>
+                        <button class="btn btn-default" ng-click="creatTask(12,'power')">设置</button>
+					</div>
+					<!-- /.box-body -->
+				</div>
+				<div class="box box-primary collapsed-box">
+					<div class="box-header with-border">
+						<h3 class="box-title">设备使用周期</h3>
+						<div class="box-tools pull-right">
+							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+						</div>
+					</div>
+					<div class="box-body">
+						<div class="form-horizontal">
+							<div class="form-group">
+		                        <label class="col-sm-2 control-label">开始时间</label>
+		                        <div class="col-sm-10">
+		                            <input  class="form-control datetime" placeholder="开始时间"
+				   					date-time-selector="start" ng-model="query.time__range[0]" ignore-empty-value/>
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">结束时间</label>
+		                        <div class="col-sm-10">
+		                            <input  class="form-control datetime" placeholder="结束时间"
+				   					date-time-selector="start" ng-model="query.time__range[1]" ignore-empty-value/>
+		                        </div>
+		                    </div>
+		                </div>
+					</div>
+					<div class="box-footer">
+						<button class="btn btn-default" ng-click="creatTask(13,'power')">获取</button>
+                        <button class="btn btn-default" ng-click="creatTask(12,'power')">设置</button>
+					</div>
+					<!-- /.box-body -->
+				</div>
+				<div class="box box-primary collapsed-box">
+					<div class="box-header with-border">
+						<h3 class="box-title">不上报告警周期</h3>
+
+						<div class="box-tools pull-right">
+							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
+                </button>
+						</div>
+					</div>
+					<div class="box-body">
+						<div class="form-horizontal">
+							<div class="form-group">
+		                        <label class="col-sm-2 control-label">周期</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                        </div>
+		                    </div>
+	                   </div>
+					</div>
+					<div class="box-footer">
+                        <button class="btn btn-default" ng-click="creatTask(12,'power')">设置</button>
+					</div>
+					<!-- /.box-body -->
+				</div>
+				<div class="box box-primary collapsed-box">
+					<div class="box-header with-border">
+						<h3 class="box-title">UDP上报服务器</h3>
+
+						<div class="box-tools pull-right">
+							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
+                </button>
+						</div>
+					</div>
+					<div class="box-body">
+						<div class="form-horizontal">
+							<div class="form-group">
+		                        <label class="col-sm-2 control-label">IP地址</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">端口</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                        </div>
+		                    </div>
+	                    </div>
+					</div>
+					<div class="box-footer">
+                        <button class="btn btn-default" ng-click="creatTask(13,'power')">获取</button>
+                        <button class="btn btn-default" ng-click="creatTask(12,'power')">设置</button>
+					</div>
+					<!-- /.box-body -->
+				</div>
+				<div class="box box-primary collapsed-box">
+					<div class="box-header with-border">
+						<h3 class="box-title">UDP配置服务器</h3>
+
+						<div class="box-tools pull-right">
+							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
+                </button>
+						</div>
+					</div>
+					<div class="box-body">
+						<div class="form-horizontal">
+							<div class="form-group">
+		                        <label class="col-sm-2 control-label">IP地址</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">端口</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                        </div>
+		                    </div>
+	                    </div>
+					</div>
+					<div class="box-footer">
+                        <button class="btn btn-default" ng-click="creatTask(13,'power')">获取</button>
+                        <button class="btn btn-default" ng-click="creatTask(12,'power')">设置</button>
+					</div>
+					<!-- /.box-body -->
+				</div>
+				<div class="box box-primary collapsed-box">
+					<div class="box-header with-border">
+						<h3 class="box-title">功率衰减调整</h3>
+
+						<div class="box-tools pull-right">
+							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
+                </button>
+						</div>
+					</div>
+					<div class="box-body">
+						<div class="form-horizontal">
+							<div class="form-group">
+		                        <label class="col-sm-2 control-label">移动功率输出</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">联通功率输出</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                        </div>
+		                    </div>
+		                </div>
+					</div>
+					<div class="box-footer">
+                        <button class="btn btn-default" ng-click="creatTask(13,'power')">获取</button>
+                        <button class="btn btn-default" ng-click="creatTask(12,'power')">设置</button>
+					</div>
+					<!-- /.box-body -->
+				</div>
+				<div class="box box-primary collapsed-box">
+					<div class="box-header with-border">
+						<h3 class="box-title">设备状态查询</h3>
+						<div class="box-tools pull-right">
+							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
+                </button>
+						</div>
+					</div>
+					<div class="box-body">
+						<div class="form-horizontal">
+							<div class="form-group">
+		                        <label class="col-sm-2 control-label">设备IP地址</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">上报IP地址</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">硬盘占用率</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">CPU使用率</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">发射功率</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">驻波比</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">软件版本</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">硬件版本</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                        </div>
+		                    </div>
+						</div>
+					</div>
+					<div class="box-footer">
+                        <button class="btn btn-default" ng-click="creatTask(13,'power')">获取</button>
+					</div>
+					<!-- /.box-body -->
+				</div>
+				<div class="box box-primary collapsed-box">
+					<div class="box-header with-border">
+						<h3 class="box-title">设备网络信息</h3>
+
+						<div class="box-tools pull-right">
+							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
+                </button>
+						</div>
+					</div>
+					<div class="box-body">
+						<div class="form-horizontal">
+							<div class="form-group">
+		                        <label class="col-sm-2 control-label">IP地址</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">网关</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">子网掩码</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">DNS1</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">DNS2</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                        </div>
+		                    </div>
+		                </div>
+					</div>
+					<div class="box-footer">
+                        <button class="btn btn-default" ng-click="creatTask(12,'power')">设置</button>
+					</div>
+					<!-- /.box-body -->
+				</div>
+				<div class="box box-primary collapsed-box">
+					<div class="box-header with-border">
+						<h3 class="box-title">重定向信息</h3>
+
+						<div class="box-tools pull-right">
+							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
+                </button>
+						</div>
+					</div>
+					<div class="box-body">
+						<div class="form-horizontal">
+							<div class="form-group">
+		                        <label class="col-sm-2 control-label">重定向</label>
+		                        <div class="col-sm-10">
+		                            <input type="checkbox" style="margin-top:10px;" ng-model="body.redirectEnable"/>
+		                        </div>
+		                    </div>
+							<div class="form-group">
+		                        <label class="col-sm-2 control-label">频点</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" name="number" class="form-control" ng-model="body.number">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">扰码</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" name="number" class="form-control" ng-model="body.number">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">带宽</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" name="number" class="form-control" ng-model="body.number">
+		                        </div>
+		                    </div>
+		                </div>
+					</div>
+					<div class="box-footer">
+                        <button class="btn btn-default" ng-click="creatTask(13,'power')">获取</button>
+                        <button class="btn btn-default" ng-click="creatTask(12,'power')">设置</button>
+					</div>
+					<!-- /.box-body -->
+				</div>
+			</div>
+			<div class="box-footer">
+				<button type="button" ng-click="close()" class="btn btn-default" data-dismiss="modal">关闭</button>
+			</div>
+			<!--loading-->
+			<!--<div class="overlay">
+              <i class="fa fa-refresh fa-spin"></i>
+            </div>-->
+		</div>
+	</div>
+</div>

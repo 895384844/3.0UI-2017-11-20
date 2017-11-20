@@ -1,0 +1,39 @@
+<div class="content content-column" ng-controller="WarningBlacklistCtrl">
+	    <div class="condition" style="border: 1px solid #ccc;border-bottom: none;">
+		<div>
+			<div class="toogle-input mb-10">
+				<div class="input-group w100">
+					<span class="input-group-addon add-bg">组名称</span>
+					<div id="divselect2" class="divselect">
+					    <span class="cite" id="cite3" style="padding-left: 10px;"></span>
+					  	<ul>
+					  		<li ng-repeat="group in vendorChoice">					  			
+					  			<a ng-click="groupName(this)" href="javascript:;" selectid="{{group.adCode}}"><i class="fa fa-bullseye" style="width: 14px;height: 14px;color: #3c8dbc;"></i>{{group.fullPath}}</a>
+					  		</li>
+					    </ul>
+					</div>
+				</div>
+			</div>
+			<div class="toogle-input mb-10">
+				<div class="input-group">
+					<span class="input-group-addon add-bg">IMEI</span>
+					<input type="number" class="form-control" oninput="if(value.length>15)value=value.slice(0,15)"  ng-model="query.imei">						
+				</div>
+			</div>
+			<div class="toogle-input mb-10">
+				<div class="input-group">
+					<span class="input-group-addon add-bg">IMSI</span>
+					<input type="number"  class="form-control" oninput="if(value.length>15)value=value.slice(0,15)" ng-model="query.imsi">						
+				</div>
+			</div>
+		</div>
+		<button class="btn btn-primary searchBtn" ng-click="search()" style="margin-right: 20px;">查询</button>
+			
+		<!--<div ng-click="toogleH()" class="toogle-btn"></div>	-->
+		
+	</div>	
+	<div class="ng-grid-container grid">
+		<div ui-grid="gridOptions" style="height: 100%;" ui-grid-pagination ui-grid-selection ui-grid-auto-resize ui-grid-resize-columns ui-grid-move-columns auto-height></div>
+	</div>
+
+</div>

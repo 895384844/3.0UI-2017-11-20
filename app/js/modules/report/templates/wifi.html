@@ -1,0 +1,48 @@
+<div class="content content-column" ng-controller="WifiCtrl">
+	<div class="condition" style="border: 1px solid #ccc;border-bottom: none;">
+		<div ng-class="{true: 'alwaysShow', false: 'toogleShow'}[isActive]">
+			<div class="toogle-input">
+				<div class="input-group">
+					<span class="input-group-addon add-bg">组名称</span>
+					<select class="form-control pd-right" ng-model="history.groupId">
+						<option value="">请选择</option>
+					    <option ng-repeat="group in groupArray" value="{{group.groupId}}">{{group.groupName}}</option>
+					</select>
+				</div>
+			</div>
+			<div class="toogle-input">
+				<div class="input-group">
+					<span class="input-group-addon add-bg">Mac地址</span>
+					<input type="text" class="form-control" ng-model="device.name">
+					<i class="fa fa-times empty-input"></i>
+				</div>
+			</div>
+			<div class="toogle-input">	
+				<div class="input-group">
+	                <span class="input-group-addon add-bg">时间范围</span>
+	                <input  class="form-control datetime" placeholder="开始时间"
+	   					date-time-selector="start" ng-model="query.time__range[0]" ignore-empty-value/>	
+   				</div>
+			</div>
+			<div class="toogle-input">
+				<div class="input-group">
+	                <span class="input-group-addon add-bg" style="width: 80px;">至</span>
+	                <input  class="form-control datetime" placeholder="结束时间"
+	   					date-time-selector="start" ng-model="query.time__range[1]" ignore-empty-value/>
+   				</div>
+			</div>
+			
+		</div>
+		<button class="btn btn-primary searchBtn" ng-click="search()" style="margin-right: 20px;">查询</button>
+			
+		<!--<div ng-click="toogleH()" class="toogle-btn"></div>-->	
+		
+	</div>
+	<!--<div class="ng-grid-container">
+		<div ui-grid="gridOptions" ui-grid-pagination ui-grid-selection class="grid">
+			
+		</div>-->
+	<div ui-grid="gridOptions" ui-grid-pagination ui-grid-selection ui-grid-auto-resize ui-grid-resize-columns ui-grid-move-columns class="grid" auto-height></div>
+	
+</div>
+

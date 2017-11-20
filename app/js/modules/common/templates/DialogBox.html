@@ -1,0 +1,19 @@
+<div class="myx-modal" >
+    <div class="myx-modal--wrap">
+        <div class="myx-modal__body">
+            <h2>{{title}}</h2>
+            <p style="font-size: 16px;">{{message}}</p>
+            <div ng-if="radioButtons">
+                <label ng-repeat="radioButton in radioButtons" class="label-radio">
+                    <input type="radio" ng-value="radioButton.Key" ng-model="param.value" name="radio" ng-hide="radioButton.Value === ''">{{radioButton.Value}}
+                </label>
+            </div>
+            <div ng-if="input">
+                <input type="{{input.type}}" name="{{input.name}}" ng-model="param.value" />
+            </div>
+        </div>
+        <div class='myx-modal__footer'>
+            <button ng-repeat="button in buttons" ng-class="button.class" class="btn" ng-click="callback(button, param.value)">{{button.name}}</button>
+        </div>
+    </div>
+</div>

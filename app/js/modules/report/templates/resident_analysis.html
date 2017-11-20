@@ -1,0 +1,20 @@
+<div class="content content-column" ng-controller="ResidentAnalysisCtrl">
+	<!--常驻人口分析-->
+	<div class="condition" style="border: 1px solid #ccc;border-bottom: none;">
+		<form class="form" role="form" name="form">
+			<div class="toogle-input mb-10">
+				<div class="toogle-input">
+					<div class="input-group">
+						<span class="input-group-addon add-bg p5">IMSI</span>
+						<input type="text" class="form-control" maxlength="15" minlength="15" ng-model="query.id">						
+					</div>
+					<div ng-if="calculation" style="position: absolute;left: 270px;bottom: 20px;">数据计算中，请稍候...</div>
+				</div>
+				
+				<button class="btn btn-primary searchBtn" ng-click="search()" style="right: 30px;">查询</button>
+			</div>
+		</form>
+	</div>
+
+	<div ui-grid="gridOptions" ui-grid-pagination ui-grid-selection ui-grid-auto-resize ui-grid-resize-columns ui-grid-move-columns class="grid" auto-height></div>
+</div>

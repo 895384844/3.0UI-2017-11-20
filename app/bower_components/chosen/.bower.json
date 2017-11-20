@@ -1,0 +1,14 @@
+{
+  "name": "chosen",
+  "homepage": "https://github.com/harvesthq/chosen",
+  "version": "1.8.2",
+  "_release": "1.8.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.8.2",
+    "commit": "520d432ee1c723236d10c8578f72e6e45ff602e3"
+  },
+  "_source": "https://github.com/harvesthq/chosen.git",
+  "_target": "*",
+  "_originalSource": "https://github.com/harvesthq/chosen.git"
+}

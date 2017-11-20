@@ -1,0 +1,34 @@
+<div class="content content-column" ng-controller="WarningSystemCtrl">
+	<div class="condition" style="border: 1px solid #ccc;border-bottom: none;">
+		<div ng-class="{true: 'alwaysShow', false: 'toogleShow'}[isActive]">
+			<div class="toogle-input mb-10">
+				<div class="input-group w100">
+						<span class="input-group-addon add-bg">告警分类</span>
+						<select class="form-control" ng-model="query.type">
+							<option value="0">全部</option>
+							<option value="1">后台服务</option>
+							<option value="2">系统资源</option>
+							<option value="3">授权文件</option>
+						</select>
+					</div>
+			</div>
+			<div class="toogle-input mb-10">
+				<div class="input-group sform">
+					<span class="input-group-addon add-bg">时间范围</span>
+					<input class="form-control datetime sform" placeholder="开始时间" date-time-selector="start" ng-model="query.timestamp__ge" ignore-empty-value/>
+				</div>
+			</div>
+			<div class="toogle-input mb-10">
+				<div class="input-group eform">
+					<span class="input-group-addon add-bg" style="width: 60px;">至</span>
+					<input class="form-control datetime" placeholder="结束时间" date-time-selector="end" ng-model="query.timestamp__lt" ignore-empty-value/>
+				</div>
+			</div>
+		</div>
+		<button class="btn btn-primary searchBtn" ng-click="search()" style="right: 30px;">查询</button>
+			
+		<!--<div ng-click="toogleH()" class="toogle-btn"></div>	-->
+		
+	</div>	
+	<div ui-grid="gridOptions" ui-grid-pagination ui-grid-selection ui-grid-auto-resize ui-grid-resize-columns ui-grid-move-columns class="grid" auto-height></div>
+</div>

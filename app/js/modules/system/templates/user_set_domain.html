@@ -1,0 +1,105 @@
+<div class="myx-modal">
+	<div class="myx-modal-box">
+		<div class="box box-style" style="border-top: 1px solid #eee;">
+			<div class="box-header with-border" style="background: #EFEFEF;padding: 10px;">
+				<h3 class="box-title">域组设置</h3>
+				<button type="button" class="close" ng-click="close()" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+              </button>
+			</div>
+			<div class="box-body" style="padding: 10 15px;">
+				<div class="box box-primary collapsed-box">
+					<div class="box-header with-border">
+						<h3 class="box-title">管理域设置</h3>
+
+						<div class="box-tools pull-right">
+							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
+                </button>
+						</div>
+					</div>
+					<div class="box-body">
+						<div class="form-horizontal">
+							<div class="form-group">
+		                        <label class="col-sm-2 control-label">管理域</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" class="dropdown-toggle w100" data-toggle="dropdown">
+									<ul class="dropdown-menu" role="menu" style="background: #fff;border: 1px solid #BBB;margin: 2px 0 0 5%;padding: 10px; width: 90%;">
+										<script type="text/ng-template" id="nodes_renderer.html">
+											<div ui-tree-handle class="tree-node tree-node-content" style="cursor: pointer;" ng-click="con(this)">
+											    {{node.name}}
+											</div>
+											<ol ui-tree-nodes="" ng-model="node.nodes" ng-class="{hidden: collapsed}">
+											    <li ng-repeat="node in node.nodes" ui-tree-node ng-include="'nodes_renderer.html'"></li>
+											</ol>
+										</script>
+										<div ui-tree id="tree-root" data-drag-enabled = false>
+										    <ol ui-tree-nodes ng-model="data">
+										       <li ng-repeat="node in data" ui-tree-node ng-include="'nodes_renderer.html'" style="font-size: 12px; font-weight: normal;"></li>
+										    </ol>
+										</div>
+									</ul>
+									<div ng-repeat="deviceGroup in loc" class="alert alert-info" style="width: 100%; padding: 5px; margin-top: 5px;margin-bottom: 5px">
+										<span class="glyphicon glyphicon-remove text-default" ng-click="removeGroup($index)"></span> {{deviceGroup}}
+									</div>
+		                        </div>
+		                    </div>
+		                </div>
+					</div>
+					<div class="box-footer">
+                        <button class="btn btn-default" ng-click="setDomain()">设置</button>
+					</div>
+					<!-- /.box-body -->
+				</div>
+				<div class="box box-primary collapsed-box">
+					<div class="box-header with-border">
+						<h3 class="box-title">权限设置</h3>
+
+						<div class="box-tools pull-right">
+							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
+                </button>
+						</div>
+					</div>
+					<div class="box-body">
+						<div class="form-horizontal">
+							<div class="form-group">
+		                        <label class="col-sm-2 control-label">重定向</label>
+		                        <div class="col-sm-10">
+		                            <input type="checkbox" style="margin-top:10px;" ng-model="body.redirectEnable"/>
+		                        </div>
+		                    </div>
+							<div class="form-group">
+		                        <label class="col-sm-2 control-label">频点</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" name="number" class="form-control" ng-model="body.number">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">扰码</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" name="number" class="form-control" ng-model="body.number">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">带宽</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" name="number" class="form-control" ng-model="body.number">
+		                        </div>
+		                    </div>
+		                </div>
+					</div>
+					<div class="box-footer">
+                        <button class="btn btn-default" ng-click="">设置</button>
+					</div>
+					<!-- /.box-body -->
+				</div>
+			</div>
+			<div class="box-footer">
+				<button type="button" ng-click="close()" class="btn btn-default" data-dismiss="modal">关闭</button>
+			</div>
+			<!--loading-->
+			<!--<div class="overlay">
+              <i class="fa fa-refresh fa-spin"></i>
+            </div>-->
+		</div>
+	</div>
+</div>

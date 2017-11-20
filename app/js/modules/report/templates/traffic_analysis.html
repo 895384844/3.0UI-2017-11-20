@@ -1,0 +1,85 @@
+<div class="content content-column" ng-controller="TrafficAnalysisCtrl">
+	<!--统计流量分析-->
+	<form class="condition" name="form" style="border: 1px solid #ccc;border-bottom: none; padding-right:130px;">
+		<div class="pl-0" ng-class="{true: 'alwaysShow', false: 'toogleShow'}[isActive]">
+			<div class="toogle-input mb-10">
+				<div class="input-group w100 pos-r" style="width: 236px;height: 34px;">
+					<span class="input-group-addon add-bg">组名称</span>
+					<div id="divselect1" class="divselect">
+					    <span class="cite" id="cite2" style="padding-left: 10px;"></span>
+					  	<ul>
+					  		<li ng-repeat="group in vendorChoice">					  			
+					  			<a ng-click="groupName(this)" href="javascript:;" selectid="{{group.adCode}}"><i class="fa fa-bullseye" style="width: 14px;height: 14px;color: #3c8dbc;"></i>{{group.fullPath}}</a>
+					  		</li>
+					    </ul>
+					</div>
+				</div>
+			</div>
+			<div class="toogle-input mb-10" ng-if='isDeviceID'>
+				<div class="input-group w100">
+					<span class="input-group-addon add-bg">设备编号</span>
+					<select class="form-control pd-right" ng-model="query.deviceID" ng-options="s.deviceID for s in deviceID" value="s.deviceID">
+					</select>
+				</div>
+			</div>
+			<div class="toogle-input mb-10">
+				<div class="input-group">
+					<span class="input-group-addon add-bg" style="padding:0 5px;">时间间隔</span>
+					<select class="form-control" ng-model="query.timeSpan" ng-change="emptyDatetime()" required>
+						<option value="1h">一小时</option>
+						<option value="1d">一天</option>
+						<option value="1m">一个月</option>
+					</select>
+				</div>
+			</div>
+			<div class="toogle-input mb-10" ng-show="query.timeSpan == '1h'">
+				<div class="input-group">
+					<span class="input-group-addon add-bg">开始时间</span>
+					<input class="form-control datetime datetimes" placeholder="开始时间" date-time-selector="start" ng-model="query.startTime" format='YYYY-MM-DD HH:00' ng-change="checkInput()" ignore-empty-value required/>
+				</div>
+			</div>
+			<div class="toogle-input mb-10" ng-show="query.timeSpan == '1h'">
+				<div class="input-group">
+					<span class="input-group-addon add-bg">结束时间</span>
+					<input class="form-control datetime datetimes" placeholder="结束时间" date-time-selector="end" ng-model="query.endTime" format='YYYY-MM-DD HH:00' ng-change="checkInput()" ignore-empty-value required/>
+				</div>
+			</div>
+			<div class="toogle-input mb-10" ng-show="query.timeSpan == '1d'">
+				<div class="input-group">
+					<span class="input-group-addon add-bg">开始时间</span>
+					<input class="form-control datetime datetimes" placeholder="开始时间" date-time-selector="start" ng-model="query.startTime" format='YYYY-MM-DD' ng-change="checkInput()" ignore-empty-value required/>
+				</div>
+			</div>
+			<div class="toogle-input mb-10" ng-show="query.timeSpan == '1d'">
+				<div class="input-group">
+					<span class="input-group-addon add-bg">结束时间</span>
+					<input class="form-control datetime datetimes" placeholder="结束时间" date-time-selector="end" ng-model="query.endTime" format='YYYY-MM-DD' ng-change="checkInput()" ignore-empty-value required/>
+				</div>
+			</div>
+			<div class="toogle-input mb-10" ng-show="query.timeSpan == '1m'">
+				<div class="input-group">
+					<span class="input-group-addon add-bg">开始时间</span>
+					<input class="form-control datetime datetimes" placeholder="开始时间" date-time-selector="start" ng-model="query.startTime" format='YYYY-MM-01' ng-change="checkInput()" ignore-empty-value required/>
+				</div>
+			</div>
+			<div class="toogle-input mb-10" ng-show="query.timeSpan == '1m'">
+				<div class="input-group">
+					<span class="input-group-addon add-bg">结束时间</span>
+					<input class="form-control datetime datetimes" placeholder="结束时间" date-time-selector="end" ng-model="query.endTime" format='YYYY-MM-01' ng-change="checkInput()" ignore-empty-value required/>
+				</div>
+			</div>
+		</div>
+		<button class="btn btn-primary searchBtn" ng-disabled="!form.$valid" ng-click="search()" style="right: 80px;">查询</button>
+			<button class="btn btn-primary searchBtn" ng-disabled="btn.status" ng-click="showChar()" ng-disabled="btn.status" style="right: 20px;">图表</button>
+
+		<!--查询条件框需折行显示时，将下面代码取消注释-->
+		<div ng-click="toogleH()" class="toogle-btn" ng-if="isShow">
+			<img src="images/down.png" ng-if="isActive"/>
+			<img src="images/up.png" ng-if="!isActive" />
+		</div>
+	</form>
+	<!--<div class="ng-grid-container grid">
+		<div ui-grid="gridOptions" ui-grid-pagination ui-grid-selection ui-grid-auto-resize ui-grid-resize-columns ui-grid-move-columns auto-height style="height: 100%;"></div></div>-->
+	<div ui-grid="gridOptions" ui-grid-pagination ui-grid-selection ui-grid-auto-resize ui-grid-resize-columns ui-grid-move-columns class="grid" auto-height></div>
+	
+</div>

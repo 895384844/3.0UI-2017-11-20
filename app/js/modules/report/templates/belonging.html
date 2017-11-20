@@ -1,0 +1,42 @@
+<div class="content content-flex" ng-controller="BelongingCtrl" style="padding: 0;">
+	<!--归属地统计-->
+	<div class="form form-inline" style="width: 300px; padding-bottom: 60px; position: relative;border: 1px solid #ccc;height: 100%;padding: 0 20px;background: #f4f4f4;margin-right: 20px;" role="form" name="form" height-bind=".grid" id="par_resize">
+		<div class="toogle-input" style="width: 100%;">
+			<div class="input-group w100">
+				<select class="form-control" ng-change="changeMapType()" style="width: 100%; margin-top: 15px; border-radius: 5px;" ng-model="query.zoneID" ng-options="s.name for s in citylist" required>
+				</select>
+			</div>
+		</div>	
+		<div class="toogle-input" style="width: 100%; margin-top: 6px;">	
+			<div class="input-group w100">
+                <span class="input-group-addon add-bg" style="width: 80px;">开始时间</span>
+                <input  class="form-control datetime" placeholder="开始时间" date-time-selector="start" format='YYYY-MM-DD' ng-model="query.startTime" ignore-empty-value/>	
+			</div>
+		</div>
+		<div class="toogle-input" style="width: 100%; margin-top: 6px;">
+			<div class="input-group w100">
+                <span class="input-group-addon add-bg" style="width: 80px;">结束时间</span>
+                <input  class="form-control datetime" placeholder="结束时间" date-time-selector="start" ng-model="query.endTime" format='YYYY-MM-DD' ignore-empty-value/>
+			</div>
+		</div>	
+		<div class="toogle-input" style="width:100%; margin-top: 6px;">
+			<div class="input-group w100">
+				<select class="form-control pd-right w100" ng-model="query.groupList" required="true" ng-options="ga.adCode as ga.fullPath for ga in groupArray" value="ga.adCode" ng-change="addGroup(query.groupList)">
+				</select>
+			</div>
+			<div ng-repeat="deviceGroup in loc" class="alert alert-info" style="width: 100%; padding: 5px; margin-top: 5px;margin-bottom: 5px">
+				<span class="glyphicon glyphicon-remove text-default" ng-click="removeGroup($index)"></span> {{deviceGroup}}
+			</div>
+		</div>
+		<button class="btn btn-primary" style="width: 90%;position: absolute; bottom: 10px;left: 5%;" ng-click="search()">
+	                                            生成报表
+            <span class="glyphicon glyphicon-signal"></span>
+         </button>
+	</div>
+	<div class="right-grid" style="background: #f4f4f4;overflow: hidden; padding: 10px;">
+		<div style="height: 100%; border:1px solid #ccc;">
+			<!--<div id="chart-panel" class="chart-panel" style="width: 100%; height: 100%;"></div>-->
+			<mw-chart ng-model="echartOptions" style="width: 100%; height:100%;"></mw-chart>
+		</div>
+	</div>
+</div>

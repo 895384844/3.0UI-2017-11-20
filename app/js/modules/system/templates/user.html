@@ -1,0 +1,26 @@
+<div class="content content-column" ng-controller="SystemUserCtrl">
+	<div class="condition" style="border: 1px solid #ccc;border-bottom: none;">
+		<div>
+			<div class="toogle-input mb-10">
+				<div class="input-group">
+					<span class="input-group-addon add-bg">用户名</span>
+					<input type="text" class="form-control" ng-model="query.account__contains">
+				</div>
+			</div>
+			<div class="toogle-input mb-10">
+				<div class="input-group w100">
+					<span class="input-group-addon add-bg">角色</span>
+					<select class="form-control" ng-model="query.roleFlag">
+						<option value="0">全部</option>
+						<option value="super">管理员</option>
+						<option value="admin">普通用户</option>
+					</select>
+				</div>
+			</div>
+			<button class="btn btn-primary searchBtn" ng-click="search()" style="margin-right: 20px;">查询</button>
+		</div>
+	</div>
+	<div class="ng-grid-container grid">
+		<div ui-grid="gridOptions" style="height: 100%;" ui-grid-pagination ui-grid-selection ui-grid-auto-resize ui-grid-resize-columns ui-grid-move-columns auto-height></div>
+	</div>
+</div>

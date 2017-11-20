@@ -1,0 +1,27 @@
+<div class="myx-modal" >
+    <div class="myx-modal-box">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+              <h3 class="box-title">{{title}}</h3>
+              <button type="button" class="close" ng-click="close()" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="box-body">
+            	<div class="form-group">
+                    <label class="col-sm-2 control-label">意见</label>
+                    <div class="col-sm-10">
+                        <textarea class="form-control" rows="3" ng-model="desc">告警已收到！</textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="box-footer">
+				<button id="dialog-btn-primary" type="button" ng-disabled="parentScope.formdata.$invalid" ng-click="parentScope.save()" class="btn btn-primary" style="margin-right: 6px;">确定</button>
+            	<button type="button" class="btn btn-default" ng-click="parentScope.clear()">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
