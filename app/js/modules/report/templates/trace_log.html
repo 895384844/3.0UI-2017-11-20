@@ -1,4 +1,4 @@
-<div class="content content-column" ng-controller="TraceLogCtrl">
+<div class="content content-column" ng-controller="TraceLogCtrl" style="position: relative;">
 	<!--终端轨迹跟踪-->
 	<div class="condition" style="border: 1px solid #ccc;border-bottom: none;">
 		<form class="form" role="form" name="form">
@@ -7,7 +7,7 @@
 					<div class="toogle-input">
 						<div class="input-group">
 							<span class="input-group-addon add-bg p5">IMSI(必填)</span>
-							<input type="number" class="form-control" oninput="if(value.length>15)value=value.slice(0,15)" ng-change="checkInput()"  ng-maxlength="15" ng-minlength="15" ng-model="query.imsi" required>							
+							<input type="text" class="form-control" ng-change="checkInput()"  ng-maxlength="15" ng-minlength="15" ng-model="query.imsi" required>							
 						</div>
 					</div>
 				</div>
@@ -35,7 +35,8 @@
 
 	</div>
 	<div ui-grid="gridOptions" ui-grid-pagination ui-grid-selection ui-grid-auto-resize ui-grid-resize-columns ui-grid-move-columns class="grid" auto-height></div>
-	<!--<div class="ng-grid-container grid">
-		<div ui-grid="gridOptions" style="height: 100%;" ui-grid-pagination ui-grid-selection ui-grid-auto-resize ui-grid-resize-columns ui-grid-move-columns auto-height></div>
-	</div>-->
+	
+	<div class="mark-div" ng-if="showLoading">
+		<img src="images/loading_bg.gif" style="width: 128px;height: 128px;margin: 100px auto;display: block;"/>
+	</div>
 </div>

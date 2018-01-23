@@ -1,7 +1,11 @@
 define(function() {
-    return ['SessionService', '$scope', '$location', '$translate','DialogService', LoginPageCtrl];
+    return ['SessionService', '$scope', '$location', '$translate','DialogService', 'HttpService', LoginPageCtrl];
 
-    function LoginPageCtrl(SessionService, $scope, $location,$t,DialogService) {
+    function LoginPageCtrl(SessionService, $scope, $location,$t,DialogService,HttpService) {
+    	HttpService.get('rest/tool/customization/get').then(function success(resp){
+    		$scope.appTitle = resp.name;
+    		document.title = resp.name;
+    	})
 
         SessionService.on('login:start', function() {
             $scope.isWaiting = true;

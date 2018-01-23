@@ -33,16 +33,16 @@ function() {
 	    	$scope.data.push(resp);
 	    })
 		
-		Array.prototype.unique3 = function(){
-			var res = [];
-			var json = {};
-			for(var i = 0; i < this.length; i++){
-				if(!json[this[i]]){
-					res.push(this[i]);
-					json[this[i]] = 1;
-				}
-			}
-			return res;
+		// 最简单数组去重法 
+		function unique1(array){ 
+			var n = []; //一个新的临时数组 
+			//遍历当前数组 
+			for(var i = 0; i < array.length; i++){ 
+				//如果当前数组的第i已经保存进了临时数组，那么跳过， 
+				//否则把当前项push到临时数组里面 
+				if (n.indexOf(array[i]) == -1) n.push(array[i]); 
+			} 
+			return n; 
 		}
 		
 		$scope.con = function(scope){
@@ -52,8 +52,8 @@ function() {
 				data.adCode = "00"
 			}
 			$scope.groupID.push(data.adCode);
-			$scope.groupID = $scope.groupID.unique3();
-			$scope.loc = $scope.loc.unique3();
+			$scope.groupID = unique1($scope.groupID);
+			$scope.loc = unique1($scope.loc);
 		}
 		
 		$scope.removeGroup = function(idx){

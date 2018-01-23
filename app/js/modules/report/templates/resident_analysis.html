@@ -1,4 +1,4 @@
-<div class="content content-column" ng-controller="ResidentAnalysisCtrl">
+<div class="content content-column" ng-controller="ResidentAnalysisCtrl" style="position: relative;">
 	<!--常驻人口分析-->
 	<div class="condition" style="border: 1px solid #ccc;border-bottom: none;">
 		<form class="form" role="form" name="form">
@@ -11,10 +11,14 @@
 					<div ng-if="calculation" style="position: absolute;left: 270px;bottom: 20px;">数据计算中，请稍候...</div>
 				</div>
 				
-				<button class="btn btn-primary searchBtn" ng-click="search()" style="right: 30px;">查询</button>
+				<button class="btn btn-primary searchBtn" ng-click="search()" style="right: 115px;">查询</button>
+				<button class="btn btn-primary searchBtn" ng-click="addSections(menus[10].subMenus[1])" style="right: 30px;">设置规则</button>
 			</div>
 		</form>
 	</div>
 
 	<div ui-grid="gridOptions" ui-grid-pagination ui-grid-selection ui-grid-auto-resize ui-grid-resize-columns ui-grid-move-columns class="grid" auto-height></div>
+	<div class="mark-div" ng-if="showLoading">
+		<img src="images/loading_bg.gif" style="width: 128px;height: 128px;margin: 100px auto;display: block;"/>
+	</div>
 </div>

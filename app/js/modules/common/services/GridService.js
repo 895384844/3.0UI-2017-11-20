@@ -13,26 +13,26 @@ define(function() {
 	            showColumnFooter: false,
                 useExternalPagination: true,
                 enableMinHeightCheck:true,
-                paginationTemplate:'common/templates/pagination.html'                       
+                paginationTemplate:'common/templates/pagination.html'
             },options);
             return gridOptions;
         }
         return {
-            create: function(scope,options) {
+            create: function(scope, options) {
                 if(!!scope.gridOptions){
                     return;
                 }               
             	scope.gridOptions=createGrid(options);
                 scope.gridOptions.onRegisterApi=function(gridApi){
                     scope.gridApi = gridApi;
-                    scope.gridApi.pagination.fetch=function(currentPage, pageSize,sortColumns){
+                    scope.gridApi.pagination.fetch=function(currentPage, pageSize, sortColumns){
                         if(typeof(scope.getPagingList)==="function"){
                             scope.gridApi.pagination.isLoading=true;
-                            var result = scope.getPagingList(currentPage, pageSize,sortColumns);
+                            var result = scope.getPagingList(currentPage, pageSize, sortColumns);
                             if (result) {
                             	result.then(function(data){
 	                                scope.gridOptions.data=data.items;
-	                                scope.gridOptions.totalItems=data.count;
+                                    scope.gridOptions.totalItems=data.count;
 	                                scope.gridApi.pagination.isLoading=false;
 	                            });
                             }
@@ -47,7 +47,7 @@ define(function() {
                     });
                     scope.gridApi.pagination.on.paginationChanged(scope, scope.gridApi.pagination.fetch);
                     if(!!options.fetchData){
-                        scope.gridApi.pagination.fetch(scope.gridApi.pagination.getPage(),scope.gridOptions.paginationPageSize);
+                        scope.gridApi.pagination.fetch(scope.gridApi.pagination.getPage(),scope.gridOptions.paginationPageSize, null);
                     }
                     
                     if (scope.gridOptions.additionalAction) {
@@ -56,7 +56,7 @@ define(function() {
                 }
             },
             refresh: function(scope) {
-               scope.gridApi.pagination.fetch(scope.gridApi.pagination.getPage(),scope.gridOptions.paginationPageSize,scope.sortCols);
+                scope.gridApi.pagination.fetch(scope.gridApi.pagination.getPage(), scope.gridOptions.paginationPageSize, scope.sortCols);
             },
             
             getOptions: function(scope) {

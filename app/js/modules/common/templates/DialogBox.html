@@ -1,8 +1,8 @@
 <div class="myx-modal" >
     <div class="myx-modal--wrap">
         <div class="myx-modal__body">
-            <h2>{{title}}</h2>
-            <p style="font-size: 16px;">{{message}}</p>
+            <h2 style="font-size: 20px;height: 44px;line-height: 44px;padding-left: 20px;background: #4785be;color: #fff;margin-top: 0;">{{title}}</h2>
+            <p style="font-size: 16px;text-align: center;margin: 40px 0;"><img src="images/choose.png" style="width: 24px;height: 24px;margin-right: 10px;"/>{{message}}</p>
             <div ng-if="radioButtons">
                 <label ng-repeat="radioButton in radioButtons" class="label-radio">
                     <input type="radio" ng-value="radioButton.Key" ng-model="param.value" name="radio" ng-hide="radioButton.Value === ''">{{radioButton.Value}}

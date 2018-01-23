@@ -18,7 +18,7 @@ define(
 			        { field: 'fullPath', displayName: '域组信息',enableSorting:false,enableColumnMenu:false},
 			        { field: 'total', displayName: '上号总量',enableSorting:false,enableColumnMenu:false},
 			        { field: 'days', displayName: '有效上号天数',enableSorting:false,enableColumnMenu:false},
-			        { field: 'average', displayName: '平均上上号量',enableSorting:false,enableColumnMenu:false}
+			        { field: 'average', displayName: '平均上号量',enableSorting:false,enableColumnMenu:false}
 			    ]
 			});
 		    

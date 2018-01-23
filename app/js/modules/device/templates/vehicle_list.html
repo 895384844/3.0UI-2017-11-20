@@ -1,0 +1,46 @@
+<div class="content content-flex" ng-controller="VehicleListCtrl" style="background: #fff;position: relative;">
+	<div style="width: 20%; height: 100%; background: #f4f4f4; float: left; border: 1px solid #ccc;padding: 10px;overflow-y: auto;">
+		<script type="text/ng-template" id="nodes_renderers.html">
+			<div ui-tree-handle class="tree-node tree-node-content" style="cursor: pointer;" ng-click="getList(this)" ng-model="query.adCode" ng-class="{'device-page-active': node.isdefault}">
+			    <a class="btn btn-success" ng-if="node.nodes && node.nodes.length > 0" data-nodrag ng-click="toggle(this)" style="width: 15px;height: 15px;padding: 0;">
+			    	<span class="fa" ng-class="{'fa fa-plus': collapsed, 'fa fa-minus': !collapsed }" style="font-size: 12px;position: relative;bottom: 4px;"></span>
+			    </a>
+			    {{node.name}}
+			</div>
+			<ol ui-tree-nodes="" ng-model="node.nodes" ng-class="{hidden: collapsed}">
+			    <li ng-repeat="node in node.nodes" ui-tree-node ng-include="'nodes_renderers.html'"></li>
+			</ol>
+		</script>
+		<div ui-tree id="tree-root" data-drag-enabled = false>
+		    <ol class="set-default" ui-tree-nodes ng-model="data" style="line-height: 20px;">
+		        <li ng-repeat="node in data" ui-tree-node ng-include="'nodes_renderers.html'"></li>
+		    </ol>
+		</div>
+	</div>
+	<div style="width: 79%; background: #f4f4f4; margin-left: 1%; float:left;height: 100%;display: -webkit-flex; -webkit-flex-direction:column;">
+		<div class="condition" style="border: 1px solid #ccc;border-bottom: none;">
+			<div ng-class="{true: 'alwaysShow', false: 'toogleShow'}[isActive]">
+				<div class="toogle-input mb-10">
+					<div class="input-group">
+						<span class="input-group-addon add-bg">设备编号</span>
+						<input type="text" class="form-control" ng-model="query.deviceID__contains">
+					</div>
+				</div>
+			</div>
+			<button class="btn btn-primary searchBtn" ng-click="search()" style="right: 30px;">查询</button>
+			
+			<!--查询条件框需折行显示时，将下面代码取消注释-->
+			<!--<div ng-click="toogleH()" class="toogle-btn" ng-if="isShow">
+				<img src="images/down.png" ng-if="isActive"/>
+				<img src="images/up.png" ng-if="!isActive" />
+			</div>	-->
+			
+		</div>	
+		<div style="-webkit-flex: 1;display: -webkit-flex;">
+			<div ui-grid="gridOptions" ui-grid-pagination ui-grid-selection ui-grid-auto-resize ui-grid-resize-columns ui-grid-move-columns class="grid" auto-height style="height: 100%;"></div>
+		</div>
+	</div>
+	<div class="mark-div" ng-if="showLoading">
+		<img src="images/loading_bg.gif" style="width: 128px;height: 128px;margin: 100px auto;display: block;"/>
+	</div>
+</div>

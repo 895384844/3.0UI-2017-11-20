@@ -4,12 +4,19 @@ define(function() {
 			$scope.close = close;
 			$scope.group = {};
 			$scope.title = title;
+			$scope.chooseBaidu = true;
+	    	$scope.chooseGps = false;
 			var data = {};
 			var filter = {};
 		    filter.adCode = '00';
 		    $scope.groupAdd = function(){
+		    	//console.log($scope.mapType)
 		    	data.name = $scope.group.name;
 		    	data.adCode = parentID;
+		    	data.centerType = $scope.mapType;
+		    	if(!$scope.mapType){
+		    		data.centerType = 'baidu';
+		    	}
 		    	if($scope.group.lon && $scope.group.lat){
 		    		data.center = $scope.group.lon+","+$scope.group.lat
 		    	}		    	

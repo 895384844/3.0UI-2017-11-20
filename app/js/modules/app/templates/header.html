@@ -1,11 +1,11 @@
 <header class="main-header" ng-controller="HeaderCtrl">
-	<a href="#" class="logo"><span class="logo-mini"><b>EFS</b></span><span class="logo-lg"><b>情报分析平台</b></span></a>
+	<a href="" class="logo"><span class="logo-mini"><b><img class="img-responsive" src="images/logoBig.png" style="width: 25px;height: 31px;margin: 10px;"></b></span><span class="logo-lg"><b><img class="img-responsive" src="images/logoBig.png" style="width: 25px;height: 31px;margin:0 10px 0 5px;display: inline-block;">{{appTitle}}</b></span></a>
 	<nav class="navbar navbar-static-top" role="navigation">
 		<a href="javascript:void(0)" class="sidebar-toggle" data-toggle="offcanvas" role="button"><span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span></a>
 		<div class="navbar-custom-menu">
 			<ul class="nav navbar-nav pos-r">
 				<li class="dropdown user user-menu notifications-menu" style="float: right;">
-					<a href class="dropdown-toggle" data-toggle="dropdown">当前用户： {{username}}</a>
+					<a href class="dropdown-toggle" data-toggle="dropdown">当前用户： {{username}} <i class="fa fa-sort-desc"></i></a>
 					<ul class="dropdown-menu" style="width: 66px">
 						<li>
 							<ul class="menu">
@@ -16,22 +16,22 @@
 									<a myx-fast-click ng-click="lockScreen()"><i class="fa fa-gear text-red"></i> 关于</a>
 								</li>
 								<li>
-									<a myx-fast-click ng-click="showSystemInfo()"><i class="fa fa-book text-green"></i> 用户手册</a>
+									<a href="docs/EFSV3.0.0用户手册.pdf" target="_blank" myx-fast-click ><i class="fa fa-book text-green"></i> 用户手册</a>
 								</li>
 								<li>
-									<a myx-fast-click ng-click="logout()"><i class="fa fa-sign-out text-yellow"></i> 安全退出</a>
+									<a id="logout" myx-fast-click ng-click="logout()"><i class="fa fa-sign-out text-yellow"></i> 安全退出</a>
 								</li>
 							</ul>
 						</li>
 					</ul>
 				</li>
-				<div class="user user-menu" style="width:75px;color: #fff;cursor: default;float: right;height: 50px;">
-					<a href style="cursor: default; line-height: 50px;">License： <span style="display: inline-block;width: 14px;height: 14px;background: #16d37d; border-radius: 50%;position: relative;top: 2px;cursor: default;line-height: 50px;"></span></a>
-				</div>
-				<div class="user user-menu" style="color: #fff;text-align: center;cursor: default;float: right;height: 50px;margin-right: 10px;">
-					<a href style="cursor: default;display: block;width: 100px;margin-top: 3px;line-height: 22px;">2017/09/06 17:54</a>
-				</div>
 				
+				<div class="user user-menu" style="color: #fff;text-align: center;cursor: default;float: left;height: 50px;background: url('images/headerLine.png') no-repeat right;padding-right: 10px;">
+					<a href style="cursor: default;display: block;width: 70px;margin-top: 3px;line-height: 22px;">{{systemTime}}</a>
+				</div>
+				<li class="user user-menu" ng-click="addSection(menus[10].subMenus[0])" style=" background: url('images/headerLine.png') no-repeat right;">
+					<a>授权： <span id="licenseStatus" style="display: inline-block;width: 14px;height: 14px; border-radius: 50%;position: relative;top: 2px;cursor: default;line-height: 50px;"></span></a>
+				</li>
 			</ul>
 		</div>
 	</nav>

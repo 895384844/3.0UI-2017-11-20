@@ -1,7 +1,7 @@
 <div class="myx-modal">
 	<div class="myx-modal-box">
-		<div class="box box-style" style="border-top: 1px solid #eee;">
-			<div class="box-header with-border" style="background: #EFEFEF;padding: 10px;">
+		<div class="box box-primary box-style">
+			<div class="box-header with-border" style="background: #EFEFEF;">
 				<h3 class="box-title">编辑用户</h3>
 				<button type="button" class="close" ng-click="close()" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">×</span>
@@ -11,7 +11,7 @@
 			<div class="box-body" style="padding: 10 15px;">
 				<div class="box box-primary collapsed-box">
 					<div class="box-header with-border">
-						<h3 class="box-title">基本信息</h3>
+						<h6 class="box-title">基本信息</h6>
 
 						<div class="box-tools pull-right">
 							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
@@ -21,7 +21,7 @@
 					<div class="box-body">
 						<div class="form-horizontal">
 							<div class="form-group relative">
-								<label class="col-sm-2 control-label">手机</label>
+								<label class="col-sm-2 control-label">手机号码</label>
 								<div class="col-sm-10">
 									<input type="text" name="phone" class="form-control" ng-model="user.telNumber" ng-minlength="11" ng-maxlength="11" pattern="1[0-9]{10}" required>
 								</div>
@@ -32,7 +32,7 @@
 				</div>
 				<div class="box box-primary collapsed-box">
 					<div class="box-header with-border">
-						<h3 class="box-title">管理域设置</h3>
+						<h6 class="box-title">管理域设置</h6>
 
 						<div class="box-tools pull-right">
 							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
@@ -71,7 +71,7 @@
 				</div>
 				<div class="box box-primary collapsed-box">
 					<div class="box-header with-border">
-						<h3 class="box-title">权限设置</h3>
+						<h6 class="box-title">权限设置</h6>
 
 						<div class="box-tools pull-right">
 							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
@@ -84,17 +84,13 @@
 								<label class="col-sm-2 control-label">设备管理</label>
 								<div class="col-sm-4">
 									<select class="form-control" ng-model="user.permissionList.DEVICE_MANAGEMENT">
-										<option value="0">不可见</option>
-										<option value="1">可读</option>
-										<option value="2">读写</option>
+										<option value="{{v.code}}" ng-repeat="v in getOptions('DEVICE_MANAGEMENT')">{{v.description}}</option>
 									</select>
 								</div>
 								<label class="col-sm-2 control-label">信息检索</label>
 								<div class="col-sm-4">
 									<select class="form-control" ng-model="user.permissionList.INFORMATION_RETRIEVAL">
-										<option value="0">不可见</option>
-										<option value="1">可读</option>
-										<option value="2">读写</option>
+										<option value="{{v.code}}" ng-repeat="v in getOptions('INFORMATION_RETRIEVAL')">{{v.description}}</option>
 									</select>
 								</div>
 							</div>
@@ -102,17 +98,13 @@
 								<label class="col-sm-2 control-label">数据分析</label>
 								<div class="col-sm-4">
 									<select class="form-control" ng-model="user.permissionList.DATA_ANALYSIS">
-										<option value="0">不可见</option>
-										<option value="1">可读</option>
-										<option value="2">读写</option>
+										<option value="{{v.code}}" ng-repeat="v in getOptions('DATA_ANALYSIS')">{{v.description}}</option>
 									</select>
 								</div>
 								<label class="col-sm-2 control-label">布控预警</label>
 								<div class="col-sm-4">
 									<select class="form-control" ng-model="user.permissionList.SURVEILLANCE">
-										<option value="0">不可见</option>
-										<option value="1">可读</option>
-										<option value="2">读写</option>
+										<option value="{{v.code}}" ng-repeat="v in getOptions('SURVEILLANCE')">{{v.description}}</option>
 									</select>
 								</div>
 							</div>
@@ -120,17 +112,13 @@
 								<label class="col-sm-2 control-label">告警查询</label>
 								<div class="col-sm-4">
 									<select class="form-control" ng-model="user.permissionList.ALARM">
-										<option value="0">不可见</option>
-										<option value="1">可读</option>
-										<option value="2">读写</option>
+										<option value="{{v.code}}" ng-repeat="v in getOptions('ALARM')">{{v.description}}</option>
 									</select>
 								</div>
 								<label class="col-sm-2 control-label">地图应用</label>
 								<div class="col-sm-4">
 									<select class="form-control" ng-model="user.permissionList.GEOGRAPHIC_INFORMATION">
-										<option value="0">不可见</option>
-										<option value="1">可读</option>
-										<option value="2">读写</option>
+										<option value="{{v.code}}" ng-repeat="v in getOptions('GEOGRAPHIC_INFORMATION')">{{v.description}}</option>
 									</select>
 								</div>
 							</div>
@@ -138,17 +126,13 @@
 								<label class="col-sm-2 control-label">域组管理</label>
 								<div class="col-sm-4">
 									<select class="form-control" ng-model="user.permissionList.DOMAIN_MANAGEMENT">
-										<option value="0">不可见</option>
-										<option value="1">可读</option>
-										<option value="2">读写</option>
+										<option value="{{v.code}}" ng-repeat="v in getOptions('DOMAIN_MANAGEMENT')">{{v.description}}</option>
 									</select>
 								</div>
 								<label class="col-sm-2 control-label">用户管理</label>
 								<div class="col-sm-4">
 									<select class="form-control" ng-model="user.permissionList.USER_MANAGEMENT">
-										<option value="0">不可见</option>
-										<option value="1">可读</option>
-										<option value="2">读写</option>
+										<option value="{{v.code}}" ng-repeat="v in getOptions('USER_MANAGEMENT')">{{v.description}}</option>
 									</select>
 								</div>
 							</div>
@@ -156,9 +140,7 @@
 								<label class="col-sm-2 control-label">系统管理</label>
 								<div class="col-sm-4">
 									<select class="form-control" ng-model="user.permissionList.SYSTEM_MANAGEMENT">
-										<option value="0">不可见</option>
-										<option value="1">可读</option>
-										<option value="2">读写</option>
+										<option value="{{v.code}}" ng-repeat="v in getOptions('SYSTEM_MANAGEMENT')">{{v.description}}</option>
 									</select>
 								</div>
 								<label class="col-sm-2 control-label">日志审计</label>
@@ -174,9 +156,13 @@
 								<label class="col-sm-2 control-label">系统工具</label>
 								<div class="col-sm-4">
 									<select class="form-control" ng-model="user.permissionList.SYSTEM_TOOL">
-										<option value="0">不可见</option>
-										<!--<option value="1">可读</option>
-										<option value="2">读写</option>-->
+										<option value="{{v.code}}" ng-repeat="v in getOptions('SYSTEM_TOOL')">{{v.description}}</option>
+									</select>
+								</div>
+								<label class="col-sm-2 control-label">案件管理</label>
+								<div class="col-sm-4">
+									<select class="form-control" ng-model="user.permissionList.CASE_MANAGEMENT">
+										<option value="{{v.code}}" ng-repeat="v in getOptions('CASE_MANAGEMENT')">{{v.description}}</option>
 									</select>
 								</div>
 							</div>

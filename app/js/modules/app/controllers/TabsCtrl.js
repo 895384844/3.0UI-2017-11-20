@@ -5,6 +5,10 @@ define(function() {
         SectionsService.init();
         $scope.sections = SectionsService.positiveSections;
         $scope.hiddenSections = SectionsService.hiddenSections;
+        
+        $scope.$on('to-parent', function(event, data) {  
+	        $timeout(function(){$scope.$broadcast('to-child', data)},500) ;
+	    }); 
 
         //not ok 
         $scope.removeSection = function(section) {

@@ -39,7 +39,7 @@ define(
 		    var remove = function(){
 		    	var selection = $scope.gridApi.selection.getSelectedRows();
 				if (selection.length <= 0) {
-					DialogService.showConfirm(
+					DialogService.showMessage(
 		                '提示',
 		                '请至少选择一条进行操作！',null)
 					return;
@@ -65,7 +65,7 @@ define(
 		    var edit = function(){
 		    	var selection = $scope.gridApi.selection.getSelectedRows();
 				if (selection.length <= 0 || selection.length >1) {
-					DialogService.showConfirm(
+					DialogService.showMessage(
 		                '提示',
 		                '请选择一条进行编辑！',null)
 					return;
@@ -144,24 +144,20 @@ define(
 						],
 						btnTools: [
 							{
-								css: 'fa fa-fw fa-refresh',
-								tooltip: '刷新',
-								method: function() {
-									GridService.refresh($scope);
-								}
-							},
-							{
-						    	css:'fa fa-fw fa-plus-circle',
+						    	//css:'fa fa-fw fa-plus-circle',
+						    	src : 'images/add.png',
 						    	tooltip:'添加',
 						    	method:groupAdd
 						    },
 							{
-						    	css:'fa fa-fw fa-minus-circle',
+						    	//css:'fa fa-fw fa-minus-circle',
+						    	src : 'images/remove.png',
 						    	tooltip:'删除',
 						    	method:remove
 					    	},
 					    	{
-						    	css:'fa fa-fw fa-pencil',
+						    	//css:'fa fa-fw fa-pencil',
+						    	src : 'images/edit.png',
 						    	tooltip:'编辑',
 						    	method:edit
 					    	}

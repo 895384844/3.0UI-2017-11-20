@@ -40,8 +40,8 @@ define(
 				$scope.getPagingList=function(currentPage, pageSize,sort){
 		            var filter={page_size:pageSize,page_no:currentPage,order_by:['domainGroup']};
 		            filter.query = {};
-		            if($scope.device.name){
-		            	filter.query.deviceID = $scope.device.name;
+		            if($scope.deviceName){
+		            	filter.query.deviceID__contains = $scope.device.name__contains;
 		            }
 		            return HttpService.post('rest/device/efence/search',filter);
 		   		};

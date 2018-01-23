@@ -1,7 +1,7 @@
 <div role="contentinfo" class="ui-grid-pager-panel" ui-grid-pager ng-show="grid.options.enablePaginationControls">
 	<div class="btnBox">
         <a ng-repeat="btn in grid.options.btnTools" herf="javascript:void(0)" title="{{btn.tooltip}}"  class="fa-lg text-info" ng-click="btn.method()">
-            <i class="{{btn.css}}"></i>
+            <img ng-src="{{btn.src}}" style="width: 60px; height: 23px;" alt="" />
         </a>
 	</div>
     <div class="ui-grid-pager-count-container">

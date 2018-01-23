@@ -1,39 +1,53 @@
 define(function() {
-	return ['$scope', 'i18nService', '$lt', '$filter', 'GridService', 'ModalService', '$element', 'localSession', 'HttpService', 'DialogService', 'SystemService', 'DateFormat','EmptyInput','delEmptyInput', NotifyLogCtrl];
+	return ['$scope', 'i18nService', '$lt', '$filter', 'GridService', 'ModalService', '$element', 'localSession', 'HttpService', 'DialogService', 'SystemService', 'DateFormat','EmptyInput','delEmptyInput', 'GetLocalTime', NotifyLogCtrl];
 
-	function NotifyLogCtrl($scope, i18nService, $lt, $filter, GridService, ModalService, $element, localSession, HttpService, DialogService, SystemService, DateFormat,EmptyInput,delEmptyInput) {
+	function NotifyLogCtrl($scope, i18nService, $lt, $filter, GridService, ModalService, $element, localSession, HttpService, DialogService, SystemService, DateFormat,EmptyInput,delEmptyInput,GetLocalTime) {
 
 		$scope.gridItemData = {};
 		$scope.query = {};
 		$scope.selectData = {};
 		EmptyInput($scope.query);
+		var cacheQuery = {};
+		
+		var field = {
+			'address' : '接收地址',
+			'content' : '发送内容',
+			'timestamp' : '发送时间',
+			'result' : '发送结果'
+		}
 
 		$scope.getPagingList = function(currentPage, pageSize, sort) {
 			var filter={page_size:pageSize,page_no:currentPage-1};
             if($scope.query){
-            	filter.query = angular.copy($scope.query);
+            	filter.query = angular.copy(cacheQuery);
             	if(filter.query.timestamp__ge){
             		filter.query.timestamp__ge = DateFormat(filter.query.timestamp__ge);
             	}
             	if(filter.query.timestamp__lt){
             		filter.query.timestamp__lt = DateFormat(filter.query.timestamp__lt);
             	}
-            	filter.order_by = ["timestamp"];
-            }
-            if($scope.search){
-                angular.extend(filter,$scope.search);
-            }
-            if(!!sort){
-            	filter.order_by=sort;
+            	filter.order_by = ["-timestamp"];
             }
             var result = HttpService.post('rest/alarm/message/search',filter);
             result.then(function success(resp){
-           		if(resp.count == 0){
+           		if(!resp.items){
            			DialogService.showMessage(
 		                '提示',
 		                '没有查询结果！',null);
 		            return;
-           		}
+           		}else{
+	           		var list = resp.items;
+	           		for(var i=0; i<list.length; i++){
+	           			list[i].timestamp = GetLocalTime(list[i].timestamp);
+	           			if(list[i].result == 1){
+	           				list[i].result = '成功';
+	           			}else if(list[i].result == 0){
+	           				list[i].result = '失败';
+	           			}else{
+	           				list[i].result = '未知';
+	           			}
+	           		}
+           		}    
             })
            return result;
 		};
@@ -55,7 +69,7 @@ define(function() {
 		var remove = function() {
 			var selection = $scope.gridApi.selection.getSelectedRows();
 		        if( selection.length == 0){
-		            DialogService.showConfirm(
+		            DialogService.showMessage(
 		                '提示',
 		                '至少选择一条进行操作！',null)
 					return;
@@ -83,6 +97,37 @@ define(function() {
 						}, null);
 				}
 		};
+		
+		var exports = function(){
+			var myDate = new Date();
+			var times = myDate.toLocaleString();
+			times = times.replace(/\s|:|\//g, "_");
+			var filter = {
+				title: "短信通知-"+times,
+			    fields: field,
+			    fileName: "NotifyLogPageList-"+times+".xlsx",
+			    sheetName: "Sheet1",
+			    pager: {
+			        //query: angular.copy($scope.query)
+			    }			    
+			}
+			if($scope.query){
+            	filter.pager.query = angular.copy(cacheQuery);
+            	if(filter.pager.query.timestamp__ge){
+            		filter.pager.query.timestamp__ge = DateFormat(filter.pager.query.timestamp__ge);
+            	}
+            	if(filter.pager.query.timestamp__lt){
+            		filter.pager.query.timestamp__lt = DateFormat(filter.pager.query.timestamp__lt);
+            	}
+            }
+			HttpService.post('rest/alarm/message/export',filter).then(function success(resp) {
+            	var filter={fileName: resp.file}
+            	var anchor = angular.element('<a/>');
+		        anchor.attr({
+		            href: 'EFS/core/system/file/download_file?fileName=' + resp.file
+		        })[0].click();
+			})		
+		}
 
 		GridService.create($scope, {
 			fetchData: true,
@@ -121,26 +166,24 @@ define(function() {
 				}
 			],
 			btnTools: [{
-					css: 'fa fa-fw fa-refresh',
+					//css: 'fa fa-fw fa-refresh',
+					src: 'images/refresh.png',
 					tooltip: '刷新',
 					method: function() {
 						GridService.refresh($scope);
 					}
 				},
 				{
-					css: 'fa fa-fw fa-minus-circle',
+					//css: 'fa fa-fw fa-minus-circle',
+					src: 'images/remove.png',
 					tooltip: '删除',
 					method: remove
 				},
 				{
-					css: 'fa fa-fw fa-share-square-o',
+					//css: 'fa fa-fw fa-share-square-o',
+					src: 'images/exports.png',
 					tooltip: '导出',
-					method: add
-				},				
-				{
-					css: 'fa fa-fw fa-download',
-					tooltip: '下载',
-					method: add
+					method: exports
 				}
 			]
 
@@ -192,6 +235,7 @@ define(function() {
 		};
 
 		$scope.search = function() {
+			cacheQuery = angular.copy($scope.query);
 			delEmptyInput($scope.query);			
 			GridService.refresh($scope);
 		};

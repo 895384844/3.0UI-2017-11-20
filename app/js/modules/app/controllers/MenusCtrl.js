@@ -3,7 +3,13 @@ define(function () {
 
 	function MenusCtrl($scope, menuGroups, SectionsService) {
 		var data = menuGroups;
-		var menus = sessionStorage.getItem('menus').split(',');
+		var permissions = JSON.parse(sessionStorage.getItem('permissions'));
+		var menus = [];
+		for (var code in permissions) {
+			if (permissions[code] != 0) {
+				menus.push(code);
+			}
+		}
 		var codes = [];
 		$scope.menus = [];
 		for(var i=0; i<data.length; i++){

@@ -1,10 +1,22 @@
-<div class="content content-column" ng-controller="DeviceAlarmNotifyPolicyCtrl">
+<div class="content content-column" ng-controller="DeviceAlarmNotifyPolicyCtrl" style="position: relative;">
 	<div class="condition" style="border: 1px solid #ccc;border-bottom: none;">
 		<div ng-class="{true: 'alwaysShow', false: 'toogleShow'}[isActive]">
 			<div class="toogle-input">
 				<div class="input-group">
+					<span class="input-group-addon add-bg">策略名称</span>
+					<input type="text" class="form-control" ng-model="query.name">
+				</div>
+			</div>
+			<div class="toogle-input">
+				<div class="input-group">
+					<span class="input-group-addon add-bg">人员姓名</span>
+					<input type="text" class="form-control" ng-model="query.staffName">
+				</div>
+			</div>
+			<div class="toogle-input">
+				<div class="input-group">
 					<span class="input-group-addon add-bg">设备编号</span>
-					<input type="text" class="form-control" ng-model="query.deviceID">
+					<input type="text" class="form-control" ng-model="query.device">
 				</div>
 			</div>
 		</div>
@@ -18,5 +30,70 @@
 
 	</div>
 
-	<div ui-grid="gridOptions" ui-grid-pagination ui-grid-selection ui-grid-auto-resize ui-grid-resize-columns ui-grid-move-columns class="grid" auto-height></div>
+	<div class="grid grid-box" id="grid-box">
+		<div class="grid-content" ng-class="{true : 'no-count',false : ''}[gridData.length == 0]">
+			<div class="box boxs" ng-repeat="v in gridData">
+				<div class="box-header">
+					<i class="fa fa-check current-bac" ng-click="choose($index)"></i>
+					<h4 class="box-title">{{v.name}}</h4>
+					<div class="box-tools pull-right">
+						<button type="button" ng-click="edit($index)" class="btn btn-box-tool" ><i class="fa fa-edit"></i></button>
+					</div>
+				</div>
+				<div class="box-body">
+					<div class="w100">
+						<p class="col-md-4 col-lg-4" ng-attr-title="{{v.staffCode}}">人员编号：{{v.staffCode}}</p>
+						<p class="col-md-4 col-lg-4" ng-attr-title="{{v.staffName}}">人员姓名：{{v.staffName}}</p>
+						<p class="col-md-4 col-lg-4" ng-attr-title="{{v.caseName}}">案件：{{v.caseName}}</p>
+					</div>
+					<div style="clear: both;"></div>
+					<div class="w100">
+						<ul class="grid-lists col-lg-6 col-md-6">
+							<li class="dropdown user user-menu notifications-menu" >
+								<span class="dropdown-toggle" ng-class="{true : 'hide-dropdown-toggle',false : 'span-yellow' }[v.deviceList.length == 0]" data-toggle="dropdown">设备列表</span>
+								<ul class="dropdown-menu" ng-if="v.plateList.length != 0">
+									<li>
+										<ul class="menu">
+											<li class="title-li">
+												设备列表
+											</li>
+											<li ng-repeat="i in v.deviceList">
+												<a>{{i.deviceID}}</a>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							</li>
+						</ul>						
+					</div>
+				</div>
+				<!-- /.box-body -->
+			</div>
+		</div>
+		<div class="footer" style="background: #EAEAEA;height: 33px;padding-top: 3px;">
+			<img src="images/refresh.png" style="width: 60px;height: 23px;" ng-click="getData()"/>
+			<img src="images/add.png" style="width: 60px;height: 23px;" ng-click="add()"/>
+			<img src="images/remove.png" style="width: 60px;height: 23px;" ng-click="remove()"/>
+			<img src="images/exports.png" style="width: 60px;height: 23px;" ng-click="exports()"/>
+			<span style="float: right; line-height: 33px;margin-right: 30px;">共 {{count}} 条</span>
+			
+			<span style="float: right; margin-right: 30px;line-height: 33px;">条每页</span>
+			<select ng-model="pageSize" style="float: right;padding:5px;margin-right: 5px;" ng-change="setPageSize()">
+				<option value="10">10</option>
+				<option value="20">20</option>
+				<option value="30">30</option>
+			</select>
+			<span style="float: right; line-height: 33px;margin-right: 30px;">第 {{pageNo}} 页</span>
+			<button type="button" class="btn btn-default" style="padding: 0;margin:0 10px 0 10px;float: right;" ng-disabled="hasNext" ng-click="nextPage()">
+			    <img src="images/right.png"/>
+			</button>
+			<button type="button" class="btn btn-default" style="padding: 0;float:right;" ng-disabled="hasPrevious" ng-click="previousPage()">
+			    <img src="images/left.png"/>
+			</button>			
+		</div>		
+	</div>
+	
+	<div class="mark-div" ng-if="showLoading">
+		<img src="images/loading_bg.gif" style="width: 128px;height: 128px;margin: 100px auto;display: block;"/>
+	</div>
 </div>

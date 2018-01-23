@@ -84,6 +84,16 @@ html {
 	-webkit-appearance: none;
 }
 
+.ui-grid-footer-panel{
+	position: fixed;
+	bottom: 0;
+}
+
+.activeLis{
+	background: #1e90ff;
+	color: #fff;
+}
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
 	-webkit-appearance: none !important;
@@ -294,6 +304,10 @@ ol:not(.labelled) {
 	overflow: hidden;
 }
 
+.toolbtns li {
+	height: 62px;
+}
+
 .dis-flex-c {
 	display: -webkit-flex;
 	-webkit-flex-direction: column;
@@ -309,6 +323,17 @@ ol:not(.labelled) {
 
 .pos-a {
 	position: absolute;
+}
+
+.mark-div{
+	position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: #000;
+    z-index: 1000;
+    opacity: 0.4;
 }
 
 
@@ -354,10 +379,10 @@ ol:not(.labelled) {
 	border: 1px solid #d3d3d3;
 	background: #f7f7f7;
 }
-
+/*
 .box-style .box-footer{
 	background: #efefef;
-}
+}*/
 
 .box-style .box-primary .box-footer{
 	background: #f7f7f7;
@@ -402,7 +427,7 @@ ol:not(.labelled) {
 }
 .device-state img{
 	display: inline;
-	width: 12px;
+	width: 24px;
 	height: 15px;
 	margin-top: -3px;
 }
@@ -592,10 +617,10 @@ ol:not(.labelled) {
 }
 
 .statistics p {
-	font-size: 26px;
+	font-size: 20px;
 	font-weight: bold;
 	color: #f29c13;
-	line-height: 100px;
+	line-height: 33px;
 }
 
 .statistics span {
@@ -799,7 +824,7 @@ div.radius_shadow {
 
 .form-horizontal .control-label {
 	padding: 0;
-	line-height: 34px;
+	line-height: 20px;
 }
 
 .nav-tabs-custom>.nav-tabs>li.active>a,
@@ -815,6 +840,8 @@ div.radius_shadow {
 
 .nav-tabs-custom>.nav-tabs>li{
 	width: 94px;
+	margin-right: 0;
+	border-right: 1px solid #ccc;
 }
 
 .nav-tabs-custom>.nav-tabs>li>a{
@@ -830,7 +857,7 @@ div.radius_shadow {
 }
 
 .box-primary {
-	padding: 10px;
+	padding-bottom: 10px;
 }
 
 .empty-input {
@@ -937,7 +964,7 @@ div.radius_shadow {
 }
 
 .acr-grid .ui-grid-pager-container {
-	margin-left: 80px;
+	margin-left: 130px;
 }
 
 .acr-grid .ui-grid-pager-row-count-picker {
@@ -953,20 +980,20 @@ div.radius_shadow {
 	position: absolute;
 	top: 0;
 	right: 5px;
-	width: 16px;
-	height: 36px;
-	background-color: #f58d00;
+	width: 26px;
+	height: 26px;
 	cursor: pointer;
+	background: url("../images/blue-unfold.png") no-repeat;
 }
 
 .toogle-width-hide {
 	position: absolute;
 	top: 0;
 	right: 5px;
-	width: 16px;
-	height: 36px;
-	background-color: #f58d00;
+	width: 26px;
+	height: 26px;
 	cursor: pointer;
+	background: url("../images/blue-fold.png") no-repeat;
 }
 
 .toogle-width p {
@@ -1117,7 +1144,8 @@ a.deltab:hover {
 }
 
 .page-login .current {
-	background: url("../images/bg.jpg");
+	background: url("../images/bg.png") no-repeat;
+	background-size: cover;
 	height: 100%;
 }
 
@@ -1133,16 +1161,32 @@ a.deltab:hover {
 }
 
 .login__logo {
-	/*height: 70px;*/
 	left: 15px;
-	/*position: absolute;*/
-	top: 10px;
+    width: 50%;
+    float: left;
+    margin-top: 25px;
+}
+	
+@media screen and (min-width: 1367px) {
+	.login__content {
+		background: url("../images/loginBg.png") no-repeat;
+		background-size: contain;
+		margin: auto;
+		width: 49%;
+		height: 361px;
+		position: relative;
+	}
 }
 
-.login__content {
-	margin: auto;
-	width: 406px;
-	position: relative;
+@media screen and (min-width: 1024px) and (max-width: 1366px) {
+	.login__content {
+		background: url("../images/loginBg.png") no-repeat;
+		background-size: contain;
+		margin: auto;
+		width: 60%;
+		height: 361px;
+		position: relative;
+	}
 }
 
 .login__content label {
@@ -1160,36 +1204,41 @@ a.deltab:hover {
 	-moz-appearance: none;
 	-webkit-appearance: none;
 	border-color: #DEDEE0;
-	border-left: 3px solid #59859E;
-	padding-left: 36px;
+	font-size: 14px;
 }
 
 .login__content .form-group {
 	position: relative;
+	display: -webkit-flex;
+	overflow: hidden;
 }
 
 .login__content .form-group i {
-	position: absolute;
-	left: 15px;
-	top: 11px;
 	color: #DEDEE0;
-	font-size: 14px;
+    font-size: 14px;
+    text-align: center;
+    display: block;
+    line-height: 32px;
 }
 
 .login-sub {
-	float: right;
 	font-family: "microsoft yahei";
+	width: 100%;/*
+	background: #236dac;*/
+	height: 71px;
 }
 
 .login-btn {
-	width: 100px;
-	height: 36px;
-	color: #fff;
-	background: #448DB6;
-	border: #B4DCF5;
-	display: inline-block;
-	font-weight: 600;
-	letter-spacing: 2px;
+	background: #85c226;
+	width: 60%;
+    margin: 15px 20%;
+    height: 36px;
+    color: #fff;
+    border-radius: 5px;
+    border: none;
+    display: inline-block;
+    font-weight: 600;
+    letter-spacing: 3px;
 }
 
 .forget-password {
@@ -1221,11 +1270,12 @@ a.deltab:hover {
 }
 
 .login__content__form-container {
-	margin-top: 35px;
-	width: 100%;
-	height: 200px;
-	background: #fff;
-	padding: 30px;
+	margin-top: 6.2%;
+    height: 200px;
+    float: left;
+    width: 37%;
+    border-radius: 5px;
+    border: 1px solid #9cd5f1;
 }
 
 .login__content__server-config {
@@ -1388,8 +1438,8 @@ MyX - Header Title
 }
 
 .header--logo__picture {
-	width: 70px;
-	height: 70px;
+	width: 112px;
+	height: 166px;
 	margin: auto;
 	vertical-align: top;
 	position: relative;
@@ -1608,7 +1658,6 @@ TODO: fix radios display in docs
 	margin-top: -10px;
 	min-height: 200px;
 	max-height: 500px;
-	max-width: 1000px;
 	background-clip: padding-box;
 	outline: none;
 	position: absolute;
@@ -1632,15 +1681,11 @@ TODO: fix radios display in docs
 .myx-modal .myx-modal--wrap .myx-modal__body {
 	color: grey;
 	position: relative;
-	padding: 20px 0;
-	max-width: 700px;
-	width: 90%;
 	margin: 0 auto;
 }
 
 .myx-modal .myx-modal--wrap .myx-modal__footer {
 	text-align: right;
-	padding: 0 0 20px;
 	margin: 0 auto;
 	max-width: 700px;
 	width: 90%;
@@ -1649,7 +1694,7 @@ TODO: fix radios display in docs
 .myx-modal .myx-modal--wrap .btn,
 .myx-modal .myx-modal--wrap .btn-vertical {
 	padding: 6px 30px;
-	margin-left: 20px;
+	margin: 0 10px 0 0;
 }
 
 .myx-modal .myx-modal--wrap label {
@@ -1868,7 +1913,7 @@ md-datepicker {
 	height: 44px;
 	border-top-color: #f39c12 !important;
 	border-right: 1px solid #ccc;
-	border-left: 1px solid #ccc;
+	/*border-left: 1px solid #ccc;*/
 }
 
 .nav-tabs-custom span.remove-btn {
@@ -1893,7 +1938,7 @@ md-datepicker {
 	font-size: 16px;
 	font-weight: bold;
 	line-height: 35px;
-	margin-left: -10px;
+	margin-left: -14px;
 	position: absolute;
 }
 
@@ -1978,3 +2023,21 @@ md-datepicker {
 
 
 /*System-setting-end*/
+
+#btn_startplay>.startplay {
+	background-image: url('../images/play.png');
+	width: 40px;
+	height: 40px;
+}
+
+#btn_nextplay>.nextplay {
+	background-image: url('../images/next.png');
+	width: 27px;
+	height: 27px;
+}
+
+#btn_lastplay>.lastplay {
+	background-image: url('../images/last.png');
+	width: 27px;
+	height: 27px;
+}

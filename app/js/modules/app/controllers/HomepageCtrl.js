@@ -8,22 +8,43 @@ define(['Chart', 'echarts', 'moment'], function(Chart, echarts, moment) {
 		    if(key.toString() == "13"){  
 		        return false;  
 		    }  
-		});
+		});		
 		
 		$scope.isDevice = false; //	设备列表
 		$scope.isResident = false; //常驻人口
 		$scope.isTraffic = false; //流量统计
-		$scope.isBelong = false; //归属地
+		$scope.isBelong = false; //归属地，运营商
 
+		$scope.isBts = false;
+		
 		$scope.resident = {
 			total: 0,
 			pie1: 0,
 			pie2: 0
 		};
+		
+		var bts = {
+			'-1' : 'images/N-A.png',
+			0 : 'images/grey.png',
+			1 : 'images/green.png',
+			null : 'images/N-A.png'
+		};
+		
+		var online = {
+			false : 'images/grey.png',
+			true : 'images/green.png',
+			null : 'images/grey.png'
+		};
 
 		//设备列表
 		var toogle = document.getElementsByClassName('sidebar-toggle')[0];
-		var menus = sessionStorage.getItem('menus').split(',');
+		var permissions = JSON.parse(sessionStorage.getItem('permissions'));
+		var menus = [];
+		for (var code in permissions) {
+			if (permissions[code] != 0) {
+				menus.push(code);
+			}
+		}
 		for(i in menus) {
 			if(menus[i] == 'DEVICE_MANAGEMENT') {
 				$scope.isDevice = true;
@@ -43,23 +64,31 @@ define(['Chart', 'echarts', 'moment'], function(Chart, echarts, moment) {
 		createLegendChart();
 		getDevice();
 		addClass();
+		createNetChart();
 		
-		$interval(createCpuChart,60000);
-		$interval(createBarChart,60000);
-		$interval(createPieChart,60000);
-		$interval(createLegendChart,60000);
-		$interval(getDevice,60000);
-		$interval(addClass,60000);
-
+		var timer1 = $interval(createCpuChart,60000);
+		var timer2 = $interval(createBarChart,60000);
+		var timer3 = $interval(createPieChart,60000);
+		var timer4 = $interval(createLegendChart,60000);
+		var timer5 = $interval(getDevice,60000);
+		var timer6 = $interval(addClass,60000);
+		var timer7 = $interval(createNetChart,60000);
+				
 		$scope.menus = menuGroups;
 		$scope.addSection = function(section) {
 			SectionsService.addActiveSection(section);
 		};
 		
 		function getDevice(){
-			HttpService.post('rest/center/dashboard/device').then(function success(resp) {
+			HttpService.get('rest/center/dashboard/device').then(function success(resp) {
+				var list = resp.device;
 				for(var i=0; i<resp.device.length; i++){
-					resp.device[i].fullPath = resp.device[i].fullPath.substring(resp.device[i].fullPath.lastIndexOf("•")+1);
+					$scope.device = {};
+					if(resp.device[i].fullPath){
+						resp.device[i].fullPath = resp.device[i].fullPath.substring(resp.device[i].fullPath.lastIndexOf("•")+1);	
+					}										
+					list[i].online = online[list[i].online];
+					list[i].btsStatus = bts[list[i].btsStatus];
 				}
 				$scope.device = resp;
 			})
@@ -93,7 +122,7 @@ define(['Chart', 'echarts', 'moment'], function(Chart, echarts, moment) {
 		//系统信息
 		// 基于准备好的dom，初始化echarts实例
 		function createCpuChart() {
-			HttpService.post('rest/system/info/getSysInfo').then(function success(resp){
+			HttpService.get('rest/system/info/getSysInfo').then(function success(resp){
 				$scope.system = {};
 				var data = resp[0];
 				data.httpd == 0 ? $scope.system.httpd='images/grey.png' : $scope.system.httpd='images/green.png';
@@ -255,18 +284,63 @@ define(['Chart', 'echarts', 'moment'], function(Chart, echarts, moment) {
 				option.series[1].data = disk;
 				option.series[2].data = memory;
 				myChart.setOption(option, true);
-				onresize = myChart.resize;
+				
+				$scope.$watch(function() {
+		            return window.innerWidth;
+		        }, function(newValue, oldValue) {
+		            if (newValue != oldValue) {
+		                myChart.resize;
+		            }
+		        });
+		        
 			})
 		}
 
 		//上号信息
 
 		function createBarChart() {
-			HttpService.post('rest/center/dashboard/record').then(function success(resp){
-				$scope.info = resp;
+			HttpService.get('rest/center/dashboard/record').then(function success(resp){
+				$scope.info = {};
+				$scope.info.imsiTotal = resp.imsiTotal.toString().replace(/(\d{1,3})(?=(\d{3})+$)/g,'$1,');
+				$scope.info.macTotal = resp.macTotal.toString().replace(/(\d{1,3})(?=(\d{3})+$)/g,'$1,');
+				$scope.info.macToday = resp.macToday.toString().replace(/(\d{1,3})(?=(\d{3})+$)/g,'$1,');
+				$scope.info.imsiToday = resp.imsiToday.toString().replace(/(\d{1,3})(?=(\d{3})+$)/g,'$1,');
+				$scope.info.today = resp.today;
+				var list = resp.chartList;
+				resp.chartList = resp.chartList.reverse();
+				var xdata = [],imsiCount = [],macCount = [];
+				times = {
+					2 : '周一',
+					3 : '周二',
+					4 : '周三',
+					5 : '周四',
+					6 : '周五',
+					7 : '周六',
+					1 : '周日'
+				}
+				for(var i=0; i<list.length; i++){
+					list[i].dayOfWeek = times[list[i].dayOfWeek];
+					xdata.push(list[i].date);
+					imsiCount.push(list[i].imsiCount);
+					macCount.push(list[i].macCount)
+				}
 				var barChart = echarts.init(document.getElementById('barChart'));
 				options = {
-					color: ['#3398DB'],
+					title:{
+						text: '最近一周上号量',
+						left: '45%',
+						textAlign: 'center',
+						textStyle: {
+							fontSize: 14
+						}
+					},
+					legend: {
+				        right: 10,
+				        width: 100,
+				        itemWidth: 15,
+				        data: ['IMSI上号量', 'MAC上号量']
+				    },
+					color: ['#3398DB','#13b49f'],
 					tooltip: {
 						trigger: 'axis',
 						axisPointer: { // 坐标轴指示器，坐标轴触发有效
@@ -293,27 +367,54 @@ define(['Chart', 'echarts', 'moment'], function(Chart, echarts, moment) {
 							show: false
 						}
 					}],
-					series: [{
-						name: '直接访问',
-						type: 'bar',
-						barWidth: '60%',
-						data: []
-						//data: [10, 52, 200, 334, 390, 330, 220]
-					}]
+					series: [
+						{
+							name: 'IMSI上号量',
+							type: 'bar',
+							barWidth: 10,
+							data: []
+							//data: [10, 52, 200, 334, 390, 330, 220]
+						},
+						{
+							name: 'MAC上号量',
+							type: 'bar',
+							barWidth: 10,
+							data: []
+							//data: [10, 52, 200, 334, 390, 330, 220]
+						}
+					]
 				};
-	
+				options.xAxis[0].data = xdata;
+				options.series[0].data = imsiCount;
+				options.series[1].data = macCount;
 				barChart.setOption(options, true);
-				onresize = barChart.resize;
+				//onresize = barChart.resize;
+				$scope.$watch(function() {
+		            return window.innerWidth;
+		        }, function(newValue, oldValue) {
+		            if (newValue != oldValue) {
+		                barChart.resize;
+		            }
+		        });
 			})
 		}
 
+		//常住人口
 		function createPieChart() {
-			HttpService.post('rest/center/dashboard/resident').then(function success(resp) {
-				$scope.resident.total = resp.total;
+			HttpService.get('rest/center/dashboard/resident').then(function success(resp) {
+				$scope.resident.total = resp.total.toString().replace(/(\d{1,3})(?=(\d{3})+$)/g,'$1,');
 				$scope.resident.pie1 = resp.resident;
 				$scope.resident.pie2 = resp.total - resp.resident;
 				var pieChart = echarts.init(document.getElementById('pieChart'));
 				option = {
+					title:{
+						text: '常住人口占比',
+						left: '55%',
+						textAlign: 'center',
+						textStyle: {
+							fontSize: 14
+						}
+					},
 					tooltip: {
 						trigger: 'item',
 						formatter: "{a} <br/>{b} : {c} ({d}%)"
@@ -346,16 +447,121 @@ define(['Chart', 'echarts', 'moment'], function(Chart, echarts, moment) {
 				option.series[0].data[0].value = $scope.resident.pie1;
 				option.series[0].data[1].value = $scope.resident.pie2;
 				pieChart.setOption(option, true);
-				onresize = pieChart.resize;
+				
+				$scope.$watch(function() {
+		            return window.innerWidth;
+		        }, function(newValue, oldValue) {
+		            if (newValue != oldValue) {
+		                pieChart.resize;
+		            }
+		        });
+		        
+			});
+
+		}
+
+		//运营商
+		function createNetChart() {
+			HttpService.get('rest/center/dashboard/carrier').then(function success(resp) {
+				$scope.nets = [
+					{name : '移动', val : 0},
+					{name : '联通', val : 0},
+					{name : '电信', val : 0},
+					{name : '其它', val : 0},
+					{name : '境外', val : 0}
+				];
+				for(i in $scope.nets){
+					if(resp[i]){
+						$scope.nets[i].val = resp[i];
+					}else{
+						$scope.nets[i].val = 0;
+					}
+				}
+				
+				function compare(property){
+			         return function(obj1,obj2){
+			             var value1 = obj1[property];
+			             var value2 = obj2[property];
+			             return value2 - value1;     // 升序
+			         }
+			    }
+			    $scope.nets = $scope.nets.sort(compare("val"));
+				
+				$scope.net = resp;
+				var netChart = echarts.init(document.getElementById('netChart'));
+				option = {
+					title:{
+						text: '运营商占比',
+						left: '55%',
+						textAlign: 'center',
+						textStyle: {
+							fontSize: 14
+						}
+					},
+					tooltip: {
+						trigger: 'item',
+						formatter: "{a} <br/>{b} : {d}%"
+					},
+					color: ['#e16767', '#9d70be', '#2576a1', '#13b49f', '#f6be41'],
+					series: [{
+						type: 'pie',
+						radius: '65%',
+						center: ['50%', '50%'],
+						selectedMode: 'single',
+						data: [
+							{
+								value: 0,
+								name: '移动'
+							},
+							{
+								value: 0,
+								name: '联通'
+							},
+							{
+								value: 0,
+								name: '电信'
+							},
+							{
+								value: 0,
+								name: '其它'
+							},
+							{
+								value: 0,
+								name: '境外'
+							}
+						],
+						itemStyle: {
+							emphasis: {
+								shadowBlur: 10,
+								shadowOffsetX: 0,
+								shadowColor: 'rgba(0, 0, 0, 0.5)'
+							}
+						}
+					}]
+				};
+				var netData = option.series[0].data;
+				for(i in netData){
+					netData[i].value = resp[i];
+				}
+				netChart.setOption(option, true);
+				//onresize = netChart.resize;
+				$scope.$watch(function() {
+		            return window.innerWidth;
+		        }, function(newValue, oldValue) {
+		            if (newValue != oldValue) {
+		                netChart.resize;
+		            }
+		        });
 
 			});
 
 		}
 
+		
 		//归属地
 
 		function createLegendChart() {
-			HttpService.post('rest/center/dashboard/attribute').then(function success(resp){
+			HttpService.get('rest/center/dashboard/attribute').then(function success(resp){
 				var legendChart = echarts.init(document.getElementById('legend-chart'));
 				var datas = resp.slice(1,11);
 				var count = [],provinceName = [];				
@@ -363,11 +569,23 @@ define(['Chart', 'echarts', 'moment'], function(Chart, echarts, moment) {
 					if(datas[i].provinceName == ''){
 						datas[i].provinceName = '其它'
 					}
-					count.push(datas[i].count);
+					count.push(datas[i].percent);
 					provinceName.push(datas[i].provinceName);
 				}
-				$scope.legendData = resp[0];
+				if(resp[0].provinceName != ''){
+					$scope.legendData = resp[0];
+				}else{
+					$scope.legendData = resp[1];
+				};
 				option = {
+					title: {
+						text: '外省市占比',
+						left: '55%',
+						textAlign: 'center',
+						textStyle: {
+							fontSize: 14
+						}
+					},
 					//提示框组件
 				    tooltip: {
 				    	//触发类型
@@ -448,7 +666,14 @@ define(['Chart', 'echarts', 'moment'], function(Chart, echarts, moment) {
 				option.series[0].data = count;
 				
 				legendChart.setOption(option, true);
-				onresize = legendChart.resize;
+				//onresize = legendChart.resize;
+				$scope.$watch(function() {
+		            return window.innerWidth;
+		        }, function(newValue, oldValue) {
+		            if (newValue != oldValue) {
+		                legendChart.resize;
+		            }
+		        });
 			})
 		}
 

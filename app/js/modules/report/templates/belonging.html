@@ -29,14 +29,14 @@
 			</div>
 		</div>
 		<button class="btn btn-primary" style="width: 90%;position: absolute; bottom: 10px;left: 5%;" ng-click="search()">
-	                                            生成报表
+	                                            生成图表
             <span class="glyphicon glyphicon-signal"></span>
          </button>
 	</div>
-	<div class="right-grid" style="background: #f4f4f4;overflow: hidden; padding: 10px;">
-		<div style="height: 100%; border:1px solid #ccc;">
+	<div style="background: #f4f4f4;overflow: hidden; padding: 10px;-webkit-flex:1;">
+		<div style="height: 100%; border:1px solid #ccc;width: 100%;">
 			<!--<div id="chart-panel" class="chart-panel" style="width: 100%; height: 100%;"></div>-->
-			<mw-chart ng-model="echartOptions" style="width: 100%; height:100%;"></mw-chart>
+			<mw-chart ng-model="echartOptions" id="mapChart" style="width: 100%; height:100%;padding: 10px;"></mw-chart>
 		</div>
 	</div>
 </div>

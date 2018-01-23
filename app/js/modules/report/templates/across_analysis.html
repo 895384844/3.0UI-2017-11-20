@@ -1,4 +1,4 @@
-<div class="content content-flex" id="con" layout="row" ng-controller="AcrossAnalysisCtrl" style="padding:0;">
+<div class="content content-flex" id="con" layout="row" ng-controller="AcrossAnalysisCtrl" style="padding:0;position: relative;">
 	<!--碰撞分析-->
 	<form class="form form-inline " ng-class="{'form-flex':currentW,'form-flex-hide':changeW}" role="form" name="form" height-bind=".grid" id="acc_resize" novalidate>
 		<div class="row addBorder" style="position: relative; height:100%;">
@@ -11,68 +11,41 @@
 				</div>
 				<div class="qualification col-lg-12" style="position: absolute;left: 6px; top: 35px;padding:0 10px;">
 					<div class="top-menu">
-						<span>采集设备</span>
+						<span>采集点位</span>
 						<span>开始</span>
 						<span>结束</span>
 					</div>
 					<ul id="rm">
-						<li class="lis lis1 curLi">
+						<li class="lis lis1 lis3">
 							<div class="input-group" style="width: 100%;">
-								<div class="mod_select col-lg-5" style="height: 22px; border: 1px solid #ccc;background: #fff;padding: 0;">
-								    <ul style="width: 100%;height: 100%;">
-								        <li style="width: 100%;height: 100%;">
-								            <div class="select_box">
-								                <span class="select_txt"></span>
-								                <div class="option">
-								                    <a ng-repeat="group in vendorChoice" ng-click="forText1($event,this)"><i class="fa fa-bullseye" style="width: 14px;height: 14px;color: #3c8dbc;"></i>{{group.fullPath}}</a>
-								                </div>
-								            </div>
-								        </li>
-								    </ul>
-								</div>
+								<select class="col-lg-5" ignore-empty-value ng-model="query[0].domainGroup" name="name" id="groupID" style="padding: 0;" required>
+									<option value="{{v.adCode}}" ng-repeat="v in vendorChoice">{{v.fullPath}}</option>
+								</select>
 								
 								<input class="val datetime col-lg-3 require-val" placeholder="开始时间" date-time-selector="start" ng-model="query[0].startTime" ignore-empty-value required/>
 								<input class="datetime col-lg-3 require-val" placeholder="结束时间" date-time-selector="start" ng-model="query[0].endTime" ignore-empty-value required/>
 							</div>
-							<button ng-click="delEle1($event,0)" ng-show="showDelete" style="margin-right: 14px;"><i class="fa fa-trash"></i></button>
+							<button ng-click="delEle1(0)" ng-if="showDelete" style="margin-right: 14px;"><i class="fa fa-trash"></i></button>
 						</li>
-						<li class="lis lis1 curLi">
+						<li class="lis lis1 lis3">
 							<div class="input-group" style="width: 100%;">
-								<div class="mod_select col-lg-5" style="height: 22px; border: 1px solid #ccc;background: #fff;padding: 0;">
-								    <ul style="width: 100%;height: 100%;">
-								        <li style="width: 100%;height: 100%;">
-								            <div class="select_box">
-								                <span class="select_txt"></span>
-								                <div class="option" style="">
-								                    <a ng-repeat="group in vendorChoice" ng-click="forText1($event,this)"><i class="fa fa-bullseye" style="width: 14px;height: 14px;color: #3c8dbc;"></i>{{group.fullPath}}</a>
-								                </div>
-								            </div>
-								        </li>
-								    </ul>
-								</div>
+								<select class="col-lg-5" ignore-empty-value ng-model="query[1].domainGroup" name="name" id="groupID" style="padding: 0;" required>
+									<option value="{{v.adCode}}" ng-repeat="v in vendorChoice">{{v.fullPath}}</option>
+								</select>
 								<input class=" datetime col-lg-3 require-val" placeholder="开始时间" date-time-selector="start" ng-model="query[1].startTime" ignore-empty-value required/>
 								<input class="datetime col-lg-3 require-val" placeholder="结束时间" date-time-selector="start" ng-model="query[1].endTime" ignore-empty-value required/>
 							</div>
-							<button ng-click="delEle1($event,1)" ng-show="showDelete" style="margin-right: 14px;"><i class="fa fa-trash"></i></button>
+							<button ng-click="delEle1(1)" ng-if="showDelete" style="margin-right: 14px;"><i class="fa fa-trash"></i></button>
 						</li>
 						<li ng-repeat="person in list" class="lis lis1" style="height: 23px;">
 							<div ng-class="input-group">
-								<div class="mod_select col-lg-5" style="height: 22px; border: 1px solid #ccc;background: #fff;padding: 0;">
-								    <ul style="width: 100%;height: 100%;">
-								        <li style="width: 100%;height: 100%;">
-								            <div class="select_box" ng-click="selectBox($event,this)">
-								                <span class="select_txt"></span>
-								                <div class="option">
-								                    <a ng-repeat="group in vendorChoice" ng-click="forText1($event,this)"><i class="fa fa-bullseye" style="width: 14px;height: 14px;color: #3c8dbc;"></i>{{group.fullPath}}</a>
-								                </div>
-								            </div>
-								        </li>
-								    </ul>
-								</div>
+								<select class="col-lg-5" ignore-empty-value ng-model="person.domainGroup" name="name" id="groupID" style="padding: 0;" required>
+									<option value="{{v.adCode}}" ng-repeat="v in vendorChoice">{{v.fullPath}}</option>
+								</select>
 								<input class=" datetime col-lg-3 require-val" placeholder="开始时间" date-time-selector="start" ng-model="person.startTime" ignore-empty-value required/>
 								<input class="datetime col-lg-3 require-val" placeholder="结束时间" date-time-selector="start" ng-model="person.endTime" ignore-empty-value required/>
 							</div>
-							<button ng-click="delEle($index)" ng-show="showDelete" style="margin-right: 14px;"><i class="fa fa-trash"></i></button>
+							<button ng-click="delEle($index)" ng-if="showDelete" style="margin-right: 14px;"><i class="fa fa-trash"></i></button>
 						</li>
 					</ul>
 				</div>
@@ -85,5 +58,8 @@
 	</form>
 	<div class="right-grid acr-grid" style="overflow: hidden;">
 		<div ui-grid="gridOptions" ui-grid-pagination ui-grid-selection ui-grid-auto-resize ui-grid-resize-columns ui-grid-move-columns class="grid" auto-height></div>
+	</div>
+	<div class="mark-div" ng-if="showLoading">
+		<img src="images/loading_bg.gif" style="width: 128px;height: 128px;margin: 100px auto;display: block;"/>
 	</div>
 </div>

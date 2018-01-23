@@ -21,6 +21,11 @@ define([
 						name: '手机热点采集设备',
 						id: 'device_list',
 						templateUrl: 'js/modules/device/templates/device_list.html'
+					},
+					{
+						name: '车辆信息采集设备',
+						id: 'vehicle_list',
+						templateUrl: 'js/modules/device/templates/vehicle_list.html'
 					}
 				]
 			},
@@ -40,6 +45,18 @@ define([
 						id: 'resident_analysis',
 						//permissions:'ALARM_READ,ALARM_MANAGE',
 						templateUrl: 'js/modules/report/templates/resident_analysis.html'
+					},					
+					{
+						name: '终端Mac查询',
+						id: 'wifi',
+						//permissions:'ALARM_READ,ALARM_MANAGE',
+						templateUrl: 'js/modules/report/templates/wifi.html'
+					},
+					{
+						name: '车辆信息查询',
+						id: 'vehicle',
+						//permissions:'ALARM_READ,ALARM_MANAGE',
+						templateUrl: 'js/modules/report/templates/vehicle.html'
 					}
 				]
 			},
@@ -50,42 +67,101 @@ define([
 				subMenus: [
 					
 					{
-						name: '手机侦码碰撞分析',
+						name: '碰撞分析',/*
 						id: 'across_analysis',
 						//permissions:'ALARM_READ,ALARM_MANAGE',
-						templateUrl: 'js/modules/report/templates/across_analysis.html'
+						templateUrl: 'js/modules/report/templates/across_analysis.html'*/
+						subMenus: [
+							{
+								name: '手机侦码碰撞分析',
+								id: 'across_analysis',
+								//permissions:'ALARM_READ,ALARM_MANAGE',
+								templateUrl: 'js/modules/report/templates/across_analysis.html'
+							},
+							{
+								name: '车辆碰撞分析',
+								id: 'vehicle_collision',
+								//permissions:'ALARM_READ,ALARM_MANAGE',
+								templateUrl: 'js/modules/report/templates/vehicle_collision.html'
+							}
+						]
 					},
 					{
-						name: '手机侦码伴随分析',
-						id: 'partner_analysis',
-						//permissions:'ALARM_READ,ALARM_MANAGE',
-						templateUrl: 'js/modules/report/templates/partner_analysis.html'
+						name: '伴随分析',
+						subMenus: [
+							{
+								name: '手机侦码伴随分析',
+								id: 'partner_analysis',
+								//permissions:'ALARM_READ,ALARM_MANAGE',
+								templateUrl: 'js/modules/report/templates/partner_analysis.html'
+							},
+							{
+								name: 'IMSI-MAC关联分析',
+								id: 'accompany_imsi',
+								//permissions:'ALARM_READ,ALARM_MANAGE',
+								templateUrl: 'js/modules/report/templates/accompany_imsi.html'
+							},
+							{
+								name: 'IMSI-车牌关联分析',
+								id: 'accompany_vehicle',
+								//permissions:'ALARM_READ,ALARM_MANAGE',
+								templateUrl: 'js/modules/report/templates/accompany_vehicle.html'
+							}
+						]
 					},					
 					{
-						name: '手机侦码轨迹分析',
-						id: 'trace_log',
-						//permissions:'ALARM_READ,ALARM_MANAGE',
-						data: '',
-						templateUrl: 'js/modules/report/templates/trace_log.html'
+						name: '轨迹分析',
+						subMenus: [
+							{
+								name: '手机侦码轨迹分析',
+								id: 'trace_log',
+								//permissions:'ALARM_READ,ALARM_MANAGE',
+								data: '',
+								templateUrl: 'js/modules/report/templates/trace_log.html'
+							},					
+							{
+								name: '车辆轨迹分析',
+								id: 'vehicle_trace',
+								//permissions:'ALARM_READ,ALARM_MANAGE',
+								data: '',
+								templateUrl: 'js/modules/report/templates/vehicle_trace.html'
+							}
+						]
 					},
 					{
-						name: '手机侦码归属地分析',
-						id: 'belonging',
-						//permissions:'ALARM_READ,ALARM_MANAGE',
-						templateUrl: 'js/modules/report/templates/belonging.html'
+						name: '流量分析',
+						subMenus: [
+							{
+								name: '手机侦码流量分析',
+								id: 'traffic_analysis',
+								//permissions:'ALARM_READ,ALARM_MANAGE',
+								templateUrl: 'js/modules/report/templates/traffic_analysis.html'
+							},
+							{
+								name: '终端MAC流量分析',
+								id: 'traffic_wifi',
+								//permissions:'ALARM_READ,ALARM_MANAGE',
+								templateUrl: 'js/modules/report/templates/traffic_wifi.html'
+							},
+							{
+								name: '车辆采集流量分析',
+								id: 'traffic_vehicle',
+								//permissions:'ALARM_READ,ALARM_MANAGE',
+								templateUrl: 'js/modules/report/templates/traffic_vehicle.html'
+							}
+						]
 					},
 					{
-						name: '手机侦码流量分析',
-						id: 'traffic_analysis',
-						//permissions:'ALARM_READ,ALARM_MANAGE',
-						templateUrl: 'js/modules/report/templates/traffic_analysis.html'
-					},					
-					/*{
-						name: 'Wifi设备上报信息',
-						id: 'wifi',
-						//permissions:'ALARM_READ,ALARM_MANAGE',
-						templateUrl: 'js/modules/report/templates/wifi.html'
-					},*/										
+						name: '归属地分析',
+						subMenus: [
+							{
+								name: '手机侦码归属地分析',
+								id: 'belonging',
+								//permissions:'ALARM_READ,ALARM_MANAGE',
+								templateUrl: 'js/modules/report/templates/belonging.html'
+							}
+						]
+					}										
 				]
 			},
 			{
@@ -95,7 +171,7 @@ define([
 				// permissions:'ALARM_READ,ALARM_MANAGE',
 				subMenus: [					
 					{
-						name: 'IMSI布控',
+						name: '重点人员布控',
 						id: 'black_list',
 						templateUrl: 'js/modules/base/templates/black_list.html'
 					},
@@ -149,14 +225,26 @@ define([
 				]
 			},
 			{
+				name: '案件管理',
+				icon: 'fa-server',
+				code: 'CASE_MANAGEMENT',
+				subMenus: [
+					{
+						name: '案件管理',
+						id: 'case',
+						templateUrl: 'js/modules/case/templates/case_list.html'
+					}
+				]
+			},
+			{
 				name: '地图应用',
 				icon: 'fa-globe',
 				code: 'GEOGRAPHIC_INFORMATION',
 				subMenus: [
 					{
 						name: '设备视图',
-						id: 'device_list',
-						templateUrl: 'js/modules/device/templates/device_list.html'
+						id: 'map',
+						templateUrl: 'js/modules/map/templates/map.html'
 					}
 				]
 			},
@@ -219,7 +307,7 @@ define([
 
 				]
 			},
-			{
+			/*{
 				name: '日志审计',
 				icon: 'fa-calendar-check-o',
 				code: 'AUDIT_TRAIL',
@@ -230,16 +318,21 @@ define([
 						templateUrl: 'js/modules/system/templates/auditLog.html'
 					}
 				]
-			},
+			},*/
 			{
 				name: '系统工具',
 				icon: 'fa-wrench',
 				code: 'SYSTEM_TOOL',
 				subMenus: [
-					{
+					/*{
 						name: '重置密码',
 						id: 'device_list',
 						templateUrl: 'js/modules/device/templates/device_list.html'
+					},*/
+					{
+						name: '定制化信息',
+						id: 'customization',
+						templateUrl: 'js/modules/tools/templates/customization.html'
 					}
 				]
 			}

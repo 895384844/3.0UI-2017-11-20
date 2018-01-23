@@ -1,6 +1,14 @@
-<div class="content content-column" ng-controller="WarningDeviceCtrl">
+<div class="content content-column" ng-controller="WarningDeviceCtrl" style="position: relative;">
 	<div class="condition" style="border: 1px solid #ccc;border-bottom: none;">
 		<div ng-class="{true: 'alwaysShow', false: 'toogleShow'}[isActive]">
+			<div class="toogle-input mb-10">
+				<div class="input-group w100 pos-r" style="width: 236px;height: 34px;">
+					<span class="input-group-addon add-bg">组名称</span>
+					<select class="form-control pd-right" ignore-empty-value ng-model="query.domainGroup" name="name" id="groupID" style="padding: 0;">
+						<option value="{{v.adCode}}" ng-repeat="v in vendorChoice">{{v.fullPath}}</option>
+					</select>
+				</div>
+			</div>
 			<div class="toogle-input mb-10">
 				<div class="input-group w100">
 					<span class="input-group-addon add-bg">设备编号</span>
@@ -19,16 +27,6 @@
 					<input class="form-control datetime" placeholder="结束时间" date-time-selector="end" ng-model="query.timestamp__lt" ignore-empty-value/>
 				</div>
 			</div>
-			<div class="toogle-input mb-10">
-				<div class="input-group w100">
-						<span class="input-group-addon add-bg">告警原因</span>
-						<select class="form-control" ng-model="query.cause">
-							<option>全部</option>
-							<option value="设备不在线">设备不在线</option>
-							<option value="长时间不上号">长时间不上号</option>
-						</select>
-					</div>
-			</div>
 		</div>
 		<button class="btn btn-primary searchBtn" ng-click="search()" style="right: 30px;">查询</button>
 			
@@ -40,4 +38,7 @@
 		
 	</div>	
 	<div ui-grid="gridOptions" ui-grid-pagination ui-grid-selection ui-grid-auto-resize ui-grid-resize-columns ui-grid-move-columns class="grid" auto-height></div>
+	<div class="mark-div" ng-if="showLoading">
+		<img src="images/loading_bg.gif" style="width: 128px;height: 128px;margin: 100px auto;display: block;"/>
+	</div>
 </div>

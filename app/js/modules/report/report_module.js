@@ -12,11 +12,22 @@ define([
 	'./controllers/TraceLogCtrl',
 	'./controllers/TrafficAnalysisCtrl',
 	'./controllers/BelongingCtrl',
-	'./controllers/ShowMapCtrl',
+	'./controllers/ShowTraceMapCtrl',
 	'./controllers/TrafficChartCtrl',
 	'./controllers/WifiCtrl',
 	'./controllers/PartnerDetailCtrl',
-	'./controllers/ResidentDetailCtrl'
+	'./controllers/TrafficWifiCtrl',
+	'./controllers/ResidentDetailCtrl',
+	'./controllers/AccompanyImsiCtrl',
+	'./controllers/AccompanyImsiDetailCtrl',
+    './controllers/VehicleCtrl',
+    './controllers/VehicleTraceCtrl',
+    './controllers/VehicleCollisionCtrl',
+    './controllers/AccompanyVehicleCtrl',
+    './controllers/TrafficVehicleCtrl',
+    './controllers/VehiclePicCtrl',
+    './controllers/AccompanyVehicleDetailCtrl'
+
 ], function (angular,
              AcrossAnalysisCtrl,
              NotifyLogCtrl,
@@ -27,11 +38,21 @@ define([
              TraceLogCtrl,
              TrafficAnalysisCtrl,
              BelongingCtrl,
-             ShowMapCtrl,
+             ShowTraceMapCtrl,
              TrafficChartCtrl,
 			 WifiCtrl,
 			 PartnerDetailCtrl,
-			 ResidentDetailCtrl) {
+			 TrafficWifiCtrl,
+			 ResidentDetailCtrl,
+			 AccompanyImsiCtrl,
+			 AccompanyImsiDetailCtrl,
+             VehicleCtrl,
+             VehicleTraceCtrl,
+             VehicleCollisionCtrl,
+             AccompanyVehicleCtrl,
+             TrafficVehicleCtrl,
+             VehiclePicCtrl,
+             AccompanyVehicleDetailCtrl) {
 	var module = angular.module('webApp.report', []);
 
 	module.controller({
@@ -44,12 +65,23 @@ define([
 		TraceLogCtrl: TraceLogCtrl,
 		TrafficAnalysisCtrl: TrafficAnalysisCtrl,
 		BelongingCtrl: BelongingCtrl,
-		ShowMapCtrl: ShowMapCtrl,
+        ShowTraceMapCtrl: ShowTraceMapCtrl,
 		TrafficChartCtrl: TrafficChartCtrl,
 		WifiCtrl: WifiCtrl,
 		PartnerDetailCtrl: PartnerDetailCtrl,
-		ResidentDetailCtrl: ResidentDetailCtrl
-	});
+		TrafficWifiCtrl: TrafficWifiCtrl,
+		ResidentDetailCtrl: ResidentDetailCtrl,
+		AccompanyImsiCtrl: AccompanyImsiCtrl,
+		AccompanyImsiDetailCtrl: AccompanyImsiDetailCtrl,
+        VehicleCtrl: VehicleCtrl,
+        VehicleTraceCtrl: VehicleTraceCtrl,
+        VehicleCollisionCtrl: VehicleCollisionCtrl,
+        AccompanyVehicleCtrl: AccompanyVehicleCtrl,
+        TrafficVehicleCtrl: TrafficVehicleCtrl,
+        VehiclePicCtrl: VehiclePicCtrl,
+        AccompanyVehicleDetailCtrl: AccompanyVehicleDetailCtrl
+
+    });
 
 	module.factory({});
 

@@ -1,4 +1,4 @@
-<div class="content content-column" ng-controller="BacklistAlarmNotifyPolicyCtrl">
+<div class="content content-column" ng-controller="BacklistAlarmNotifyPolicyCtrl" style="position: relative;">
 	<div class="condition" style="border: 1px solid #ccc;border-bottom: none;">
 		<div ng-class="{true: 'alwaysShow', false: 'toogleShow'}[isActive]">
 			<div class="toogle-input mb-10">
@@ -33,6 +33,8 @@
 		
 	</div>
 	<div ui-grid="gridOptions" ui-grid-pagination ui-grid-selection ui-grid-auto-resize ui-grid-resize-columns ui-grid-move-columns class="grid" auto-height></div>
-	
+	<div class="mark-div" ng-if="showLoading">
+		<img src="images/loading_bg.gif" style="width: 128px;height: 128px;margin: 100px auto;display: block;"/>
+	</div>
 </div>
 

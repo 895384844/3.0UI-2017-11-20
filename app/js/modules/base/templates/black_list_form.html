@@ -2,26 +2,114 @@
 	<div class="myx-modal-box">
 		<div class="box box-primary">
 			<div class="box-header with-border">
-				<h3 class="box-title">新增黑名单</h3><button type="button" class="close" ng-click="close()" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+				<h3 class="box-title">重点人员添加</h3>
+				<button type="button" class="close" ng-click="close()" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+              </button>
+			</div>
 			<form class="form-horizontal" role="form" name="form">
-				<div class="box-body">
-					<div class="form-group"><label class="col-sm-2 control-label">姓名</label>
-						<div class="col-sm-9"><input type="text" name="name" class="form-control" required ng-model="addBlacklist.name"></div><span class="tips" ng-show="form.name.$error.required">*</span></div>
-					<div class="form-group"><label class="col-sm-2 control-label">IMEI</label>
-						<div class="col-sm-9"><input type="number" name="imei" class="form-control"  oninput="if(value.length>15)value=value.slice(0,15)" ng-model="addBlacklist.imei"></div>
+				<div class="box-body" id="dialog-tab">
+					<div class="form-group" style="padding: 0;">
+						<label class="col-sm-2 control-label">姓名</label>
+						<div class="col-sm-10">
+							<input type="text" name="name" class="form-control" required ng-model="addBlacklist.name">
+						</div>
+						<span class="tips" ng-show="form.name.$error.required">*</span>
+					</div>					
+					<div class="form-group">
+						<label class="col-sm-2 control-label">身份证号</label>
+						<div class="col-sm-10">
+							<input type="text" name="imei" class="form-control" ng-model="addBlacklist.identification">
+						</div>
 					</div>
-					<div class="form-group"><label class="col-sm-2 control-label">IMSI</label>
-						<div class="col-sm-9"><input type="number" name="imsi" class="form-control"  oninput="if(value.length>15)value=value.slice(0,15)" ng-maxlength="15" ng-minlength="15" ng-model="addBlacklist.imsi" required></div>
-						<span class="tips" ng-show="form.imsi.$error.required">*</span> 
-						<span class="tips black-tips" style="font-size: 12px; width: 30px; line-height: 13px;font-weight: normal;" ng-show="form.imsi.$error.minlength">格式有误</span> 
-						<span class="tips black-tips" style="font-size: 12px;font-weight:normal;width: 30px;line-height: 13px;" ng-show="form.imsi.$error.maxlength">格式有误</span>
-					</div>				
+					<div style="clear: both;"></div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">案件</label>
+						<div class="col-sm-10">
+							<select class="form-control" name="case" ng-model="addBlacklist.caseCode" required>
+								<option value="{{group.code}}" ng-repeat="group in caseList">{{group.name}}</option>
+							</select>
+						</div>
+						<span class="tips" ng-show="form.case.$error.required">*</span>
+					</div>
+					<div style="clear: both;"></div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">备注</label>
+						<div class="col-sm-10">
+							<textarea class="form-control" rows="3" ng-model="addBlacklist.description" style="padding: 0 10px;"></textarea>
+						</div>
+					</div>
+					<div class="nav-tabs-custom" style="border: 1px solid #ccc;">
+						<!-- Tabs within a box -->
+						<ul class="nav nav-tabs">
+							<li class="active">
+								<a href="#imsiList" data-toggle="tab">IMSI列表</a>
+							</li>
+							<li>
+								<a href="#imeiList" data-toggle="tab">IMEI列表</a>
+							</li>
+							<li>
+								<a href="#macList" data-toggle="tab">MAC列表</a>
+							</li>
+							<li>
+								<a href="#plateList" data-toggle="tab">车牌列表</a>
+							</li>
+						</ul>
+						<div class="tab-content no-padding">
+							<!-- Morris chart - Sales -->
+							<div class="chart tab-pane active" id="imsiList" style="position: relative; height: 200px;overflow-y: auto;">
+								<div class="form-group add-box">
+									<div class="col-sm-6" style="position: relative;">
+										<input class="form-control add-input" type="text" ng-model="addImsi" />
+										<button type="button" ng-click="pushImsi()" class="col-sm-1 push-btn">＋</button>
+									</div>									
+								</div>
+								<div ng-repeat="deviceGroup in imsiList" class="alert alert-info" style="width: 45%; padding: 5px; margin-top: 5px;margin:0 0 5px 3%; display: inline-block;">
+									 {{deviceGroup}}
+									 <span class="glyphicon glyphicon-remove text-default" ng-click="removeImsi($index)"></span>
+								</div>
+							</div>
+							<div class="chart tab-pane" id="imeiList" style="position: relative; height: 200px;overflow-y: auto;">
+								<div class="form-group add-box">
+									<div class="col-sm-6" style="position: relative;">
+										<input class="form-control add-input" type="text" ng-model="addImei" />
+										<button type="button" ng-click="pushImei()" class="col-sm-1 push-btn">＋</button>
+									</div>
+								</div>
+								<div ng-repeat="deviceGroup in imeiList" class="alert alert-info" style="width: 45%; padding: 5px; margin-top: 5px;margin:0 0 5px 3%; display: inline-block;">
+									<span class="glyphicon glyphicon-remove text-default" ng-click="removeImei($index)"></span> {{deviceGroup}}
+								</div>
+							</div>
+							<div class="chart tab-pane" id="macList" style="position: relative; height: 200px;overflow-y: auto;">
+								<div class="form-group add-box">
+									<div class="col-sm-6" style="position: relative;">
+										<input class="form-control add-input" type="text" ng-model="addMac" />
+										<button type="button" class="col-sm-1 push-btn" ng-click="pushMac()">＋</button>
+									</div>
+								</div>
+								<div ng-repeat="deviceGroup in macList" class="alert alert-info" style="width: 45%; padding: 5px; margin-top: 5px;margin:0 0 5px 3%; display: inline-block;">
+									<span class="glyphicon glyphicon-remove text-default" ng-click="removeMac($index)"></span> {{deviceGroup}}
+								</div>
+							</div>
+							<div class="chart tab-pane" id="plateList" style="position: relative; height: 200px;overflow-y: auto;">
+								<div class="form-group add-box">
+									<div class="col-sm-6" style="position: relative;">
+										<input class="form-control add-input" type="text" ng-model="addPlate" />
+										<button type="button" class="col-sm-1 push-btn" ng-click="pushPlate()">＋</button>
+									</div>									
+								</div>
+								<div ng-repeat="deviceGroup in plateList" class="alert alert-info" style="width: 45%; padding: 5px; margin-top: 5px;margin:0 0 5px 3%; display: inline-block;">
+									<span class="glyphicon glyphicon-remove text-default" ng-click="removePlate($index)"></span> {{deviceGroup}}
+								</div>
+							</div>
+						</div>
+					</div>
+
 				</div>
 				<div class="box-footer">
 					<button type="reset" class="btn btn-default" ng-click="clear()">清空</button>
-					<button type="button" ng-disabled="!form.$valid" ng-click="sure()" class="btn btn-primary" data-dismiss="modal" style="margin-right: 6px;">确定</button>
+					<button type="button" ng-disabled="!form.$valid" ng-click="sure()" class="btn btn-primary" data-dismiss="modal">确定</button>
 				</div>
 			</form>
 		</div>
 	</div>
-</div>

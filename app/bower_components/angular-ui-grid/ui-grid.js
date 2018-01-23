@@ -14890,7 +14890,7 @@ module.filter('px', function() {
         },
         aggregation: {
           count: '计数：',
-          sum: '求和：',
+          sum: '总量：',
           avg: '均值：',
           min: '最小值：',
           max: '最大值：'

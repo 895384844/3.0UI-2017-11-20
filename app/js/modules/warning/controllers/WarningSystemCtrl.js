@@ -4,7 +4,9 @@ define(function() {
 	function WarningSystemCtrl($scope, $element, localSession, HttpService, DialogService, GridService, DateFormat, EmptyInput, delEmptyInput,GetLocalTime) {
 
 		$scope.query = {};
+		var cacheQuery = {};
 		EmptyInput($scope.query);
+		$scope.showLoading = false;
 		var type = {
 			1 : '后台服务',
 			2 : '系统资源',
@@ -12,13 +14,23 @@ define(function() {
 		}
 		$scope.query.type = '0';
 		
+		var field = {
+			'type' : '告警分类',
+			'cause' : '告警原因',
+			'timestamp' : '告警时间'
+		};
+		
 		$scope.getPagingList = function(currentPage, pageSize, sort) {
+			$scope.showLoading = true;
 			var filter={page_size:pageSize,page_no:currentPage};
             if($scope.query){
-            	filter.query = angular.copy($scope.query);
-            	filter.order_by = ['timestamp'];
+            	filter.query = angular.copy(cacheQuery);
+            	filter.order_by = ['-timestamp'];
             	if($scope.query.type == '0'){
             		delete filter.query.type;
+            	}
+            	if(filter.query.type){
+            		filter.query.type = filter.query.type * 1;
             	}
             	if(filter.query.timestamp__ge){
             		filter.query.timestamp__ge = DateFormat(filter.query.timestamp__ge);
@@ -29,33 +41,59 @@ define(function() {
             }
             var result = HttpService.post('rest/alarm/system/search',filter);
             result.then(function success(resp){
+            	$scope.showLoading = false;
            		var list = resp.items;
            		for(var i=0; i<list.length; i++){
            			list[i].timestamp = GetLocalTime(list[i].timestamp);
            			list[i].type = type[list[i].type]
 	            }
+            },function error(err){
+            	$scope.showLoading = false;
             })
             return result;
 		};
 		
-		$scope.export = function() {
-
+		var exports = function(){
+			$scope.showLoading = true;
+			var myDate = new Date();
+			var times = myDate.toLocaleString();
+			times = times.replace(/\s|:|\//g, "_");
 			var filter = {
-				sheetName: '当前告警',
-				title: '当前告警',
-				fields: [],
-				headers: $scope.config.colNames,
-				query: $scope.gridapi.getSearchInfo().query,
-				fileType: "xlsx"
-			};
-			for(var index in $scope.config.colModel) {
-				filter.fields.push($scope.config.colModel[index].name);
+				title: "系统告警-"+times,
+			    fields: field,
+			    fileName: "WarningDevicePageList-"+times+".xlsx",
+			    sheetName: "Sheet1",
+			    pager: {
+			        //query: $scope.query
+			    }			    
 			}
-			var uri = 'device/alarm/export';
-			HttpService.download(uri, filter).then(function(data) {
-				$('#download_file').attr('src', 'rest/files/download?fileName=' + data.file);
-			});
-		};
+			if($scope.query){
+            	filter.pager.query = angular.copy(cacheQuery);
+            	if($scope.query.type == '0'){
+            		delete filter.pager.query.type;
+            	}
+            	if(filter.pager.query.type){
+            		filter.pager.query.type = filter.pager.query.type * 1;
+            	}
+            	if(filter.pager.query.timestamp__ge){
+            		filter.pager.query.timestamp__ge = DateFormat(filter.pager.query.timestamp__ge);
+            	}
+            	if(filter.pager.query.timestamp__lt){
+            		filter.pager.query.timestamp__lt = DateFormat(filter.pager.query.timestamp__lt);
+            	}	            	
+            }
+			HttpService.post('rest/alarm/system/export',filter).then(function success(resp) {
+            	$scope.showLoading = false;
+            	var filter={fileName: resp.file};
+            	var anchor = angular.element('<a/>');
+		        anchor.attr({
+		            href: 'EFS/core/system/file/download_file?fileName=' + resp.file
+		        })[0].click();
+			},function error(err){
+				$scope.showLoading = false;
+			})
+		}
+		
 		GridService.create($scope, {
 			fetchData: true,
 			columnDefs: [{
@@ -79,28 +117,18 @@ define(function() {
 				}
 			],
 			btnTools: [{
-					css: 'fa fa-fw fa-refresh',
+					//css: 'fa fa-fw fa-refresh',
+					src : 'images/refresh.png',
 					tooltip: '刷新',
 					method: function() {
 						GridService.refresh($scope);
 					}
+				}, 
+				{
+					src: 'images/exports.png',
+					tooltip: '导出',
+					method: exports
 				}
-				/*, 
-								{
-									css: 'fa fa-fw fa-minus-circle',
-									tooltip: '删除',
-									method: remove
-								},
-								{
-									css: 'fa fa-fw fa-share-square-o',
-									tooltip: '导出',
-									method: remove
-								},
-								{
-									css: 'fa fa-fw fa-download',
-									tooltip: '下载',
-									method: remove
-								}*/
 			]
 		});
 
@@ -109,6 +137,7 @@ define(function() {
 		};
 
 		$scope.search = function() {
+			cacheQuery = angular.copy($scope.query);
 			delEmptyInput($scope.query);
 			GridService.refresh($scope);
 		};

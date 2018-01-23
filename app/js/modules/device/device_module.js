@@ -2,42 +2,48 @@ define([
 	'angular',
 	'./controllers/DeviceListCtrl',
 	'./controllers/DeviceListFormCtrl',
-	'./controllers/DeviceListEditCtrl',
-	'./controllers/RestartCaptureCtrl',
-	'./controllers/CloseCaptureCtrl',
-	'./controllers/CatchPointCtrl',
-	'./controllers/RestartSystemCtrl',
-	'./controllers/SameClockCtrl',
 	'./controllers/DeviceImportCtrl',
 	'./controllers/DeviceMoveCtrl',
-	'./controllers/DeviceDeleteCtrl'
+	'./controllers/DeviceDeleteCtrl',
+	'./controllers/DeviceSetCtrl',
+	'./controllers/DeviceListEditCtrl',
+	'./controllers/VehicleListCtrl',
+	'./controllers/VehicleListFormCtrl',
+	'./controllers/VehicleImportCtrl',
+	'./controllers/VehicleDeleteCtrl',
+	'./controllers/VehicleListEditCtrl',
+	'./controllers/VehicleMoveCtrl'
 ], function (angular,
              DeviceListCtrl,
 			 DeviceListFormCtrl,
-			 DeviceListEditCtrl,
-			 RestartCaptureCtrl,
-			 CloseCaptureCtrl,
-			 CatchPointCtrl,
-			 RestartSystemCtrl,
-			 SameClockCtrl,
 			 DeviceImportCtrl,
 			 DeviceMoveCtrl,
-			 DeviceDeleteCtrl) {
+			 DeviceDeleteCtrl,
+			 DeviceSetCtrl,
+			 DeviceListEditCtrl,
+			 VehicleListCtrl,
+			 VehicleListFormCtrl,
+			 VehicleImportCtrl,
+ 			 VehicleDeleteCtrl,
+			 VehicleListEditCtrl,
+			 VehicleMoveCtrl) {
 
 	var module = angular.module('webApp.device', []);
 
 	module.controller({
 		DeviceListCtrl: DeviceListCtrl,
 		DeviceListFormCtrl: DeviceListFormCtrl,
-		DeviceListEditCtrl: DeviceListEditCtrl,
-		RestartCaptureCtrl: RestartCaptureCtrl,
-		CloseCaptureCtrl: CloseCaptureCtrl,
-		CatchPointCtrl: CatchPointCtrl,
-		RestartSystemCtrl: RestartSystemCtrl,
-		SameClockCtrl: SameClockCtrl,
 		DeviceImportCtrl: DeviceImportCtrl,
 		DeviceMoveCtrl: DeviceMoveCtrl,
-		DeviceDeleteCtrl: DeviceDeleteCtrl
+		DeviceDeleteCtrl: DeviceDeleteCtrl,
+		DeviceSetCtrl: DeviceSetCtrl,
+		DeviceListEditCtrl: DeviceListEditCtrl,
+		VehicleListCtrl: VehicleListCtrl,
+		VehicleListFormCtrl: VehicleListFormCtrl,
+		VehicleImportCtrl: VehicleImportCtrl,
+		VehicleDeleteCtrl: VehicleDeleteCtrl,
+		VehicleListEditCtrl: VehicleListEditCtrl,
+		VehicleMoveCtrl: VehicleMoveCtrl
 	});
 
 });

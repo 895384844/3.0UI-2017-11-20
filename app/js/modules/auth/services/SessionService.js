@@ -25,8 +25,9 @@ define(['../../common/utils/md5'],function(md5){
                 localSession.settings=this.settings;
                 localSession.token=this.token;
     		    sessionStorage.setItem("token",this.token);
-    		    sessionStorage.setItem('menus',this.menus);
                 sessionStorage.setItem("username",this.account);
+                sessionStorage.setItem('currentCenter',this.mapCenter);
+                sessionStorage.setItem('isOnline',this.isOnline);
                 sessionStorage.setItem("permissions",JSON.stringify(this.permissions));
                 sessionStorage.setItem("settings",JSON.stringify(this.settings));
     		}
@@ -63,6 +64,13 @@ define(['../../common/utils/md5'],function(md5){
                 localSession.token="";
                 sessionStorage.clear();
                 self.trigger('logout:success');
+            }, function() {
+                $location.path('/login');
+                localSession.user={};
+                localSession.role={};
+                localSession.settings={};
+                localSession.token="";
+                sessionStorage.clear();
             });
             
         };

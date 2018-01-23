@@ -1,0 +1,106 @@
+<div class="content content-column" ng-controller="VehicleCtrl" style="position: relative;">
+	<div class="condition" style="border: 1px solid #ccc;border-bottom: none;padding-right: 130px;" ng-click="hideUl()">
+		<div ng-class="{true: 'alwaysShow', false: 'toogleShow'}[isActive]">
+			<div class="toogle-input mb-10">
+				<div class="input-group w100 pos-r" style="width: 236px;height: 34px;">
+					<span class="input-group-addon add-bg">组名称</span>
+					<select class="form-control pd-right" ignore-empty-value ng-model="query.domainGroup" name="name" id="groupID" style="padding: 0;" ng-change="groupName()">
+						<option value="{{v.adCode}}" ng-repeat="v in vendorChoice">{{v.fullPath}}</option>
+					</select>
+				</div>
+			</div>
+			<div class="toogle-input mb-10" ng-if='isDeviceID'>
+				<div class="input-group w100">
+					<span class="input-group-addon add-bg">设备编号</span>
+					<select class="form-control pd-right" ng-model="query.deviceID" ng-options="s.deviceID for s in deviceID" value="s.deviceID">
+					</select>
+				</div>
+			</div>
+			<div class="toogle-input mb-10">
+				<div class="input-group">
+					<span class="input-group-addon add-bg">车牌号</span>
+					<input type="text" class="form-control" maxlength="15" ng-model="query.plate">				
+				</div>
+			</div>
+			<div class="toogle-input mb-10">
+				<div class="input-group sform">
+					<span class="input-group-addon add-bg">时间范围</span>
+					<input class="form-control datetime sform" placeholder="开始时间" date-time-selector="start" ng-model="query.timestamp__ge" ignore-empty-value/>
+				</div>
+			</div>
+			<div class="toogle-input mb-10">
+				<div class="input-group eform">
+					<span class="input-group-addon add-bg" style="width: 60px;">至</span>
+					<input class="form-control datetime" placeholder="结束时间" date-time-selector="end" ng-model="query.timestamp__lt" ignore-empty-value/>
+				</div>
+			</div>	
+			<div class="toogle-input mb-10">
+				<div class="input-group w100 pos-r" style="width: 236px;height: 34px;">
+					<span class="input-group-addon add-bg">归属地(省)</span>
+					<select class="form-control pd-right" ignore-empty-value ng-model="query.provinceID" name="name" id="groupID" style="padding: 0;" ng-change="showAttribute()">
+						<option value="{{v.adCode}}" ng-repeat="v in province">{{v.name}}</option>
+					</select>
+				</div>
+			</div>
+			<div class="toogle-input mb-10" ng-if="attribute">
+				<div class="input-group w100 pos-r" style="width: 236px;height: 34px;">
+					<span class="input-group-addon add-bg">归属地(市)</span>
+					<select class="form-control pd-right" ignore-empty-value ng-model="query.attributeNo" name="name" id="groupID" ng-change="emptyLetter()" style="padding: 0;">
+						<option value="{{v.areaCode}}" ng-repeat="v in attribute">{{v.name}}</option>
+					</select>
+				</div>
+			</div>
+			<div class="toogle-input mb-10">
+				<div class="input-group w100 pos-r" style="width: 236px;height: 34px;">
+					<span class="input-group-addon add-bg">车牌前缀</span>
+					<select class="form-control pd-right" ignore-empty-value ng-model="query.provinceID" name="name" id="groupID" style="padding: 0;" ng-change="showAttribute()">
+						<option value="{{v.root}}" ng-repeat="v in carScope">{{v.name}}</option>
+					</select>
+				</div>
+			</div>
+			<div class="toogle-input mb-10" ng-if="isPlate" style="position: relative;">
+				<div class="input-group w100 pos-r" style="width: 236px;height: 34px;">
+					<span class="input-group-addon add-bg">首字母</span>
+					<!--<select class="form-control pd-right" ignore-empty-value ng-model="query.initialLetter" name="name" id="groupID" style="padding: 0;">
+						<option value="{{v}}" ng-repeat="v in letterList">{{v}}</option>
+					</select>-->
+					<input class="form-control datetime" type="text" ng-model="query.initialLetter" ng-click="showLetterList()" ng-change="hideLetterList()" />
+				</div>
+				<ul ng-if="showLetters" class="pd-right" id="groupID" style="padding: 0;position: absolute;z-index: 99;width: 175px;background: #fff;border: 1px solid #ccc;border-top: none;right: 0;line-height: 20px;">
+					<li value="{{v}}" ng-repeat="v in letterList" ng-click="chooseLetter(v)" style="padding-left: 10px;" class="activeLi" ng-mouseover="addActiveClass($index)">{{v}}</li>
+				</ul>
+			</div>
+		</div>
+		<button class="btn btn-primary searchBtn" ng-click="search()" style="right: 80px;">查询</button>
+		<button class="btn btn-primary searchBtn" ng-disabled="btn.status" ng-click="clear()" style="right: 20px;">清空</button>
+			
+		<!--查询条件框需折行显示时，将下面代码取消注释-->
+		<div ng-click="toogleH()" class="toogle-btn" ng-if="isShow">
+			<img src="images/down.png" ng-if="isActive"/>
+			<img src="images/up.png" ng-if="!isActive" />
+		</div>
+		
+	</div>	
+	<div style="background: #f4f4f4; -webkit-flex:1; z-index: 80;display: -webkit-flex;-webkit-flex-direction: column;">
+		<div ui-grid="gridOption" ui-grid-pagination ui-grid-selection ui-grid-auto-resize ui-grid-resize-columns ui-grid-move-columns class="grid" auto-height></div>
+		<div class="footer" style="background: #EAEAEA;height: 33px;padding-top: 3px;">
+			<img src="images/refresh.png" style="width: 60px;height: 23px;" ng-click="refresh()"/>
+			<img src="images/exports.png" style="width: 60px;height: 23px;" ng-click="exports()"/>
+			<span style="float: right; margin-right: 30px;line-height: 33px;">行每页</span>
+			<select ng-model="pageSize" style="float: right;padding:5px;margin-right: 5px;" ng-change="setPageSize()">
+				<option value="30">30</option>
+				<option value="50">50</option>
+				<option value="100">100</option>
+			</select>
+			<button type="button" class="btn btn-default" style="padding: 0;margin:0 10px 0 10px;float: right;" ng-disabled="!postData.hasNext" ng-click="nextPage()">
+			    <img src="images/right.png"/>
+			</button>
+			<button type="button" class="btn btn-default" style="padding: 0;float:right;" ng-disabled="!postData.hasPrevious" ng-click="previousPage()">
+			    <img src="images/left.png"/>
+			</button>			
+		</div>
+	</div>
+	<div class="mark-div" ng-if="showLoading">
+		<img src="images/loading_bg.gif" style="width: 128px;height: 128px;margin: 100px auto;display: block;"/>
+	</div>
+</div>

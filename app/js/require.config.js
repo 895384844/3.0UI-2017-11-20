@@ -27,10 +27,9 @@ require.config({
 		datetimepicker: '../bower_components/eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker',
 		angularModalService:'../bower_components/angular-modal-service/dst/angular-modal-service',
 		angularUITree:'../bower_components/angular-ui-tree/dist/angular-ui-tree',
+        bmap:'../bower_components/echarts/dist/extension/bmap',
 		//baiduMapApi: './map/apiv2.0.min',
-		//baiduMapApiModules: './map/getmodules',
-		baiduMapApi: 'http://api.map.baidu.com/getscript?v=2.0&ak=Qspv2IN2CfD4PTqIfBEiL5wQTlL4EXp1&services=&t=20170425192735',//'./map/apiv2.0.min',
-		baiduMapApiModules: 'http://api.map.baidu.com/api?v=2.0&ak=Qspv2IN2CfD4PTqIfBEiL5wQTlL4EXp1',
+		//baiduMapApiModules: './map/getmodules',		
 		template: './template'
 	},
 	// Ensure that the dependencies are loaded in the right order
@@ -75,6 +74,9 @@ require.config({
 		echarts: {
 			exports: 'echarts'
 		},
+        bmap: {
+            exports: 'bmap'
+        },
 		myBootstrap: {
 			deps: ['jquery', 'globalEventEmitter'],
 			exports: '$.fn.popover'
@@ -107,6 +109,7 @@ require.config({
 			deps: ['angular']
 		}
 	},
+	waitSeconds: 0,
 	urlArgs: "timestamp=" + (new Date()).getTime()
 });
 

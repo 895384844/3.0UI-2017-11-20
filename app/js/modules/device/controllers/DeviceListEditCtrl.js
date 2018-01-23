@@ -1,21 +1,32 @@
 define(
 	function () {
-		return ['$scope', 'HttpService', 'SystemService','close', 'row',DeviceListEditCtrl];
-		function DeviceListEditCtrl($scope, HttpService,SystemService,close,row) {
+		return ['$scope', 'HttpService','SystemService','row','close', DeviceListEditCtrl];
+		function DeviceListEditCtrl($scope, HttpService,SystemService,row,close) {
 			$scope.device = row;
+			var network = {
+				'GSM' : '0',
+				'CDMA' : '1',
+				'W-CDMA' : '2',
+				'TD-SCDMA' : '3',
+				'FDD-LTE' : '4',
+				'TDD-LTE' : '5',
+				'WIFI' : '6'
+			}
+			for(i in network){
+				if(row.network == i){
+					$scope.device.network = network[i];
+				}
+			}
 			
-			$scope.sure = function(){
-				SystemService.saveOrUpdateUser('rest/business/device/edit',$scope.device).then(function success(data){
+			$scope.save = function(){
+				SystemService.saveOrUpdateUser('rest/device/efence/save',$scope.device).then(function success(data){
 					close();
 				})
-			};
-			
+			}
 			$scope.clear = function(){
 				$scope.device = {};
 			}
 
-			$scope.close=function(){
-				close();
-			};
+			$scope.close=close;
 		}
 	});

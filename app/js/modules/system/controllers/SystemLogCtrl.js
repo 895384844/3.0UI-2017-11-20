@@ -15,14 +15,8 @@ define(function() {
 		$scope.getPagingList = function(currentPage, pageSize, sort) {
 			var filter = {
 				page_size: pageSize,
-				page_no: currentPage - 1
+				page_no: currentPage
 			};
-			if($scope.search) {
-				angular.extend(filter, $scope.search);
-			}
-			if(!!sort) {
-				//filter.sort=sort;
-			}
 			return HttpService.post('warning/warning_blacklist/get', filter);
 		};
 

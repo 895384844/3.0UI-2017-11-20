@@ -2,37 +2,35 @@
 	<div class="myx-modal-box">
 		<div class="box box-primary">
 			<div class="box-header with-border">
-				<h3 class="box-title">编辑设备</h3><button type="button" class="close" ng-click="close()" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+				<h3 class="box-title">编辑设备</h3>
+				<button type="button" class="close" ng-click="close()" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+                  <!--<img src="images/close.png"/>-->
+              </button>
+			</div>
 			<form class="form-horizontal" role="form" name="form">
 				<div class="box-body">
-					<div class="form-group">
-						<label class="col-sm-2 control-label">设备地址</label>
-						<div class="col-sm-10">
-							<input type="text" name="address" class="form-control" ng-model="device.location" required>
-						</div>
-					</div>
-					<div class="form-group relative">
-						<label class="col-sm-2 control-label">设备经度</label>
-						<div class="col-sm-4">
-							<input type="text" name="longitude" class="form-control" ng-model="device.lon" required>
-						</div> 
-						<label class="col-sm-2 control-label">设备纬度</label>
-						<div class="col-sm-4">
-							<input type="text" name="latitude" class="form-control" ng-model="device.lat" required>
-						</div>
-					</div>
-					<div class="form-group data">
-						<label class="col-sm-2 control-label">组编号</label>
-						<div class="col-sm-4">
-							<input type="text" name="groupId" ng-model="device.groupID" class="form-control" required>
-						</div>
-					</div>				
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">设备网络制式</label>
+                        <div class="col-sm-10">
+                            <select class="form-control pd-right" ng-model="device.network" required>
+								<option value="0">GSM</option>
+								<option value="1">CDMA</option>
+								<option value="2">W-CDMA</option>
+								<option value="3">TD-SCDMA</option>
+								<option value="4">FDD-LTE</option>
+								<option value="5">TDD-LTE</option>
+								<option value="6">WIFI</option>
+							</select>
+                        </div>
+                    </div>
 				</div>
 				<div class="box-footer">
-					<button type="reset" class="btn btn-default" ng-click="clear()">清空</button> 
-					<button id="dialog-btn-primary" type="button" ng-disabled="parentScope.formdata.$invalid" ng-click="sure()" class="btn btn-primary" style="margin-left: 6px;">确定</button>
+					<button type="reset" class="btn btn-default" ng-click="clear()">清空</button>
+					<button id="dialog-btn-primary" type="button" ng-disabled="form.$invalid" ng-click="save()" class="btn btn-primary" style="margin-left: 6px;">确定
+					</button>
 				</div>
-			</form>
+			</form> 
 		</div>
 	</div>
 </div>

@@ -1,0 +1,26 @@
+<div class="myx-modal">
+    <div class="myx-modal-box" style="width: 80%; max-height: none; min-height: 550px; height: 80%; left:10%; padding: 5px 10px;">
+        <div class="box box-primary" style="height: 100%;">
+            <div class="box-header with-border">
+                <button type="button" class="close" ng-click="close()" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3 class="modal-title">轨迹</h3>
+            </div>
+            <div class="box-body" style="padding: 0; height: 100%; padding-bottom: 46px">
+                <div id="maptrace" style="height:100%;width: 100%;"></div>
+            </div>
+
+            <div class="box-footer" style="padding-bottom: 46px;margin-top: -46px">
+                <button id="btn_startplay" type="button" class="btn btn-default" title="整体播放" style="padding: 0;outline: none;margin:-2px 10px 0 0;float: left;border-color: #ffffff00;background-color: #FFFFFF;" ng-click="refreshCharts()">
+                    <div class="startplay"/>
+                </button>
+                <!--<button id="btn_lastplay" type="button" class="btn btn-default" title="播放上一条" style="padding: 0;outline: none;margin:4px 10px 0 0;float:left;border-color: #ffffff00;background-color: #FFFFFF" ng-click="refreshLastCharts()">-->
+                    <!--<div class="lastplay"/>-->
+                <!--</button>-->
+                <button id="btn_nextplay" type="button" class="btn btn-default" title="播放下一条" style="padding: 0;outline: none;margin:4px 0 0 0;float:left;border-color: #ffffff00;background-color: #FFFFFF" ng-click="refreshNextCharts()">
+                    <div class="nextplay"/>
+                </button>
+                <button type="button" ng-click="close()" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -18,7 +18,7 @@
 						<div class="form-group safeSet">
 							<label class="col-lg-3 col-sm-3  control-label font-line">测试手机号</label>
 							<div class="col-lg-8 col-sm-8">
-								<input type="number" id="mytest" name="phone_number" class="form-control" ng-model="msg.msgTestTel" ng-maxlength='11' ng-minlength="11" oninput="if(value.length>11)value=value.slice(0,11)" required>
+								<input type="text" id="mytest" name="phone_number" class="form-control" ng-model="msg.msgTestTel" maxlength='11' minlength="11"  required>
 							</div>
 						</div>
 						<div style="clear: both;"></div>
@@ -43,7 +43,7 @@
 						</div>
 						<div style="clear: both;"></div>
 						<div class="form-group safeSet">
-							<label class="col-lg-3 col-sm-3  control-label font-line">短信内容</label>
+							<label class="col-lg-3 col-sm-3  control-label font-line">测试短信内容</label>
 							<div class="col-lg-8 col-sm-8">
 								<textarea class="form-control" name="content" rows="3" ng-model="msg.msgTestInfo" maxlength="30" placeholder="最多输入三十字" required></textarea>
 							</div>
@@ -51,11 +51,10 @@
 					</form>
 					</div>
 					<div class="system-btnsure" style="height: 65px; background: #f4f4f4;">
-						<button class="btn btn-primary ml-20" ng-disabled="!form1.$valid" style="width: 75px;" ng-click="sureMsg()">测试</button>
-						<button class="btn btn-primary" ng-disabled="!form1.$valid" style="width: 75px;" ng-click="sureMsg()">确定</button>
+						<button class="btn btn-primary ml-20" ng-disabled="!form1.$valid" style="width: 75px;" ng-click="testMsg()">测试</button>
+						<button class="btn btn-primary" ng-disabled="!form1.$valid" style="width: 75px;" ng-click="sureMsg()">保存</button>
 					</div>
-				</div>
-				
+				</div>				
 			</div>
 		</div>
 		<!-------------------------------------短信设置-end-------------------------------------------->
@@ -79,26 +78,7 @@
 							</div>
 						</div>
 						<div style="clear: both;"></div>
-						<div class="form-group safeSet">
-							<label class="col-lg-3 col-sm-3  control-label font-line">中心点</label>
-							<div class="col-lg-9 col-sm-9">
-								<div class="row">
-									<div class="col-lg-6 col-md-6">
-										<input type="text" class="form-control" ng-model="maps.mapCenterLon" placeholder="经度" required>
-									</div>
-									<div class="col-lg-6 col-md-6">
-										<input type="text" class="form-control" ng-model="maps.mapCenterLat" placeholder="纬度" required>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div style="clear: both;"></div>
-						<div class="form-group safeSet">
-							<label class="col-lg-3 col-sm-3  control-label font-line">默认缩放等级</label>
-							<div class="col-lg-9 col-sm-9">
-								<input type="text" class="form-control" ng-model="maps.mapFocusLevel" placeholder="默认" required/>
-							</div>
-						</div>
+						<p style="text-align: center;margin-top: 50px;font-size: 14px;padding: 0 50px;">切换地图显示状态后需刷新页面才可生效！</p>
 					</form>
 				</div>
 				<div class="system-btnsure" style="height: 65px; background: #f4f4f4;">

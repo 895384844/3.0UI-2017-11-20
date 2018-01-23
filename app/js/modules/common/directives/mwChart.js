@@ -19,6 +19,9 @@ define(['Chart', 'echarts', 'moment', 'china'], function(Chart, echarts, moment,
             var ndWrapper = el[0];
             var echart = echarts.init(ndWrapper,'macarons');
             scope.registeredMap=['china'];
+            setTimeout(function(){
+            	echart.resize(); 
+            },0)
             scope.$watch('showLoading', function(showLoading) {
                 if(!!showLoading){
                     echart.showLoading();

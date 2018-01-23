@@ -2,7 +2,11 @@
 	<div class="myx-modal-box">
 		<div class="box box-primary">
 			<div class="box-header with-border">
-				<h3 class="box-title">{{title}}</h3><button type="button" class="close" ng-click="close()" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+				<h3 class="box-title">{{title}}</h3>
+				<button type="button" class="close" ng-click="close()" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+              </button>
+			</div>
 			<div class="box-body">
 				<div class="form-group"><label for="name" class="col-sm-3 control-label">用户名</label>
 					<div class="col-sm-9"><input class="form-control" maxlength="32" ng-model="parentScope.gridItemData.name" required></div>

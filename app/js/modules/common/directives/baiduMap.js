@@ -54,23 +54,23 @@ var modules = {
 */
 
 
-define(['baiduMapApi','baiduMapApiModules'],function() {
+define(function() {
     'use strict';
-    return ['$interval',baiduMap];
+    return ['$interval','HttpService',baiduMap];
 
-    function baiduMap($interval) {
+    function baiduMap($interval,HttpService) {
     	var defaultOps = {
-				zoom: 11,
-				center:{
-					longitude:0.0,
-					latitude:0.0
-				},
-				navCtrl:true,
-				scaleCtrl:true,
-				overviewCtrl:true,
-				enableScrollWheelZoom:true,
-				markers:[]
-			};
+			zoom: 12,
+			center:{
+				longitude:0.0,
+				latitude:0.0
+			},
+			navCtrl:true,
+			scaleCtrl:true,
+			overviewCtrl:true,
+			enableScrollWheelZoom:true,
+			markers:[]
+		};
 		var mapStyle = {
 		    width: '100%',
 		    height: '100%'
@@ -86,48 +86,50 @@ define(['baiduMapApi','baiduMapApiModules'],function() {
 
 
 		var redrawMarkers = function(map, oldMarkers, newMarkers,onMarkerSelect) {
+		    oldMarkers.forEach(function (_ref) {
+		        var marker = _ref.marker;
+		        var listener = _ref.listener;
+		        if(!!_ref.listener){
+		        	marker.removeEventListener('click', listener);
+		        }
+		        map.removeOverlay(marker);
+		    });
 
-			    oldMarkers.forEach(function (_ref) {
-			        var marker = _ref.marker;
-			        var listener = _ref.listener;
+		    //oldMarkers.length = 0;
 
-			        marker.removeEventListener('click', listener);
-			        map.removeOverlay(marker);
-			    });
+		    if (!newMarkers) {
+		        return;
+		    }
+			var pt = []
+		    newMarkers.forEach(function (marker) {
 
-			    oldMarkers.length = 0;
+		        var newMarker = createMarker(marker, new BMap.Point(marker.longitude, marker.latitude));
 
-			    if (!newMarkers) {
-			        return;
-			    }
+		        // add marker to the map
+		        map.addOverlay(newMarker);
+		        //console.log(marker.pt)
+		        pt.push(new BMap.Point(marker.longitude, marker.latitude))
+		        map.setViewport(pt)
+		        //var previousMarker = { marker: marker2, listener: null };
+		        //previousMarkers.push(previousMarker);
 
-			    newMarkers.forEach(function (marker) {
+		        if (!marker.title) {
+		            return;
+		        }
+		        var msg = '<p>' + (marker.title || '') + '</p>';
+		        var infoWindow = new BMap.InfoWindow(msg, {
+		            enableMessage: !!marker.enableMessage
+		        });
 
-			        var newMarker = createMarker(marker, new BMap.Point(marker.longitude, marker.latitude));
-
-			        // add marker to the map
-			        map.addOverlay(newMarker);
-			        //var previousMarker = { marker: marker2, listener: null };
-			        //previousMarkers.push(previousMarker);
-
-			        if (!marker.title && !marker.content) {
-			            return;
-			        }
-			        var msg = '<p>' + (marker.title || '') + '</p><p>' + (marker.content || '') + '</p>';
-			        var infoWindow = new BMap.InfoWindow(msg, {
-			            enableMessage: !!marker.enableMessage
-			        });
-
-			        var clickMarkerListener = function () {
-			            this.openInfoWindow(infoWindow);
-			            if(!!onMarkerSelect){
-			            	onMarkerSelect(marker);
-			            }
-			            
-			        };
-			        newMarker.addEventListener('click', clickMarkerListener);
-			    });
-			
+		        var clickMarkerListener = function () {
+		            this.openInfoWindow(infoWindow);
+		            if(!!onMarkerSelect){
+		            	onMarkerSelect(marker);
+		            }
+		            
+		        };
+		        newMarker.addEventListener('click', clickMarkerListener);
+		    });
 		};
 		var createRadius=function (marker) {
         	var mPoint = new BMap.Point(marker[0].longitude, marker[0].latitude);  
@@ -151,6 +153,7 @@ define(['baiduMapApi','baiduMapApiModules'],function() {
 	            document.body.removeChild(script);
 	            setTimeout(createTag, offlineOpts.retryInterval);
 	        };
+	        
 	        document.body.appendChild(script);
 	    };
 
@@ -181,19 +184,19 @@ define(['baiduMapApi','baiduMapApiModules'],function() {
 				if (!scope.options) {
 					opts = defaultOps;
 				}
-
+				
 				if(!!scope.online){
 					if(!window.isMapLoaded){
 						var url = 'http://api.map.baidu.com/api?v=2.0&ak=Qspv2In2CfD4PYqIfBeiL5wQTlL4EXp1&callback=initOnlineMap';
 						createTag(url);
 					}
 				}else{
-					var url = 'js/common/apiv2.0.min.js';
+					var url = 'js/modules/common/directives/apiv2.0.min.js';
 					createTag(url);
 				}
 
 				function autoRanderMap(){
-					scope.map = new BMap.Map(element.find('div')[0],{mapType: BMAP_NORMAL_MAP, maxZoom: opts.maxZoomLevel, minZoom: opts.minZoomLevel});
+					scope.map = new BMap.Map(element.find('div')[0],{mapType: BMAP_NORMAL_MAP, maxZoom: opts.maxZoomLevel || 18, minZoom: opts.minZoomLevel || 1,enableMapClick:false});
 					if (opts.center && opts.zoom) {
 						scope.map.centerAndZoom(new BMap.Point(opts.center.longitude, opts.center.latitude), opts.zoom);
 					}
@@ -214,13 +217,13 @@ define(['baiduMapApi','baiduMapApiModules'],function() {
 				        scope.map.enableScrollWheelZoom();
 				    }
 
-				    /*if (!!opts.center) {
+				    if (!!opts.center) {
 				    	scope.map.centerAndZoom(new BMap.Point(opts.center.longitude, opts.center.latitude), opts.zoom);
 				    	scope.$watch('options.center', function (newValue, oldValue) {
 		                    opts = scope.options;
 		                    scope.map.centerAndZoom(new BMap.Point(opts.center.longitude, opts.center.latitude), opts.zoom);
 		                }, true);
-				    }*/
+				    }
 					
 					scope.$watch('options.isUpdate', function (newValue, oldValue) {  
 				    	var center =scope.options.center;
@@ -244,15 +247,17 @@ define(['baiduMapApi','baiduMapApiModules'],function() {
 	                	opts.externalCallBack(scope.map);
 	                }
 				}				
-
-				var timers = setInterval(function(){
-					if(window.isMapLoaded){
-						autoRanderMap();
-						clearInterval(timers);
-					}
-				},1000)
-				
-                
+				if(!!scope.online){	    
+				    var timers = setInterval(function(){
+				    	if(window.isMapLoaded){
+				    		autoRanderMap();
+				    		clearInterval(timers);
+				    	}
+				    },1000)
+				    
+				}else{
+					setTimeout(autoRanderMap,1000);
+				}  
 			}
 		};
     }

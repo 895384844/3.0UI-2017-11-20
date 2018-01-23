@@ -1,16 +1,17 @@
-<div ng-controller="HomepageCtrl" style="overflow: hidden; height: 1500px;">
+<div ng-controller="HomepageCtrl" style="overflow-y: auto;overflow-x: hidden;">
 	<section class="content" style="background: #fff;" id="getWidth">
 		<div class="row">
 			<div class="col-md-6">
+				<!--设备列表-->
 				<div class="box box-info oh bkf7 dis-flex-c" style="height: 409px;">
 					<div class="box-header with-border" style="border-bottom: 1px solid #ccc;">
 						<h3 class="box-title fwb" style="color: #555;">设备列表</h3>
-						<button ng-if="isDevice" class="more-btn pos-a" title="跳转到设备列表页面">
+						<button ng-if="isDevice" style="padding: 3px;" class="more-btn pos-a" title="跳转到设备列表页面">
 							<span ng-click="addSection(menus[1].subMenus[0])">更多 <i class="fa fa-arrow-circle-right"></i></span>
 						</button>
 					</div>
 					<div class="box-body w100 bkf7 flex-1" style="padding: 0;height: 80%; overflow-y: scroll;">
-						<table class="w100 tac" style="border-color: #ccc;border-bottom: 1px solid #ccc;">
+						<table class="w100 tac" style="border-color: #ccc;border-bottom: 1px solid #ccc;width: 100%;">
 							<tr class="linear" style="height: 34px;">
 								<td class="brc-t" style="width: 80px;border-right: none;background:-webkit-gradient(linear, 0% 0, 0% 100%,from(#fdfdfd), to(#f0f0f0));">域组信息</td>
 								<td class="brc-t">设备号</td>
@@ -21,135 +22,166 @@
 							<tr ng-repeat="device in device.device">
 								<td class="homeDeviceList">{{device.fullPath}}</td>
 								<td>{{device.deviceID}}</td>
-								<td>{{device.online}}</td>
-								<td>{{device.btsStatus}}</td>
+								<td><img ng-src="{{device.online}}" style="width: 28px;height: 15px;" alt></td>
+								<td><img ng-src="{{device.btsStatus}}" style="width: 28px;height: 15px;" alt></td>
 								<td>{{device.lastUpdate}}</td>
 							</tr>
 						</table>
 					</div>
 					<div class="box-footer bkf7 pos-r">
 						<div class="device-state col-lg-7 col-md-7">
+							<span class="mr-10">在线状态：</span>
 							<img src="images/green.png" alt> 
 							<span class="mr-10">{{device.online}}</span> 
 							<img src="images/grey.png" alt> 
-							<span class="mr-10">{{device.offline}}</span> 
+							<span class="mr-10">{{device.offline}}</span> <!--
 							<span style="font-weight: bold;">N/A : </span> 
-							<span class="mr-10">{{device.unknown}}</span>
+							<span class="mr-10">{{device.unknown}}</span>-->
 						</div>
 					</div>
 				</div>
+				<!--常住人口-->
 				<div class="box box-info dis-flex-c bkf7" style="border-top-color: #f39c11;height: 409px;overflow: hidden;">
 					<div class="box-header with-border" style="border-bottom: 1px solid #ccc;">
 						<h3 class="box-title fwb" style="color: #555;">常驻人口</h3>
-						<button ng-if="isResident" class="more-btn pos-a" title="跳转到常驻人口分析页面">
+						<button ng-if="isResident" style="padding: 3px;" class="more-btn pos-a" title="跳转到常驻人口分析页面">
 							<span ng-click="addSection(menus[2].subMenus[1])">更多 <i class="fa fa-arrow-circle-right"></i></span>
 						</button>
 					</div>
 					<div class="box-body flex-1" style="display: -webkit-flex;">
-						<div class="population col-lg-4 col-md-4" style="position: relative;">
+						<div class="population col-lg-4 col-md-4 col-sm-4" style="position: relative;">
 							<div class="sum" style="background: #ececec; padding:25px 15px;border-radius: 8px;position: absolute; top: 90px; left: 30px;">
 								<p style="color: #333;font-size: 14px; font-weight: bold;text-align: center;"><i class="fa fa-pie-chart"></i> 总人口数</p>
 								<span style="color: #448fb9; font-size: 22px;font-weight:bold;display: block;width: 100%; text-align: center;">{{resident.total}}</span>
 							</div>
 						</div>
-						<div class="population-charts col-lg-8 col-md-8" style="margin-left: -10px;">
+						<div class="population-charts col-lg-8 col-md-8 col-sm-8" style="margin-left: -10px;">
 							<div class="pieChart" id="pieChart" style="width: 95%;height: 100%;"></div>
 						</div>
 					</div>
 				</div>
-				<!--<div ng-controller="MapMainCtrl" style="height: 409px; margin-bottom: 20px;">
-					<div class="box box-info h100 bkf7" style="height: 100%;border-top-color: #92d3b5;">
-						<div class="box-header with-border" style="border-bottom: 1px solid #ccc;">
-							<h3 class="box-title fwb" style="color: #555;">地理视图</h3>
-							<button ng-if="isDevice" class="more-btn pos-a" title="跳转到设备列表页面">
-								<span ng-click="addSection(menus[1].subMenus[0])">更多 <i class="fa fa-arrow-circle-right"></i>									
-								</span>								
-							</button>
-						</div>
-						<div class="box-body" style="height: 345px; overflow: hidden;">
-							<baidu-map options="mapOptions" online="isOnline" ak class="map"></baidu-map>
-						</div>
-					</div>
-				</div>-->
-				<div class="box box-info dis-flex-c bkf7" style="border-top-color: #de4b39;height: 409px;">
-					<div class="box-header with-border" style="border-bottom:1px solid #ccc;">
-						<h3 class="box-title fwb" style="color: #555;">系统信息</h3>
+				<!--运营商-->
+				<div class="box box-info dis-flex-c bkf7" style="border-top-color: #f39c11;height: 409px;overflow: hidden;">
+					<div class="box-header with-border" style="border-bottom: 1px solid #ccc;">
+						<h3 class="box-title fwb" style="color: #555;">运营商</h3>
+						<button ng-if="isBelong" style="padding: 3px;" class="more-btn pos-a" title="跳转到手机侦码流量分析页面">
+							<span ng-click="addSection(menus[3].subMenus[3].subMenus[0])">更多 <i class="fa fa-arrow-circle-right"></i></span>
+						</button>
 					</div>
 					<div class="box-body flex-1" style="display: -webkit-flex;">
-						<div class="server col-lg-3 col-md-3">
-							<div class="serverStatus" style="width: 100%;height: 100%;">
+						<div class="net col-lg-3 col-md-3 col-sm-3" style="position: relative;">
+							<!--<div class="sum" style="position: absolute; top: 30px; left: 20px;">
+								<span style="color: #448fb9; font-size: 22px;font-weight:bold;display: block;width: 100%; text-align: center;">{{resident.total}}</span>
+							</div>-->
+							<div class="serverStatus" style="width: 100%;height: 70%; background: #ececec; padding:18px 0;border-radius: 8px;position: absolute;top: 10%;">
 								<table class="serverTable w100 h100" border="0">
-									<tr>
-										<td style="width: 60%;">数据处理服务</td>
-										<td><img ng-src="{{system.dpe}}" style="width: 12px;height: 15px;" alt></td>
-									</tr>
-									<tr>
-										<td style="width: 60%;">web代理服务</td>
-										<td><img ng-src="{{system.httpd}}" style="width: 12px;height: 15px;" alt></td>
-									</tr>
-									<tr>
-										<td style="width: 60%;">数据库服务</td>
-										<td><img ng-src="{{system.mongodb}}" style="width: 12px;height: 15px;" alt></td>
-									</tr>
-									<tr>
-										<td style="width: 60%;">缓存服务</td>
-										<td><img ng-src="{{system.redis}}" style="width: 12px;height: 15px;" alt></td>
-									</tr>
-									<tr>
-										<td style="width: 60%;">web应用服务</td>
-										<td><img ng-src="{{system.tomcat}}" style="width: 12px;height: 15px;" alt></td>
-									</tr>
-									<tr>
-										<td style="width: 60%;">设备接口服务</td>
-										<td><img ng-src="{{system.di}}" style="width: 12px;height: 15px;" alt></td>
+									<tr ng-repeat="i in nets">
+										<td>{{i.name}}</td>
+										<td>{{i.val}}%</td>
 									</tr>
 								</table>
 							</div>
 						</div>
-						<div class="server-charts col-lg-9 col-md-9">
-							<div id="cpuChart" style="width: 100%;height:320px;"></div>
+						<div class="net-charts col-lg-9 col-md-9 col-sm-3" style="margin-left: -10px;">
+							<div class="netChart" id="netChart" style="width: 95%;height: 100%;"></div>
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="col-md-6">
+				<!--上号信息-->
 				<div class="box box-info dis-flex-c bkf7" style="border-top-color: #f39c11;height: 409px;overflow: hidden;">
 					<div class="box-header with-border" style="border-bottom: 1px solid #ccc;">
 						<h3 class="box-title fwb" style="color: #555;">上号信息</h3>
-						<button ng-if="isTraffic" class="more-btn pos-a" title="跳转到统计流量分析页面">
-							<span ng-click="addSection(menus[3].subMenus[4])">更多 <i class="fa fa-arrow-circle-right"></i></span>
+						<button ng-if="isTraffic" style="padding: 3px;" class="more-btn pos-a" title="跳转到统计流量分析页面">
+							<span ng-click="addSection(menus[3].subMenus[3].subMenus[0])">更多 <i class="fa fa-arrow-circle-right"></i></span>
 						</button>
 					</div>
 					<div class="box-body flex-1" style="display: -webkit-flex;">
-						<div class="statistics col-lg-4 col-md-4"><span><i class="fa fa-database"></i> 全库总上号量</span>
-							<p>{{info.total}}</p><span><i class="fa fa-line-chart"></i> 当天上号总量</span>
-							<p style="color: #59678c;">{{info.today}}</p>
+						<div class="statistics col-lg-4 col-md-4 col-sm-4">
+							<!--<div class="statistics col-lg-4 col-md-4" style="width: 100%;height: 40%; background: #ececec; padding:18px 0;border-radius: 8px;position: absolute;top: 10%;"></div>-->
+							<div style="width: 100%;height: 40%; background: #ececec; padding:18px 7px;border-radius: 8px;">
+								<span>IMSI全库总上号量</span>
+								<p style="color: #3398DB;">{{info.imsiTotal}}</p>
+								<span>IMSI当天上号总量</span>
+								<p style="color: #3398DB;">{{info.imsiToday}}</p>
+							</div>
+							<!--<div class="statistics col-lg-4 col-md-4" style="width: 100%;height: 40%; background: #ececec; padding:18px 0;border-radius: 8px;position: absolute;top: 10%;"></div>-->
+							<div style="width: 100%;height: 40%; background: #ececec; padding:18px 7px;border-radius: 8px;margin-top: 10px;">
+								<span>MAC全库总上号量</span>
+								<p style="color: #13b49f;">{{info.macTotal}}</p>
+								<span>MAC当天上号总量</span>
+								<p style="color: #13b49f;">{{info.macToday}}</p>
+							</div>
 						</div>
-						<div class="statistics-charts col-lg-8 col-md-8">
+						<div class="statistics-charts col-lg-8 col-md-8 col-sm-8">
 							<div class="barChart" id="barChart" style="width: 100%;height: 100%;"></div>
 						</div>
 					</div>
 				</div>
+				<!--归属地-->
 				<div class="box box-info dis-flex-c bkf7" style="border-top-color: #3b8dbc;height: 409px;">
 					<div class="box-header with-border" style="border-bottom: 1px solid #ccc;">
 						<h3 class="box-title fwb" style="color: #555;">归属地</h3>
-						<button ng-if="isBelong" class="more-btn pos-a" title="跳转到归属地统计页面">
-							<span ng-click="addSection(menus[3].subMenus[3])">更多 <i class="fa fa-arrow-circle-right"></i></span>
+						<button ng-if="isBelong" style="padding: 3px;" class="more-btn pos-a" title="跳转到归属地统计页面">
+							<span ng-click="addSection(menus[3].subMenus[4].subMenus[0])">更多 <i class="fa fa-arrow-circle-right"></i></span>
 						</button>
 					</div>
 					<div class="box-body flex-1" style="display: -webkit-flex;">
 						<div style="width: 28%; float:left;">
 							<div class="sum" style="background: #ececec; padding:25px 15px;border-radius: 8px;position: absolute; top: 141px; left: 30px;">
-								<p style="color: #333;font-size: 14px; font-weight: bold;text-align: center;"><i class="fa fa-pie-chart"></i> {{legendData.provinceName}}</p>
-								<span style="color: #448fb9; font-size: 22px;font-weight:bold;display: block;width: 100%; text-align: center;">{{legendData.count}}</span>
+								<p style="color: #333;text-align: center;font-weight: bold;font-size: 14px;">本省占比</p>
+								<p style="color: #333;font-size: 12px; font-weight: bold;text-align: center;"><i class="fa fa-pie-chart"></i> {{legendData.provinceName}}</p>
+								<span style="color: #448fb9; font-size: 22px;font-weight:bold;display: block;width: 100%; text-align: center; color: #13b49f;">{{legendData.percent}}%</span>
 							</div>
 						</div>
 						<div class="legend-charts" style="width: 70%;">
-							<div class="legend-chart" id="legend-chart" style="width: 85%; margin-left: 4%;"></div>
+							<div class="legend-chart" id="legend-chart" style="width: 95%; margin-left: 4%;"></div>
 						</div>
 					</div>
 				</div>
+				<!--系统信息-->
+				<div class="box box-info dis-flex-c bkf7" style="border-top-color: #de4b39;height: 409px;">
+					<div class="box-header with-border" style="border-bottom:1px solid #ccc;">
+						<h3 class="box-title fwb" style="color: #555;">系统信息</h3>
+					</div>
+					<div class="box-body flex-1" style="display: -webkit-flex;">
+						<div class="server col-lg-3 col-md-3 col-sm-3">
+							<div class="serverStatus" style="width: 100%;height: 70%;margin-top: 23%;">
+								<table class="serverTable w100 h100" border="0">
+									<tr>
+										<td style="width: 60%;">数据处理服务</td>
+										<td><img ng-src="{{system.dpe}}" style="width: 24px;height: 15px;" alt></td>
+									</tr>
+									<tr>
+										<td style="width: 60%;">web代理服务</td>
+										<td><img ng-src="{{system.httpd}}" style="width: 24px;height: 15px;" alt></td>
+									</tr>
+									<tr>
+										<td style="width: 60%;">数据库服务</td>
+										<td><img ng-src="{{system.mongodb}}" style="width: 24px;height: 15px;" alt></td>
+									</tr>
+									<tr>
+										<td style="width: 60%;">缓存服务</td>
+										<td><img ng-src="{{system.redis}}" style="width: 24px;height: 15px;" alt></td>
+									</tr>
+									<tr>
+										<td style="width: 60%;">web应用服务</td>
+										<td><img ng-src="{{system.tomcat}}" style="width: 24px;height: 15px;" alt></td>
+									</tr>
+									<tr>
+										<td style="width: 60%;">设备接口服务</td>
+										<td><img ng-src="{{system.di}}" style="width: 24px;height: 15px;" alt></td>
+									</tr>
+								</table>
 							</div>
+						</div>
+						<div class="server-charts col-lg-9 col-md-9 col-sm-9">
+							<div id="cpuChart" style="width: 100%;height:320px;"></div>
+						</div>
+					</div>
+				</div>			
+			</div>
 		</div>
 	</section>
 </div>

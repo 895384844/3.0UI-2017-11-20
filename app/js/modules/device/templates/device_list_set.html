@@ -1,16 +1,15 @@
 <div class="myx-modal">
-	<div class="myx-modal-box">
-		<div class="box box-style" style="border-top: 1px solid #eee;">
-			<div class="box-header with-border" style="background: #EFEFEF;padding: 10px;">
-				<h3 class="box-title">设备查询</h3>
-				<button type="button" class="close" ng-click="close()" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">×</span>
-              </button>
+	<div class="myx-modal-box" style="position: relative;width: 45%;">
+		<div class="box box-primary box-style">
+			<div class="box-header with-border" style="background: #EFEFEF;">
+				<h3 class="box-title">设备管控</h3>
+				<button type="button" class="close" ng-click="close()" data-dismiss="modal" aria-hidden="true"><span aria-hidden="true">×</span></button>
 			</div>
 			<div class="box-body" style="padding: 10 15px;">
-				<div class="box box-primary collapsed-box">
+				<!--设备编号-->
+				<!--<div class="box box-primary collapsed-box">
 					<div class="box-header with-border">
-						<h3 class="box-title">设备编号</h3>
+						<h6 class="box-title">设备编号</h6>
 						<div class="box-tools pull-right">
 							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
                 			</button>
@@ -21,20 +20,20 @@
 							<div class="form-group">
 		                        <label class="col-sm-2 control-label">设备编号</label>
 		                        <div class="col-sm-10">
-		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                            <input type="text" class="form-control" ng-model="device.number">
 		                        </div>
 		                    </div>
 	                   </div>
 					</div>
 					<div class="box-footer">
-						<button class="btn btn-default" ng-click="creatTask(13,'power')">获取</button>
-                        <button class="btn btn-default" ng-click="creatTask(12,'power')">设置</button>
-					</div>
-					<!-- /.box-body -->
-				</div>
-				<div class="box box-primary collapsed-box">
+						<button class="btn btn-default" ng-disabled="showLoading" ng-click="creatTask(13,'power')">获取</button>
+                        <button class="btn btn-default" ng-disabled="showLoading" ng-click="creatTask(12,'power')">设置</button>
+					</div>					
+				</div>-->
+				<!--功率调整-->
+				<div class="box box-primary collapsed-box" ng-if="!cdma">
 					<div class="box-header with-border">
-						<h3 class="box-title">功率调整</h3>
+						<h6 class="box-title">功率调整</h6>
 
 						<div class="box-tools pull-right">
 							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
@@ -46,81 +45,80 @@
 							<div class="form-group">
 		                        <label class="col-sm-2 control-label">功率</label>
 		                        <div class="col-sm-10">
-		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                            <input type="number" class="form-control" ng-model="power.power">
 		                        </div>
 		                    </div>
 	                   </div>
 					</div>
 					<div class="box-footer">
-						<button class="btn btn-default" ng-click="creatTask(13,'power')">获取</button>
-                        <button class="btn btn-default" ng-click="creatTask(12,'power')">设置</button>
+						<button class="btn btn-default" ng-disabled="showLoading" ng-click="creatTask(0,'power')">获取</button>
+                        <button class="btn btn-default" ng-disabled="showLoading" ng-click="creatTask(1,'power')">设置</button>
 					</div>
 					<!-- /.box-body -->
 				</div>
+				<!--小区信息-->
 				<div class="box box-primary collapsed-box">
 					<div class="box-header with-border">
-						<h3 class="box-title">小区信息</h3>
+						<h6 class="box-title">小区信息</h6>
 						<div class="box-tools pull-right">
 							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
 						</div>
 					</div>
-					<div class="box-body">
+					<!--FDD-LTE-->
+					<div class="box-body" ng-if="fdd">
 						<form class="form-horizontal" role="form" name="form">
 							<div class="form-group">
 		                        <label class="col-sm-2 control-label">手动配置</label>
 		                        <div class="col-sm-10">
-		                            <input type="checkbox" style="margin-top:10px;" ng-model="body.autoConf"/>
+		                            <input type="checkbox" style="margin-top:10px;" ng-model="cellInfo.cfgMode"/>
 		                        </div>
 		                    </div>
 							<div class="form-group">
-								<label class="col-sm-2 control-label">运营商</label>
+								<label class="col-sm-2 control-label">运营商编码</label>
 								<div class="col-sm-10">
-									<select class="form-control" ng-model="person.type">
-										<option value="46000FFF">移动</option>
-										<option value="46001FFF">联通</option>
-									</select>
+									<input type="text" class="form-control" ng-model="cellInfo.plmn" disabled="disabled" />
 								</div>
 							</div>
 							<div class="form-group">
 		                        <label class="col-sm-2 control-label">小区频点</label>
 		                        <div class="col-sm-10">
-		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                            <input type="number" class="form-control" ng-model="cellInfo.earfcn">
 		                        </div>
 		                    </div>
 		                    <div class="form-group">
 		                        <label class="col-sm-2 control-label">物理小区ID</label>
 		                        <div class="col-sm-10">
-		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                            <input type="number" class="form-control" ng-model="cellInfo.pci" ng-blur="checkPci()">
 		                        </div>
 		                    </div>
 		                    <div class="form-group">
 		                        <label class="col-sm-2 control-label">小区ID</label>
 		                        <div class="col-sm-10">
-		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                            <input type="number" class="form-control" ng-model="cellInfo.cid">
 		                        </div>
 		                    </div>
 		                    <div class="form-group">
 		                        <label class="col-sm-2 control-label">tac</label>
 		                        <div class="col-sm-10">
-		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                            <input type="number" class="form-control" ng-model="cellInfo.tac" ng-blur="checkTac()">
 		                        </div>
 		                    </div>
 		                    <div class="form-group">
 		                        <label class="col-sm-2 control-label">拒绝TAC</label>
 		                        <div class="col-sm-10">
-		                            <input type="checkbox" style="margin-top:10px;" ng-model="body.tac"/>
+		                            <input type="checkbox" style="margin-top:10px;" ng-model="cellInfo.rejectEnable"/>
 		                        </div>
 		                    </div>
 		                    <div class="form-group">
 		                        <label class="col-sm-2 control-label">拒绝原因</label>
 		                        <div class="col-sm-10">
-		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                            <input type="text" class="form-control" ng-model="cellInfo.rejectCause">
 		                        </div>
 		                    </div>
 		                    <div class="form-group">
 								<label class="col-sm-2 control-label">同步类型</label>
 								<div class="col-sm-10">
-									<select class="form-control" ng-model="person.type">
+									<select class="form-control" ng-model="cellInfo.syncType">
 										<option value="">No Sync</option>
 										<option value="">GPS</option>
 										<option value="">Air Sync</option>
@@ -132,25 +130,25 @@
 							<div class="form-group">
 		                        <label class="col-sm-2 control-label">同步频点</label>
 		                        <div class="col-sm-10">
-		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                            <input type="text" class="form-control" ng-model="cellInfo.number">
 		                        </div>
 		                    </div>
 		                    <div class="form-group">
-		                        <label class="col-sm-2 control-label">是否重新获取(s)</label>
+		                        <label class="col-sm-2 control-label">是否重新获取</label>
 		                        <div class="col-sm-10">
-		                            <input type="checkbox" style="margin-top:10px;" ng-model="recaptureFlag"/>
+		                            <input type="checkbox" style="margin-top:10px;" ng-model="cellInfo.recaptureFlag"/>
 		                        </div>
 		                    </div>
 		                    <div class="form-group">
-		                        <label class="col-sm-2 control-label">重新捕获周期</label>
+		                        <label class="col-sm-2 control-label">重新捕获周期(s)</label>
 		                        <div class="col-sm-10">
-		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                            <input type="number" class="form-control" ng-model="cellInfo.recaptureDuration">
 		                        </div>
 		                    </div>
 		                    <div class="form-group">
 								<label class="col-sm-2 control-label">系统带宽</label>
 								<div class="col-sm-10">
-									<select class="form-control" ng-model="person.type">
+									<select class="form-control" ng-model="cellInfo.bw">
 										<option value="5">5</option>
 										<option value="10">10</option>
 										<option value="20">20</option>
@@ -159,15 +157,488 @@
 							</div>
 	                   </form>
 					</div>
-					<div class="box-footer">
-						<button class="btn btn-default" ng-click="creatTask(13,'power')">获取</button>
-                        <button class="btn btn-default" ng-click="creatTask(12,'power')">设置</button>
+					<div class="box-footer" ng-if="fdd">
+						<button class="btn btn-default" ng-disabled="showLoading" ng-click="creatTask(16,'cell')">获取</button>
+                        <button class="btn btn-default" ng-disabled="showLoading" ng-click="creatTask(17,'cell')">设置</button>
+					</div>						
+					<!--GSM-->
+					<div class="box-body" ng-if="gsm">
+						<form class="form-horizontal" role="form" name="form">
+							<div class="deviceList" style="background: #fff;z-index: 90;padding: 15px;">
+								<ul id="myTab" class="nav nav-tabs" >
+									<li class="active">
+										<a data-target="#gsm_46000"  href="javascript:void(0)" data-toggle="tab">
+											移动
+										</a>
+									</li>
+									<li>
+										<a data-target="#gsm_46001"  href="javascript:void(0)" data-toggle="tab">
+											联通
+										</a>
+									</li>
+								</ul>
+								<div id="myTabContent" class="tab-content" style="margin-top: 10px;">
+									<div class="tab-pane active" id="gsm_46000">
+										<div class="form-group">
+											<label class="col-sm-2 control-label">带宽</label>
+											<div class="col-sm-10">
+												<select class="form-control" ng-model="cellInfo.move.band">
+													<option value="0">850</option>
+													<option value="1">900</option>
+													<option value="2">1800</option>
+													<option value="3">1900</option>
+												</select>
+											</div>
+										</div>
+										<div class="form-group">
+					                        <label class="col-sm-2 control-label">自动配置</label>
+					                        <div class="col-sm-10">
+					                            <input type="checkbox" style="margin-top:10px;" ng-model="cellInfo.move.autoConf"/>
+					                        </div>
+					                    </div>
+										<div class="form-group">
+					                        <label class="col-sm-2 control-label">位置区码</label>
+					                        <div class="col-sm-10">
+					                            <input type="number" class="form-control" ng-model="cellInfo.move.lac" ng-blur="checkLac()">
+					                        </div>
+					                    </div>
+					                    <div class="form-group">
+					                        <label class="col-sm-2 control-label">是否重新获取</label>
+					                        <div class="col-sm-10">
+					                            <input type="checkbox" style="margin-top:10px;" ng-model="cellInfo.move.recaptureFlag"/>
+					                        </div>
+					                    </div>
+					                    <div class="form-group">
+					                        <label class="col-sm-2 control-label">重新捕获周期(s)</label>
+					                        <div class="col-sm-10">
+					                            <input type="number" class="form-control" ng-model="cellInfo.move.recaptureDuration">
+					                        </div>
+					                    </div>
+					                    <div class="form-group">
+					                        <label class="col-sm-2 control-label">信道号</label>
+					                        <div class="col-sm-10">
+					                            <input type="number" class="form-control" ng-model="cellInfo.move.arfcn">
+					                        </div>
+					                    </div>
+									</div>
+									<div class="tab-pane" id="gsm_46001">
+										<div class="form-group">
+										<label class="col-sm-2 control-label">带宽</label>
+										<div class="col-sm-10">
+											<select class="form-control" ng-model="cellInfo.links.band">
+												<option value="0">850</option>
+												<option value="1">900</option>
+												<option value="2">1800</option>
+												<option value="3">1900</option>
+											</select>
+										</div>
+									</div>
+									<div class="form-group">
+				                        <label class="col-sm-2 control-label">自动配置</label>
+				                        <div class="col-sm-10">
+				                            <input type="checkbox" style="margin-top:10px;" ng-model="cellInfo.links.autoConf"/>
+				                        </div>
+				                    </div>
+									<div class="form-group">
+				                        <label class="col-sm-2 control-label">位置区码</label>
+				                        <div class="col-sm-10">
+				                            <input type="number" class="form-control" ng-model="cellInfo.links.lac" ng-blur="checkLac()">
+				                        </div>
+				                    </div>
+				                    <div class="form-group">
+				                        <label class="col-sm-2 control-label">是否重新获取</label>
+				                        <div class="col-sm-10">
+				                            <input type="checkbox" style="margin-top:10px;" ng-model="cellInfo.links.recaptureFlag"/>
+				                        </div>
+				                    </div>
+				                    <div class="form-group">
+				                        <label class="col-sm-2 control-label">重新捕获周期(s)</label>
+				                        <div class="col-sm-10">
+				                            <input type="number" class="form-control" ng-model="cellInfo.links.recaptureDuration">
+				                        </div>
+				                    </div>
+				                    <div class="form-group">
+				                        <label class="col-sm-2 control-label">信道号</label>
+				                        <div class="col-sm-10">
+				                            <input type="number" class="form-control" ng-model="cellInfo.links.arfcn">
+				                        </div>
+				                    </div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>					
+					<div class="box-footer" ng-if="gsm">
+						<button class="btn btn-default" ng-disabled="showLoading" ng-click="creatTask(7,'cell')">获取</button>
+                        <button class="btn btn-default" ng-disabled="showLoading" ng-click="creatTask(9,'cell')">设置</button>
+					</div>
+					<!--TDD-LTE-->
+					<div class="box-body" ng-if="tdd">
+						<form class="form-horizontal" role="form" name="form">
+							<div class="form-group">
+		                        <label class="col-sm-2 control-label">手动配置</label>
+		                        <div class="col-sm-10">
+		                            <input type="checkbox" style="margin-top:10px;" ng-model="cellInfo.cfgMode"/>
+		                        </div>
+		                    </div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label">运营商</label>
+								<div class="col-sm-10">
+									<select class="form-control" ng-model="cellInfo.type">
+										<option value="46000">移动</option>
+										<option value="46001">联通</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+		                        <label class="col-sm-2 control-label">小区频点</label>
+		                        <div class="col-sm-10">
+		                            <input type="number" class="form-control" ng-model="cellInfo.earfcn">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">物理小区ID</label>
+		                        <div class="col-sm-10">
+		                            <input type="number" class="form-control" ng-model="cellInfo.pci" ng-blur="checkPci()">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">小区ID</label>
+		                        <div class="col-sm-10">
+		                            <input type="number" class="form-control" ng-model="cellInfo.cid">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">tac</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" class="form-control" ng-model="cellInfo.tac" ng-blur="checkTac()">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">拒绝TAC</label>
+		                        <div class="col-sm-10">
+		                            <input type="checkbox" style="margin-top:10px;" ng-model="cellInfo.rejectEnable"/>
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">拒绝原因</label>
+		                        <div class="col-sm-10">
+		                            <input type="number" class="form-control" ng-model="cellInfo.rejectCause">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+								<label class="col-sm-2 control-label">同步类型</label>
+								<div class="col-sm-10">
+									<select class="form-control" ng-model="cellInfo.syncType">
+										<option value="">No Sync</option>
+										<option value="">GPS</option>
+										<option value="">Air Sync</option>
+										<option value="">Auto Air Sync</option>
+									</select>
+									<!--<select class="form-control" ng-model="cellinfo.sync_type" ng-options='x.value as x.name for x  in cellinfoSyncType'></select>-->
+								</div>
+							</div>
+							<div class="form-group">
+		                        <label class="col-sm-2 control-label">同步频点</label>
+		                        <div class="col-sm-10">
+		                            <input type="number" class="form-control" ng-model="cellInfo.syncEarfcn">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">是否重新获取</label>
+		                        <div class="col-sm-10">
+		                            <input type="checkbox" style="margin-top:10px;" ng-model="cellInfo.recaptureFlag"/>
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">重新捕获周期(s)</label>
+		                        <div class="col-sm-10">
+		                            <input type="number" class="form-control" ng-model="cellInfo.recaptureDuration">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+								<label class="col-sm-2 control-label">系统带宽</label>
+								<div class="col-sm-10">
+									<select class="form-control" ng-model="cellInfo.bw">
+										<option value="5">5</option>
+										<option value="10">10</option>
+										<option value="20">20</option>
+									</select>
+								</div>
+							</div>
+	                   </form>
+					</div>
+					<div class="box-footer" ng-if="tdd">
+						<button class="btn btn-default" ng-disabled="showLoading" ng-click="creatTask(18,'cell')">获取</button>
+                        <button class="btn btn-default" ng-disabled="showLoading" ng-click="creatTask(19,'cell')">设置</button>
+					</div>
+					<!--W-CDMA-->
+					<div class="box-body" ng-if="wcdma">
+						<form class="form-horizontal" role="form" name="form">
+							<div class="form-group">
+								<label class="col-sm-2 control-label">运营商编码</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" ng-model="cellInfo.plmn" disabled="disabled" />
+								</div>
+							</div>
+							<div class="form-group">
+		                        <label class="col-sm-2 control-label">下行频点</label>
+		                        <div class="col-sm-10">
+		                            <input type="number" class="form-control" ng-model="cellInfo.dlurfcn">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">上行频点</label>
+		                        <div class="col-sm-10">
+		                            <input type="number" class="form-control" ng-model="cellInfo.ulurfcn">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">下行扰码</label>
+		                        <div class="col-sm-10">
+		                            <input type="number" class="form-control" ng-model="cellInfo.dlscode" ng-blur="checkDlscode()">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">位置区码</label>
+		                        <div class="col-sm-10">
+		                            <input type="number" class="form-control" ng-model="cellInfo.lac" ng-blur="checkLac()">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">是否重新获取</label>
+		                        <div class="col-sm-10">
+		                            <input type="checkbox" style="margin-top:10px;" ng-model="cellInfo.recaptureFlag"/>
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">重新捕获周期(s)</label>
+		                        <div class="col-sm-10">
+		                            <input type="number" class="form-control" ng-model="cellInfo.recaptureDuration">
+		                        </div>
+		                    </div>
+	                   </form>
+					</div>
+					<div class="box-footer" ng-if="wcdma">
+						<button class="btn btn-default" ng-disabled="showLoading" ng-click="creatTask(12,'cell')">获取</button>
+                        <button class="btn btn-default" ng-disabled="showLoading" ng-click="creatTask(13,'cell')">设置</button>
+					</div>						
+					<!--CDMA-->
+					<div class="box-body" ng-if="cdma">
+						<form class="form-horizontal" role="form" name="form">
+							<div class="form-group">
+								<label class="col-sm-2 control-label">运营商编码</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" ng-model="cellInfo.plmn" disabled="disabled" />
+								</div>
+							</div>
+							<div class="form-group">
+		                        <label class="col-sm-2 control-label">无数据重启时间(min)</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" class="form-control" ng-model="cellInfo.noDataMin">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">启用分时采集</label>
+		                        <div class="col-sm-10">
+		                            <input type="checkbox" style="margin-top:10px;" ng-model="cellInfo.enable"/>
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">持续时间(s)</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" class="form-control" ng-model="cellInfo.timeA">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">停止采集时间(s)</label>
+		                        <div class="col-sm-10">
+		                            <input type="text" class="form-control" ng-model="cellInfo.timeB">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+								<label class="col-sm-2 control-label">工作模式</label>
+								<div class="col-sm-10">
+									<select class="form-control" ng-model="cellInfo.mode">
+										<option value="0">被动式采集</option>
+										<option value="2">分时采集</option>
+										<option value="4">非掉话模式</option>
+										<option value="5">网络搜索</option>
+										<option value="6">主动式屏蔽</option>
+										<option value="7">主动式采集</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+		                        <label class="col-sm-2 control-label">子模式</label>
+		                        <div class="col-sm-10">
+		                            <input type="number" class="form-control" ng-model="cellInfo.subMode">
+		                        </div>
+		                    </div>
+		                    
+		                    <div class="deviceList" style="height: 260px;background: #fff;z-index: 90;padding: 15px;">
+								<ul id="myTab" class="nav nav-tabs" >
+									<li class="active">
+										<a data-target="#device_1"  href="javascript:void(0)" data-toggle="tab">
+											 channelList[1]
+										</a>
+									</li>
+									<li>
+										<a data-target="#device_2"  href="javascript:void(0)" data-toggle="tab">
+											 channelList[2]
+										</a>
+									</li>
+									<li>
+										<a data-target="#device_3"  href="javascript:void(0)" data-toggle="tab">
+											 channelList[3]
+										</a>
+									</li>
+									<li>
+										<a data-target="#device_4"  href="javascript:void(0)" data-toggle="tab">
+											 channelList[4]
+										</a>
+									</li>
+								</ul>
+								<div id="myTabContent" class="tab-content" style="margin-top: 10px;">
+									<div class="tab-pane active" id="device_1">
+										<div class="form-group">
+					                        <label class="col-sm-2 control-label">工作频率</label>
+					                        <div class="col-sm-10">
+					                            <input type="text" class="form-control" ng-model="cellInfo.channels[0].frequence">
+					                        </div>
+					                    </div>
+					                    <div class="form-group">
+					                        <label class="col-sm-2 control-label">功率类型</label>
+					                        <div class="col-sm-10">
+					                            <input type="text" class="form-control" ng-model="cellInfo.channels[0].powerType">
+					                        </div>
+					                    </div>
+					                    <div class="form-group">
+					                        <label class="col-sm-2 control-label">功率值</label>
+					                        <div class="col-sm-10">
+					                            <input type="text" class="form-control" ng-model="cellInfo.channels[0].power">
+					                        </div>
+					                    </div>
+									</div>
+									<div class="tab-pane" id="device_2">
+										<div class="form-group">
+					                        <label class="col-sm-2 control-label">工作频率</label>
+					                        <div class="col-sm-10">
+					                            <input type="text" class="form-control" ng-model="cellInfo.channels[1].frequence">
+					                        </div>
+					                    </div>
+					                    <div class="form-group">
+					                        <label class="col-sm-2 control-label">功率类型</label>
+					                        <div class="col-sm-10">
+					                            <input type="text" class="form-control" ng-model="cellInfo.channels[1].powerType">
+					                        </div>
+					                    </div>
+					                    <div class="form-group">
+					                        <label class="col-sm-2 control-label">功率值</label>
+					                        <div class="col-sm-10">
+					                            <input type="text" class="form-control" ng-model="cellInfo.channels[1].power">
+					                        </div>
+					                    </div>
+									</div>
+									<div class="tab-pane" id="device_3">
+										<div class="form-group">
+					                        <label class="col-sm-2 control-label">工作频率</label>
+					                        <div class="col-sm-10">
+					                            <input type="text" class="form-control" ng-model="cellInfo.channels[2].frequence">
+					                        </div>
+					                    </div>
+					                    <div class="form-group">
+					                        <label class="col-sm-2 control-label">功率类型</label>
+					                        <div class="col-sm-10">
+					                            <input type="text" class="form-control" ng-model="cellInfo.channels[2].powerType">
+					                        </div>
+					                    </div>
+					                    <div class="form-group">
+					                        <label class="col-sm-2 control-label">功率值</label>
+					                        <div class="col-sm-10">
+					                            <input type="text" class="form-control" ng-model="cellInfo.channels[2].power">
+					                        </div>
+					                    </div>
+									</div>
+									<div class="tab-pane" id="device_4">
+										<div class="form-group">
+					                        <label class="col-sm-2 control-label">工作频率</label>
+					                        <div class="col-sm-10">
+					                            <input type="text" class="form-control" ng-model="cellInfo.channels[3].frequence">
+					                        </div>
+					                    </div>
+					                    <div class="form-group">
+					                        <label class="col-sm-2 control-label">功率类型</label>
+					                        <div class="col-sm-10">
+					                            <input type="text" class="form-control" ng-model="cellInfo.channels[3].powerType">
+					                        </div>
+					                    </div>
+					                    <div class="form-group">
+					                        <label class="col-sm-2 control-label">功率值</label>
+					                        <div class="col-sm-10">
+					                            <input type="text" class="form-control" ng-model="cellInfo.channels[3].power">
+					                        </div>
+					                    </div>
+									</div>
+								</div>
+							</div>
+	                   </form>
+					</div>
+					<div class="box-footer" ng-if="cdma">
+						<button class="btn btn-default" ng-disabled="showLoading" ng-click="creatTask(10,'cell')">获取</button>
+                        <button class="btn btn-default" ng-disabled="showLoading" ng-click="creatTask(11,'cell')">设置</button>
+					</div>						
+					<!--TD-SCDMA-->
+					<div class="box-body" ng-if="tdcdma">
+						<form class="form-horizontal" role="form" name="form">
+							<div class="form-group">
+		                        <label class="col-sm-2 control-label">手动配置</label>
+		                        <div class="col-sm-10">
+		                            <input type="checkbox" style="margin-top:10px;" ng-model="cellInfo.cfgMode"/>
+		                        </div>
+		                    </div>
+							<div class="form-group">
+		                        <label class="col-sm-2 control-label">扰码</label>
+		                        <div class="col-sm-10">
+		                            <input type="number" class="form-control" ng-model="cellInfo.scode" ng-blur="checkScode()">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">频点</label>
+		                        <div class="col-sm-10">
+		                            <input type="number" class="form-control" ng-model="cellInfo.uarfcn">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">位置区码</label>
+		                        <div class="col-sm-10">
+		                            <input type="number" class="form-control" ng-model="cellInfo.lac" ng-blur="checkLac()">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">是否重新获取</label>
+		                        <div class="col-sm-10">
+		                            <input type="checkbox" style="margin-top:10px;" ng-model="cellInfo.recaptureFlag"/>
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">重新捕获周期(s)</label>
+		                        <div class="col-sm-10">
+		                            <input type="number" class="form-control" ng-model="cellInfo.recaptureDuration">
+		                        </div>
+		                    </div>
+	                   </form>
+					</div>				
+					<div class="box-footer" ng-if="tdcdma">
+						<button class="btn btn-default" ng-disabled="showLoading" ng-click="creatTask(14,'cell')">获取</button>
+                        <button class="btn btn-default" ng-disabled="showLoading" ng-click="creatTask(15,'cell')">设置</button>
 					</div>
 					<!-- /.box-body -->
 				</div>
-				<div class="box box-primary collapsed-box">
+				<!--设备使用周期-->
+				<!--<div class="box box-primary collapsed-box">
 					<div class="box-header with-border">
-						<h3 class="box-title">设备使用周期</h3>
+						<h6 class="box-title">设备使用周期</h6>
 						<div class="box-tools pull-right">
 							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
 						</div>
@@ -191,14 +662,14 @@
 		                </div>
 					</div>
 					<div class="box-footer">
-						<button class="btn btn-default" ng-click="creatTask(13,'power')">获取</button>
-                        <button class="btn btn-default" ng-click="creatTask(12,'power')">设置</button>
+						<button class="btn btn-default" ng-disabled="showLoading" ng-click="creatTask(13,'power')">获取</button>
+                        <button class="btn btn-default" ng-disabled="showLoading" ng-click="creatTask(12,'power')">设置</button>
 					</div>
-					<!-- /.box-body -->
-				</div>
-				<div class="box box-primary collapsed-box">
+				</div>-->
+				<!--不上报告警周期-->
+				<!--<div class="box box-primary collapsed-box">
 					<div class="box-header with-border">
-						<h3 class="box-title">不上报告警周期</h3>
+						<h6 class="box-title">不上报告警周期</h6>
 
 						<div class="box-tools pull-right">
 							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
@@ -210,19 +681,19 @@
 							<div class="form-group">
 		                        <label class="col-sm-2 control-label">周期</label>
 		                        <div class="col-sm-10">
-		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                            <input type="text" class="form-control" ng-model="device.number">
 		                        </div>
 		                    </div>
 	                   </div>
 					</div>
 					<div class="box-footer">
-                        <button class="btn btn-default" ng-click="creatTask(12,'power')">设置</button>
-					</div>
-					<!-- /.box-body -->
-				</div>
-				<div class="box box-primary collapsed-box">
+                        <button class="btn btn-default" ng-disabled="showLoading" ng-click="creatTask(12,'power')">设置</button>
+					</div>					
+				</div>-->
+				<!--UDP上报服务器-->
+				<!--<div class="box box-primary collapsed-box">
 					<div class="box-header with-border">
-						<h3 class="box-title">UDP上报服务器</h3>
+						<h6 class="box-title">UDP上报服务器</h6>
 
 						<div class="box-tools pull-right">
 							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
@@ -234,26 +705,26 @@
 							<div class="form-group">
 		                        <label class="col-sm-2 control-label">IP地址</label>
 		                        <div class="col-sm-10">
-		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                            <input type="text" class="form-control" ng-model="device.number">
 		                        </div>
 		                    </div>
 		                    <div class="form-group">
 		                        <label class="col-sm-2 control-label">端口</label>
 		                        <div class="col-sm-10">
-		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                            <input type="text" class="form-control" ng-model="device.number">
 		                        </div>
 		                    </div>
 	                    </div>
 					</div>
 					<div class="box-footer">
-                        <button class="btn btn-default" ng-click="creatTask(13,'power')">获取</button>
-                        <button class="btn btn-default" ng-click="creatTask(12,'power')">设置</button>
+                        <button class="btn btn-default" ng-disabled="showLoading" ng-click="creatTask(2,'udp')">获取</button>
+                        <button class="btn btn-default" ng-disabled="showLoading" ng-click="creatTask(3,'udp')">设置</button>
 					</div>
-					<!-- /.box-body -->
-				</div>
-				<div class="box box-primary collapsed-box">
+				</div>-->
+				<!--UDP配置服务器-->
+				<!--<div class="box box-primary collapsed-box">
 					<div class="box-header with-border">
-						<h3 class="box-title">UDP配置服务器</h3>
+						<h6 class="box-title">UDP配置服务器</h6>
 
 						<div class="box-tools pull-right">
 							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
@@ -265,26 +736,26 @@
 							<div class="form-group">
 		                        <label class="col-sm-2 control-label">IP地址</label>
 		                        <div class="col-sm-10">
-		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                            <input type="text" class="form-control" ng-model="device.number">
 		                        </div>
 		                    </div>
 		                    <div class="form-group">
 		                        <label class="col-sm-2 control-label">端口</label>
 		                        <div class="col-sm-10">
-		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                            <input type="text" class="form-control" ng-model="device.number">
 		                        </div>
 		                    </div>
 	                    </div>
 					</div>
 					<div class="box-footer">
-                        <button class="btn btn-default" ng-click="creatTask(13,'power')">获取</button>
-                        <button class="btn btn-default" ng-click="creatTask(12,'power')">设置</button>
+                        <button class="btn btn-default" ng-disabled="showLoading" ng-click="creatTask(4,'udpConfig')">获取</button>
+                        <button class="btn btn-default" ng-disabled="showLoading" ng-click="creatTask(5,'udpConfig')">设置</button>
 					</div>
-					<!-- /.box-body -->
-				</div>
-				<div class="box box-primary collapsed-box">
+				</div>-->
+				<!--功率衰减调整-->
+				<!--<div class="box box-primary collapsed-box">
 					<div class="box-header with-border">
-						<h3 class="box-title">功率衰减调整</h3>
+						<h6 class="box-title">功率衰减调整</h6>
 
 						<div class="box-tools pull-right">
 							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
@@ -296,26 +767,26 @@
 							<div class="form-group">
 		                        <label class="col-sm-2 control-label">移动功率输出</label>
 		                        <div class="col-sm-10">
-		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                            <input type="text" class="form-control" ng-model="device.number">
 		                        </div>
 		                    </div>
 		                    <div class="form-group">
 		                        <label class="col-sm-2 control-label">联通功率输出</label>
 		                        <div class="col-sm-10">
-		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                            <input type="text" class="form-control" ng-model="device.number">
 		                        </div>
 		                    </div>
 		                </div>
 					</div>
 					<div class="box-footer">
-                        <button class="btn btn-default" ng-click="creatTask(13,'power')">获取</button>
-                        <button class="btn btn-default" ng-click="creatTask(12,'power')">设置</button>
+                        <button class="btn btn-default" ng-disabled="showLoading" ng-click="creatTask(13,'power')">获取</button>
+                        <button class="btn btn-default" ng-disabled="showLoading" ng-click="creatTask(12,'power')">设置</button>
 					</div>
-					<!-- /.box-body -->
-				</div>
-				<div class="box box-primary collapsed-box">
+				</div>-->
+				<!--设备状态查询-->
+				<!--<div class="box box-primary collapsed-box">
 					<div class="box-header with-border">
-						<h3 class="box-title">设备状态查询</h3>
+						<h6 class="box-title">设备状态查询</h6>
 						<div class="box-tools pull-right">
 							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
                 </button>
@@ -326,61 +797,61 @@
 							<div class="form-group">
 		                        <label class="col-sm-2 control-label">设备IP地址</label>
 		                        <div class="col-sm-10">
-		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                            <input type="text" class="form-control" ng-model="device.number">
 		                        </div>
 		                    </div>
 		                    <div class="form-group">
 		                        <label class="col-sm-2 control-label">上报IP地址</label>
 		                        <div class="col-sm-10">
-		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                            <input type="text" class="form-control" ng-model="device.number">
 		                        </div>
 		                    </div>
 		                    <div class="form-group">
 		                        <label class="col-sm-2 control-label">硬盘占用率</label>
 		                        <div class="col-sm-10">
-		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                            <input type="text" class="form-control" ng-model="device.number">
 		                        </div>
 		                    </div>
 		                    <div class="form-group">
 		                        <label class="col-sm-2 control-label">CPU使用率</label>
 		                        <div class="col-sm-10">
-		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                            <input type="text" class="form-control" ng-model="device.number">
 		                        </div>
 		                    </div>
 		                    <div class="form-group">
 		                        <label class="col-sm-2 control-label">发射功率</label>
 		                        <div class="col-sm-10">
-		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                            <input type="text" class="form-control" ng-model="device.number">
 		                        </div>
 		                    </div>
 		                    <div class="form-group">
 		                        <label class="col-sm-2 control-label">驻波比</label>
 		                        <div class="col-sm-10">
-		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                            <input type="text" class="form-control" ng-model="device.number">
 		                        </div>
 		                    </div>
 		                    <div class="form-group">
 		                        <label class="col-sm-2 control-label">软件版本</label>
 		                        <div class="col-sm-10">
-		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                            <input type="text" class="form-control" ng-model="device.number">
 		                        </div>
 		                    </div>
 		                    <div class="form-group">
 		                        <label class="col-sm-2 control-label">硬件版本</label>
 		                        <div class="col-sm-10">
-		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                            <input type="text" class="form-control" ng-model="device.number">
 		                        </div>
 		                    </div>
 						</div>
 					</div>
 					<div class="box-footer">
-                        <button class="btn btn-default" ng-click="creatTask(13,'power')">获取</button>
+                        <button class="btn btn-default" ng-disabled="showLoading" ng-click="creatTask(13,'power')">获取</button>
 					</div>
-					<!-- /.box-body -->
-				</div>
-				<div class="box box-primary collapsed-box">
+				</div>-->
+				<!--设备网络信息-->
+				<!--<div class="box box-primary collapsed-box">
 					<div class="box-header with-border">
-						<h3 class="box-title">设备网络信息</h3>
+						<h6 class="box-title">设备网络信息</h6>
 
 						<div class="box-tools pull-right">
 							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
@@ -392,43 +863,43 @@
 							<div class="form-group">
 		                        <label class="col-sm-2 control-label">IP地址</label>
 		                        <div class="col-sm-10">
-		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                            <input type="text" class="form-control" ng-model="device.number">
 		                        </div>
 		                    </div>
 		                    <div class="form-group">
 		                        <label class="col-sm-2 control-label">网关</label>
 		                        <div class="col-sm-10">
-		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                            <input type="text" class="form-control" ng-model="device.number">
 		                        </div>
 		                    </div>
 		                    <div class="form-group">
 		                        <label class="col-sm-2 control-label">子网掩码</label>
 		                        <div class="col-sm-10">
-		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                            <input type="text" class="form-control" ng-model="device.number">
 		                        </div>
 		                    </div>
 		                    <div class="form-group">
 		                        <label class="col-sm-2 control-label">DNS1</label>
 		                        <div class="col-sm-10">
-		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                            <input type="text" class="form-control" ng-model="device.number">
 		                        </div>
 		                    </div>
 		                    <div class="form-group">
 		                        <label class="col-sm-2 control-label">DNS2</label>
 		                        <div class="col-sm-10">
-		                            <input type="text" name="number" class="form-control" ng-model="device.number">
+		                            <input type="text" class="form-control" ng-model="device.number">
 		                        </div>
 		                    </div>
 		                </div>
 					</div>
 					<div class="box-footer">
-                        <button class="btn btn-default" ng-click="creatTask(12,'power')">设置</button>
+                        <button class="btn btn-default" ng-disabled="showLoading" ng-click="creatTask(12,'power')">设置</button>
 					</div>
-					<!-- /.box-body -->
-				</div>
-				<div class="box box-primary collapsed-box">
+				</div>-->
+				<!--重定向信息-->
+				<div class="box box-primary collapsed-box" ng-if="isShowBox">
 					<div class="box-header with-border">
-						<h3 class="box-title">重定向信息</h3>
+						<h6 class="box-title">重定向信息</h6>
 
 						<div class="box-tools pull-right">
 							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
@@ -436,38 +907,101 @@
 						</div>
 					</div>
 					<div class="box-body">
-						<div class="form-horizontal">
+						<div class="form-horizontal" ng-if="fdd">
 							<div class="form-group">
 		                        <label class="col-sm-2 control-label">重定向</label>
 		                        <div class="col-sm-10">
-		                            <input type="checkbox" style="margin-top:10px;" ng-model="body.redirectEnable"/>
+		                            <input type="checkbox" style="margin-top:10px;" ng-model="redirectFdd.redirectEnable"/>
 		                        </div>
 		                    </div>
 							<div class="form-group">
 		                        <label class="col-sm-2 control-label">频点</label>
 		                        <div class="col-sm-10">
-		                            <input type="text" name="number" class="form-control" ng-model="body.number">
+		                            <input type="number" class="form-control" ng-model="redirectFdd.arfcn">
 		                        </div>
 		                    </div>
 		                    <div class="form-group">
 		                        <label class="col-sm-2 control-label">扰码</label>
 		                        <div class="col-sm-10">
-		                            <input type="text" name="number" class="form-control" ng-model="body.number">
+		                            <input type="number" class="form-control" ng-model="redirectFdd.psc">
 		                        </div>
 		                    </div>
 		                    <div class="form-group">
 		                        <label class="col-sm-2 control-label">带宽</label>
 		                        <div class="col-sm-10">
-		                            <input type="text" name="number" class="form-control" ng-model="body.number">
+		                            <input type="number" class="form-control" ng-model="redirectFdd.bandClass">
 		                        </div>
 		                    </div>
 		                </div>
+						<div class="form-horizontal" ng-if="tdd">
+							<div class="form-group">
+		                        <label class="col-sm-2 control-label">重定向</label>
+		                        <div class="col-sm-10">
+		                            <input type="checkbox" style="margin-top:10px;" ng-model="redirectTd.redirectEnable"/>
+		                        </div>
+		                    </div>
+							<div class="form-group">
+		                        <label class="col-sm-2 control-label">频点</label>
+		                        <div class="col-sm-10">
+		                            <input type="number" class="form-control" ng-model="redirectTd.arfcn">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">扰码</label>
+		                        <div class="col-sm-10">
+		                            <input type="number" class="form-control" ng-model="redirectTd.psc">
+		                        </div>
+		                    </div>
+		                </div>						
+						<div class="form-horizontal" ng-if="wcdma">
+							<div class="form-group">
+								<label class="col-sm-2 control-label">重定向类型</label>
+								<div class="col-sm-10">
+									<select class="form-control" ng-model="redirectWCDMA.type">
+										<option value="0">关闭重定向</option>
+										<option value="1">重定向到WCDMA其他频点</option>
+										<option value="2">重定向到GSM</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+		                        <label class="col-sm-2 control-label">下行频点</label>
+		                        <div class="col-sm-10">
+		                            <input type="number" class="form-control" ng-model="redirectFdd.dlUrfcn">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">频段</label>
+		                        <div class="col-sm-10">
+		                            <input type="number" class="form-control" ng-model="redirectFdd.gsmBand">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">信道号</label>
+		                        <div class="col-sm-10">
+		                            <input type="number" class="form-control" ng-model="redirectFdd.arfcn">
+		                        </div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label class="col-sm-2 control-label">stRedirTgtInfo</label>
+		                        <div class="col-sm-10">
+		                            <input type="number" class="form-control" ng-model="redirectFdd.stRedirTgtInfo">
+		                        </div>
+		                    </div>
+		                </div>				
 					</div>
-					<div class="box-footer">
-                        <button class="btn btn-default" ng-click="creatTask(13,'power')">获取</button>
-                        <button class="btn btn-default" ng-click="creatTask(12,'power')">设置</button>
+					<div class="box-footer" ng-if="fdd">
+                        <button class="btn btn-default" ng-disabled="showLoading" ng-disabled="showLoading" ng-click="creatTask(20,'redirectFdd')">获取</button>
+                        <button class="btn btn-default" ng-disabled="showLoading" ng-click="creatTask(21,'redirectFdd')">设置</button>
 					</div>
-					<!-- /.box-body -->
+					<div class="box-footer" ng-if="tdd">
+                        <button class="btn btn-default" ng-disabled="showLoading" ng-click="creatTask(22,'redirectTd')">获取</button>
+                        <button class="btn btn-default" ng-disabled="showLoading" ng-click="creatTask(23,'redirectTd')">设置</button>
+					</div>
+					<div class="box-footer" ng-if="wcdma">
+                        <button class="btn btn-default" ng-disabled="showLoading" ng-click="creatTask(24,'redirectWCDMA')">获取</button>
+                        <button class="btn btn-default" ng-disabled="showLoading" ng-click="creatTask(25,'redirectWCDMA')">设置</button>
+					</div>					
 				</div>
 			</div>
 			<div class="box-footer">
@@ -478,5 +1012,9 @@
               <i class="fa fa-refresh fa-spin"></i>
             </div>-->
 		</div>
+		
+	<div class="mark-div" ng-if="showLoading" style="background: transparent;">
+		<img src="images/loading_bg.gif" style="width: 40px;height: 40px;margin: 200px auto;display: block; position: fixed;left: 50%;"/>
+	</div>
 	</div>
 </div>

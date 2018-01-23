@@ -199,7 +199,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                // Not support IE8
 	                bmapRoot.classList.add('ec-extension-bmap');
 	                root.appendChild(bmapRoot);
-	                var bmap = bmapModel.__bmap = new BMap.Map(bmapRoot);
+                    var bmap = bmapModel.__bmap = new BMap.Map(bmapRoot,{
+                        enableMapClick: false
+                    });
 
 	                var overlay = new Overlay(viewportRoot);
 	                bmap.addOverlay(overlay);

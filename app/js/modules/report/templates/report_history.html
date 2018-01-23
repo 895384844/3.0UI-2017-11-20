@@ -1,28 +1,38 @@
-<div class="content content-column" ng-controller="ReportHistoryCtrl">
-	<div class="condition" style="border: 1px solid #ccc;border-bottom: none;">
+<div class="content content-column" ng-controller="ReportHistoryCtrl" style="position: relative;">
+	<div class="condition" style="border: 1px solid #ccc;border-bottom: none;padding-right: 130px;">
 		<div ng-class="{true: 'alwaysShow', false: 'toogleShow'}[isActive]">
-			<div class="toogle-input mb-10">
+			<!--<div class="toogle-input mb-10">
 				<div class="input-group w100">
 					<span class="input-group-addon add-bg">组名称</span>
-					<div id="divselect" class="divselect">
-					    <span class="cite" id="cite1" style="padding-left: 10px;"></span>
-					  	<ul>
-					  		<li ng-repeat="group in vendorChoice1">					  			
-					  			<a ng-click="groupNames(this)" href="javascript:;" selectid="{{group.adCode}}"><i class="fa fa-bullseye" style="width: 14px;height: 14px;color: #3c8dbc;"></i>{{group.fullPath}}</a>
-					  		</li>
-					    </ul>
-					</div>
+					<select class="form-control pd-right" ignore-empty-value ng-model="query.domainGroup" name="name" id="groupID" style="padding: 0;">
+						<option value="{{v.adCode}}" ng-repeat="v in vendorChoice">{{v.fullPath}}</option>
+					</select>
+				</div>
+			</div>-->
+			<div class="toogle-input mb-10">
+				<div class="input-group w100 pos-r" style="width: 236px;height: 34px;">
+					<span class="input-group-addon add-bg">组名称</span>
+					<select class="form-control pd-right" ignore-empty-value ng-model="query.domainGroup" name="name" id="groupID" style="padding: 0;" ng-change="groupName()">
+						<option value="{{v.adCode}}" ng-repeat="v in vendorChoice">{{v.fullPath}}</option>
+					</select>
+				</div>
+			</div>
+			<div class="toogle-input mb-10" ng-if='isDeviceID'>
+				<div class="input-group w100">
+					<span class="input-group-addon add-bg">设备编号</span>
+					<select class="form-control pd-right" ng-model="query.deviceID" ng-options="s.deviceID for s in deviceID" value="s.deviceID">
+					</select>
 				</div>
 			</div>
 			<div class="toogle-input mb-10">
 				<div class="input-group w100">
-					<span class="input-group-addon add-bg">终端网络供应商</span>
+					<span class="input-group-addon add-bg">网络运营商</span>
 					<select class="form-control pd-right" ng-model="query.mobileNetCarrier">
 						<option value=" ">全部</option>
 						<option value="0">移动</option>
 						<option value="1">联通</option>
 						<option value="2">电信</option>
-						<option value="3">其他</option>
+						<option value="3">其它</option>
 						<option value="4">境外</option>
 					</select>
 				</div>
@@ -50,10 +60,26 @@
 					<span class="input-group-addon add-bg">IMEI</span>
 					<input type="text" class="form-control" maxlength="15" ng-model="query.imei">				
 				</div>
-			</div>		
+			</div>	
+			<div class="toogle-input mb-10">
+				<div class="input-group w100 pos-r" style="width: 236px;height: 34px;">
+					<span class="input-group-addon add-bg">归属地(省)</span>
+					<select class="form-control pd-right" ignore-empty-value ng-model="query.provinceID" name="name" id="groupID" style="padding: 0;" ng-change="showAttribute()">
+						<option value="{{v.adCode}}" ng-repeat="v in province">{{v.name}}</option>
+					</select>
+				</div>
+			</div>
+			<div class="toogle-input mb-10" ng-if="attribute">
+				<div class="input-group w100 pos-r" style="width: 236px;height: 34px;">
+					<span class="input-group-addon add-bg">归属地(市)</span>
+					<select class="form-control pd-right" ignore-empty-value ng-model="query.attributeNo" name="name" id="groupID" style="padding: 0;">
+						<option value="{{v.areaCode}}" ng-repeat="v in attribute">{{v.name}}</option>
+					</select>
+				</div>
+			</div>
 		</div>
-		<button class="btn btn-primary searchBtn" ng-click="search()" style="right: 30px;">查询</button>
-			
+		<button class="btn btn-primary searchBtn" ng-click="search()" style="right: 80px;">查询</button>	
+		<button class="btn btn-primary searchBtn" ng-disabled="btn.status" ng-click="clear()" style="right: 20px;">清空</button>		
 		<!--查询条件框需折行显示时，将下面代码取消注释-->
 		<div ng-click="toogleH()" class="toogle-btn" ng-if="isShow">
 			<img src="images/down.png" ng-if="isActive"/>
@@ -61,7 +87,26 @@
 		</div>
 		
 	</div>	
-	
-	<div ui-grid="gridOptions" ui-grid-pagination ui-grid-selection ui-grid-auto-resize ui-grid-resize-columns ui-grid-move-columns class="grid" auto-height></div>
-
+	<div style="background: #f4f4f4; -webkit-flex:1; z-index: 80;display: -webkit-flex;-webkit-flex-direction: column;">
+		<div ui-grid="gridOption" ui-grid-pagination ui-grid-selection ui-grid-auto-resize ui-grid-resize-columns ui-grid-move-columns class="grid" auto-height></div>
+		<div class="footer" style="background: #EAEAEA;height: 33px;padding-top: 3px;">
+			<img src="images/refresh.png" style="width: 60px;height: 23px;" ng-click="refresh()"/>
+			<img src="images/exports.png" style="width: 60px;height: 23px;" ng-click="exports()"/>
+			<span style="float: right; margin-right: 30px;line-height: 33px;">行每页</span>
+			<select ng-model="pageSize" style="float: right;padding:5px;margin-right: 5px;" ng-change="setPageSize()">
+				<option value="30">30</option>
+				<option value="50">50</option>
+				<option value="100">100</option>
+			</select>
+			<button type="button" class="btn btn-default" style="padding: 0;margin:0 10px 0 10px;float: right;" ng-disabled="!postData.hasNext" ng-click="nextPage()">
+			    <img src="images/right.png"/>
+			</button>
+			<button type="button" class="btn btn-default" style="padding: 0;float:right;" ng-disabled="!postData.hasPrevious" ng-click="previousPage()">
+			    <img src="images/left.png"/>
+			</button>			
+		</div>
+	</div>
+	<div class="mark-div" ng-if="showLoading">
+		<img src="images/loading_bg.gif" style="width: 128px;height: 128px;margin: 100px auto;display: block;"/>
+	</div>
 </div>

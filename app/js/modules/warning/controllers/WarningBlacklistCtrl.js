@@ -8,53 +8,48 @@ define(function() {
 		$scope.blackList = {};
 		$scope.selectData = {};
 		EmptyInput($scope.query);
+		var cacheQuery = {};
+		$scope.showLoading = false;
+		
+		var field = {
+			'name' : '姓名',
+			'fullPath' : '域组信息',
+			'imei' : 'IMEI',
+			'imsi' : 'IMSI',
+			'deviceName' : '采集设备名称',
+			'timestamp' : '捕获时间'
+		};
 		
 		HttpService.get('rest/system/domain/allgroup').then(function success(data) {
-			data.splice(0,0,{adCode: 'all',fullPath: '全部'});
+			for(var i=0; i<data.length; i++){
+				data[i].fullPath = data[i].fullPath.split('•');
+				var str = data[i].fullPath[2]+"•"+data[i].fullPath[3]
+				data[i].fullPath = str;
+			}
+			data.splice(0,0,{fullPath:"全部"})
             $scope.vendorChoice = data;
         });
-        groupSelect("#divselect2");
-        $('#cite3').text('全部');
         
-        $scope.groupName = function(scope){
-        	$scope.query.deviceID = '';
-        	var a = scope.group.fullPath;
-        	$scope.query.domainGroup = scope.group.adCode;
-        	a = a.substring(a.lastIndexOf("•")+1);
-        	$('#cite3').text(a);
-        	var data = $scope.query.domainGroup * 1;
-        	if($scope.query.domainGroup == 'all'){
-        		$scope.isDeviceID = false;
-        		$scope.isShow = false;
-        	}else{
-        		$scope.isDeviceID = true;
-        		if(window.outerWidth <= 1367){
-        			$scope.isShow = true;
-        		}       		
-        		HttpService.get('rest/device/efence/get',{group:data}).then(function success(resp){
-        			resp.splice(0,0,{deviceID:"全部"})
-					$scope.deviceID = resp;
-					$scope.query.deviceID = '全部';
-				});
-        	}
-        }
 
 		$scope.getPagingList = function(currentPage, pageSize, sort) {
-			var filter={page_size:pageSize,page_no:currentPage};
+			$scope.showLoading = true;
+			var filter={page_size:pageSize,page_no:currentPage,order_by:['-timestamp']};
             if($scope.query){
-            	filter.query = angular.copy($scope.query);
-            	filter.order_by = ['timestamp'];
+            	filter.query = angular.copy(cacheQuery);
             	delete filter.query.deviceID;
             	if(filter.query.domainGroup == 'all' || !filter.query.domainGroup){
             		delete filter.query.domainGroup;
             	}
             }
             var result = HttpService.post('rest/alarm/efence/search',filter);
-            result.then(function success(resp){
+            result.then(function success(resp){     
+            	$scope.showLoading = false;
 	           	var list = resp.items;
            		for(var i=0; i<list.length; i++){
            			list[i].timestamp = GetLocalTime(list[i].timestamp) ;
-	            }
+	            }	           	
+            },function error(err){
+            	$scope.showLoading = false;
             })
            return result;
 		};
@@ -76,7 +71,7 @@ define(function() {
 		var remove = function() {
 			var selection = $scope.gridApi.selection.getSelectedRows();
 		        if( selection.length == 0 || selection.length == null){
-		            DialogService.showConfirm(
+		            DialogService.showMessage(
 		                '提示',
 		                '至少选择一条进行操作！',null)
 					return;
@@ -103,6 +98,39 @@ define(function() {
 				}
 		};
 
+		var exports = function(){
+			$scope.showLoading = true;
+			var myDate = new Date();
+			var times = myDate.toLocaleString();
+			times = times.replace(/\s|:|\//g, "_");
+			var filter = {
+				title: "IMSI告警-"+times,
+			    fields: field,
+			    fileName: "WarningBlacklistPageList-"+times+".xlsx",
+			    sheetName: "Sheet1",
+			    pager: {
+			        //query: $scope.query
+			    }			    
+			}
+			if($scope.query){
+            	filter.pager.query = angular.copy(cacheQuery);
+            	delete filter.pager.query.deviceID;
+            	if(filter.pager.query.domainGroup == 'all' || !filter.pager.query.domainGroup){
+            		delete filter.pager.query.domainGroup;
+            	}
+            }
+			HttpService.post('rest/alarm/efence/export',filter).then(function success(resp) {
+            	$scope.showLoading = false;
+            	var filter={fileName: resp.file};
+            	var anchor = angular.element('<a/>');
+		        anchor.attr({
+		            href: 'EFS/core/system/file/download_file?fileName=' + resp.file
+		        })[0].click();
+			},function error(err){
+				$scope.showLoading = false;
+			})
+		}
+		
 		GridService.create($scope, {
 			fetchData: true,
 			columnDefs: [{
@@ -110,6 +138,12 @@ define(function() {
 					displayName: '姓名',
 					enableSorting: false,
 					enableColumnMenu: false
+				},
+				{ 
+					field: 'fullPath',
+					displayName: '域组信息',
+					enableSorting:false,
+					enableColumnMenu:false 
 				},
 				{
 					field: 'imei',
@@ -138,76 +172,31 @@ define(function() {
 			],
 			btnTools: [
 				{
-					css: 'fa fa-fw fa-refresh',
+					//css: 'fa fa-fw fa-refresh',
+					src : 'images/refresh.png',
 					tooltip: '刷新',
 					method: function() {
 						GridService.refresh($scope);
 					}
 				}, 
-				{
-					css: 'fa fa-fw fa-minus-circle',
+				/*{
+					//css: 'fa fa-fw fa-minus-circle',
+					src : 'images/remove.png',
 					tooltip: '删除',
 					method: remove
-				},
+				},*/
 				{
-					css: 'fa fa-fw fa-share-square-o',
+					//css: 'fa fa-fw fa-share-square-o',
+					src : 'images/exports.png',
 					tooltip: '导出',
-					method: remove
-				},
-				{
-					css: 'fa fa-fw fa-download',
-					tooltip: '下载',
-					method: remove
+					method: exports
 				}
 			]
 		});
-		$scope.export = function() {
-			var filter = {
-				"fields": [
-					"name",
-					"id"
-				]
-			};
-			HttpService.download('action/group/exportxml', filter);
-		};
-
-		$scope.edit = function() {
-			var selection = $scope.gridapi.getSelectedRows();
-			if(selection.length <= 0) {
-				$scope.showNoItemDialog(
-					$lt('提示'),
-					$lt('请选择需要编辑的选项')
-				);
-				return;
-			}
-
-			if(selection.length > 1) {
-				$scope.showNoItemDialog(
-					$lt('提示'),
-					$lt('最多选择一项')
-				);
-				return;
-			}
-			var rid = selection[0];
-			$scope.selectData = $scope.gridapi.getSelectedData(rid);
-			$scope.getgridData = $scope.gridapi.getgridData();
-			var dataArray = $scope.getgridData.items;
-			$.each(dataArray, function(n, data) {
-				if($scope.selectData.id == data.id) {
-					$scope.gridItemData = data;
-					$scope.gridItemData.confirm = $scope.gridItemData.password;
-				}
-			});
-			//$scope.gridItemData.isEdit = 'true';
-			OverlayService.show({
-				title: $lt('编辑用户信息'),
-				template: 'js/modules/warning/templates/warning_blacklist_form.html',
-				scope: $scope
-			});
-		};
-
+		
 		$scope.search = function() {
-			delEmptyInput($scope.query);			
+			delEmptyInput($scope.query);
+			cacheQuery = angular.copy($scope.query);						
 			GridService.refresh($scope);
 		};
 

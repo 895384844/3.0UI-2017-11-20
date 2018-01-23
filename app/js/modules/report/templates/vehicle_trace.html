@@ -1,0 +1,42 @@
+<div class="content content-column" ng-controller="VehicleTraceCtrl" style="position: relative;">
+	<!--车辆轨迹-->
+	<div class="condition" style="border: 1px solid #ccc;border-bottom: none;">
+		<form class="form" role="form" name="form">
+			<div class="pl-0" ng-class="{true: 'alwaysShow', false: 'toogleShow'}[isActive]">			
+				<div class="toogle-input">
+					<div class="toogle-input">
+						<div class="input-group">
+							<span class="input-group-addon add-bg p5">车牌号</span>
+							<input type="text" class="form-control" ng-change="checkInput()" ng-model="query.plate" required>							
+						</div>
+					</div>
+				</div>
+				<div class="toogle-input">
+					<div class="input-group">
+						<span class="input-group-addon add-bg p5">开始时间</span>
+						<input class="form-control datetime" placeholder="开始时间" date-time-selector="start" ng-model="query.startTime" ignore-empty-value/>
+					</div>
+				</div>
+				<div class="toogle-input">
+					<div class="input-group">
+						<span class="input-group-addon add-bg p5">结束时间</span>
+						<input class="form-control datetime" placeholder="结束时间" date-time-selector="end" ng-model="query.endTime" ignore-empty-value/>
+					</div>
+				</div>				
+			</div>
+			<button class="btn btn-primary searchBtn" ng-disabled="!form.$valid" ng-click="search()" style="right: 80px;">查询</button>
+			<button class="btn btn-primary searchBtn" ng-disabled="btn.status" ng-click="showMap()" style="right: 20px;">轨迹</button>
+		</form>
+		<!--查询条件框需折行显示时，将下面代码取消注释-->
+		<!--<div ng-click="toogleH()" class="toogle-btn" ng-if="isShow">
+			<img src="images/down.png" ng-if="isActive"/>
+			<img src="images/up.png" ng-if="!isActive" />
+		</div>-->
+
+	</div>
+	<div ui-grid="gridOptions" ui-grid-pagination ui-grid-selection ui-grid-auto-resize ui-grid-resize-columns ui-grid-move-columns class="grid" auto-height></div>
+	
+	<div class="mark-div" ng-if="showLoading">
+		<img src="images/loading_bg.gif" style="width: 128px;height: 128px;margin: 100px auto;display: block;"/>
+	</div>
+</div>

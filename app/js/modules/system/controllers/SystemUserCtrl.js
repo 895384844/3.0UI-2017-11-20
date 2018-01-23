@@ -7,21 +7,29 @@ define(
 			$scope.gridItemData = {};
 			$scope.query = {};
 			$scope.selectData = {};
+			var cacheQuery = {};
 			
 			EmptyInput($scope.query);
 			
 			var lock = {
 				0 : '正常',
 				1 : '锁定'
-			}
+			};
+			
+			var field = {
+				'account' : '用户名',
+				'locked' : '账号状态',
+				'telNumber' : '手机号',
+				'pathList' : '管理域'
+			};
 
 			$scope.getPagingList = function(currentPage, pageSize, sort) {
 				var filter={page_size:pageSize,page_no:currentPage};
 	            if($scope.query){
-	            	filter.query = angular.copy($scope.query);
+	            	filter.query = angular.copy(cacheQuery);
 	            }
-	           var result =  HttpService.post('rest/system/user/search',filter);
-	           result.then(function success(data){
+	            var result =  HttpService.post('rest/system/user/search',filter);
+	            result.then(function success(data){
 	           		var list = data.items;
 	           		for(var i=0; i<list.length; i++){
 						list[i].locked = lock[list[i].locked];
@@ -32,7 +40,7 @@ define(
 						}else{
 							list[i].pathList = list[i].pathList.join(';');
 						}
-	           		}
+		           	}
 	           })
 	           return result;
 			};
@@ -40,7 +48,7 @@ define(
        		var remove=function(){
        			var selection = $scope.gridApi.selection.getSelectedRows();
 		        if( selection.length == 0 || selection.length > 1){
-		            DialogService.showConfirm(
+		            DialogService.showMessage(
 		                '提示',
 		                '请选择一条进行操作！',null)
 					return;
@@ -88,7 +96,7 @@ define(
 			var edit = function () {
 				var selection = $scope.gridApi.selection.getSelectedRows();
 				if (selection.length <= 0 || selection.length >1) {
-					DialogService.showConfirm(
+					DialogService.showMessage(
 		                '提示',
 		                '请选择一条进行编辑！',null)
 					return;
@@ -109,44 +117,6 @@ define(
 				}				
 			};
 
-		    
-		    /*var export = function(){
-		        if($scope.user.male == '男'){
-		            $scope.user.male = 1;
-		        }else if($scope.user.male == '女'){
-		            $scope.user.male = 2;
-		        }else{
-		            $scope.user.male = '';
-		        }
-		
-		        var obj = {
-		            account: $scope.user.account, 
-		            name : $scope.user.name,
-		            male : $scope.user.male
-		        };
-		
-		        document.location.href = gridServices.exportAction('/system/userAction!exportExcel.action',obj);
-		
-		    };
-		    
-		    var downLoad = function(){
-		        $http.get('/system/downloadAction!listFileName.action').then(function(resp){
-					if(resp.data){
-		                ModalService.showModal({
-			                templateUrl: 'system/templates/downLoad.html',
-			                controller: 'SystemDownloadCtrl',
-			                inputs: { 
-			                    rows: resp.data 
-			                }
-			            }).then(function(modal) {
-			                modal.element.modal();
-			                modal.close.then(function(result) {
-			                });
-			            });
-					}
-				});
-			};*/
-		    
 		    var unLock = function(){
 		    	var selection = $scope.gridApi.selection.getSelectedRows();
 		        if( selection != null && selection.length >0){
@@ -154,13 +124,13 @@ define(
 		            selection=$scope.gridApi.selection.getSelectedRows();		            
 		            HttpService.post('rest/system/user/unlock',{id:ids}).then(function success(data){
 		            	if(data.status == 0){
-		            		DialogService.showConfirm(
+		            		DialogService.showMessage(
 				                '提示',
 				                '解锁成功！',null)							
 		            		GridService.refresh($scope);
 		            		return;
 		            	}else{
-		            		DialogService.showConfirm(
+		            		DialogService.showMessage(
 				                '提示',
 				                '解锁失败！',null)
 		            		return;
@@ -168,12 +138,34 @@ define(
                     },
                     function failure(errorResponse){}).finally(function(){});
 		        }else{
-		            DialogService.showConfirm(
+		            DialogService.showMessage(
 		                '提示',
 		                '请选择一条进行操作！',null)
 					return;
 		        }
 		    };
+			
+			var exports = function(){
+				var myDate = new Date();
+				var times = myDate.toLocaleString();
+				times = times.replace(/\s|:|\//g, "_");
+				var filter = {
+					title: "用户管理-"+times,
+				    fields: field,
+				    fileName: "SystemUserPageList-"+times+".xlsx",
+				    sheetName: "Sheet1",
+				    pager: {
+				        query: angular.copy(cacheQuery)
+				    }
+				}
+				HttpService.post('rest/system/user/export',filter).then(function success(resp) {
+	            	var filter={fileName: resp.file};
+	            	var anchor = angular.element('<a/>');
+			        anchor.attr({
+			            href: 'EFS/core/system/file/download_file?fileName=' + resp.file
+			        })[0].click();
+				})		
+			}
 			
 			GridService.create($scope,{
 				fetchData:true,
@@ -181,29 +173,33 @@ define(
 					
 			        { field: 'account',displayName: '用户名',enableSorting:false,enableColumnMenu:false },			        
 			        { field: 'locked',displayName: '账号状态',enableSorting:false,enableColumnMenu:false },
-			        { field: 'telNumber',displayName: '手机',enableSorting:false,enableColumnMenu:false },
+			        { field: 'telNumber',displayName: '手机号码',enableSorting:false,enableColumnMenu:false },
 			        { field: 'pathList',displayName: '管理域',enableSorting:false,enableColumnMenu:false }
 			    ],
 			    btnTools:[
 			    	{
-				    	css:'fa fa-fw fa-refresh',
+				    	//css:'fa fa-fw fa-refresh',
+				    	src : 'images/refresh.png',
 				    	tooltip:'刷新',
 				    	method:function(){
 				    		GridService.refresh($scope);
 				    	}
 			    	},
 			    	{
-				    	css:'fa fa-fw fa-plus-circle',
+				    	//css:'fa fa-fw fa-plus-circle',
+				    	src : 'images/add.png',
 				    	tooltip:'添加',
 				    	method:add
 				    },
 			    	{
-				    	css:'fa fa-fw fa-minus-circle',
+				    	//css:'fa fa-fw fa-minus-circle',
+				    	src : 'images/remove.png',
 				    	tooltip:'删除',
 				    	method:remove
 			    	},
 			    	{
-				    	css:'fa fa-fw fa-pencil',
+				    	//css:'fa fa-fw fa-pencil',
+				    	src : 'images/edit.png',
 				    	tooltip:'编辑',
 				    	method:edit
 			    	},
@@ -213,17 +209,14 @@ define(
 				    	method:resetPsw
 			    	},*/
 			    	{
-				    	css:'fa fa-fw fa-share-square-o',
+				    	//css:'fa fa-fw fa-share-square-o',
+				    	src: 'images/exports.png',
 				    	tooltip:'导出',
-				    	method:add
+				    	method:exports
 			    	},
 			    	{
-				    	css:'fa fa-fw fa-download',
-				    	tooltip:'下载',
-				    	method:add
-			    	},
-			    	{
-				    	css:'fa fa-fw fa-unlock-alt',
+				    	//css:'fa fa-fw fa-unlock-alt',
+				    	src: 'images/unlock.png',
 				    	tooltip:'解锁',
 				    	method:unLock
 			    	}
@@ -248,6 +241,7 @@ define(
 			}
 
 			$scope.search = function () {
+				cacheQuery = angular.copy($scope.query);
 				delEmptyInput($scope.query);
 				GridService.refresh($scope);
 			};

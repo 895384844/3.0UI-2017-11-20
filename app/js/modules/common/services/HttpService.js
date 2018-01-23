@@ -23,7 +23,7 @@ define(
 							DialogService.showDialog(
 								'操作失败',
 								result.data.message, [{
-									name: 'Ok',
+									name: '确定',
 									class: 'btn-primary'
 								}]
 							);
@@ -37,7 +37,7 @@ define(
 						}
 					},
 					function failure(error) {
-						// 1) 400 license invalid
+						// 1) 400 bad request
 						// 2) 401 not login
 						// 3) 403 no permission
 						// 4) 404 no such api or api url error
@@ -47,27 +47,33 @@ define(
 							case 400:
 								DialogService.showDialog(
 									'请求失败',
-									'请更新授权信息', [{
-										name: 'Ok',
+									'请求格式错误', [{
+										name: '确定',
 										class: 'btn-primary'
 									}]
 								);
 								break;
 							case 401:
-								DialogService.showDialog(
-									'请求失败',
-									'请重新登录', [{
-										name: 'Ok',
-										class: 'btn-primary'
-									}]
-								);
-								$location.path('/login');
+								if (error.config.url.indexOf("center") < 0
+									&& error.config.url.indexOf("getSysInfo") < 0
+									&& error.config.url.indexOf("check") < 0
+									&& error.config.url.indexOf("showAbout") < 0
+									&& error.config.url.indexOf("customization") < 0) {
+									DialogService.showDialog(
+										'请求失败',
+										'请重新登录', [{
+											name: '确定',
+											class: 'btn-primary'
+										}]
+									);
+									$location.path('/login');
+								}
 								break;
 							case 403:
 								DialogService.showDialog(
 									'请求失败',
 									'无权限访问', [{
-										name: 'Ok',
+										name: '确定',
 										class: 'btn-primary'
 									}]
 								);
@@ -78,8 +84,8 @@ define(
 							case 405:
 								DialogService.showDialog(
 									'请求失败',
-									'用户已经被锁定，请管理员解锁', [{
-										name: 'Ok',
+									'此访问方法已被禁止', [{
+										name: '确定',
 										class: 'btn-primary'
 									}]
 								);
@@ -88,7 +94,7 @@ define(
 								DialogService.showDialog(
 									'请求失败',
 									'会话已经被锁定，请输入密码解锁', [{
-										name: 'Ok',
+										name: '确定',
 										class: 'btn-primary'
 									}]
 								);
@@ -98,16 +104,31 @@ define(
 								DialogService.showDialog(
 									'请求超时',
 									'请求超时，服务器无响应', [{
-										name: 'Ok',
+										name: '确定',
 										class: 'btn-primary'
 									}]
 								);
 								break;
 							case 503:
+								if (error.config.url.indexOf("center") < 0
+									&& error.config.url.indexOf("getSysInfo") < 0
+									&& error.config.url.indexOf("check") < 0
+									&& error.config.url.indexOf("showAbout") < 0
+									&& error.config.url.indexOf("customization") < 0) {
+									DialogService.showDialog(
+										'请求失败',
+										'服务不可用', [{
+											name: '确定',
+											class: 'btn-primary'
+										}]
+									);
+								}
+								break;
+							case 500:
 								DialogService.showDialog(
 									'请求失败',
-									'服务不可用', [{
-										name: 'Ok',
+									'服务器内部错误', [{
+										name: '确定',
 										class: 'btn-primary'
 									}]
 								);
@@ -116,7 +137,7 @@ define(
 								AlertService.show('请求失败', '服务器内部错误');
 								break;
 						}
-						deffered.notify(error);
+						deffered.reject(error);
 
 
 					}

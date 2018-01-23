@@ -1,13 +1,22 @@
 define(['../../common/utils/md5'],function (md5) {
        
-    return ['$scope', '$location','$interval', 'MENU_GROUPS', 'HttpService', 'ModalService', 'DialogService','SessionService', 'localSession','SectionsService', HeaderCtrl];
+    return ['$scope', '$location','$interval', 'MENU_GROUPS', 'HttpService', 'ModalService', 'DialogService','SessionService', 'localSession','SectionsService', '$interval', HeaderCtrl];
 	
-	function HeaderCtrl($scope, $location, $interval, menuGroups, HttpService, ModalService, DialogService,SessionService, localSession,SectionsService) {
+	function HeaderCtrl($scope, $location, $interval, menuGroups, HttpService, ModalService, DialogService,SessionService, localSession,SectionsService,$interval) {
 
 
 		//Alarm statistics 
 		$scope.alarm_count={};
 		$scope.username = sessionStorage.getItem('username');
+		
+		$scope.menus = menuGroups;
+		$scope.addSection = function(section) {
+			SectionsService.addActiveSection(section);
+		};
+		
+		HttpService.get('rest/tool/customization/get').then(function success(resp){
+			$scope.appTitle = resp.name;
+		})
 
 		var getNewAlarmCount=function(){
 			if($scope.page.type!='edit'){
@@ -24,6 +33,31 @@ define(['../../common/utils/md5'],function (md5) {
                 $interval.cancel(intervalGetNewAlarmCount); 
             }
         });
+        
+        function getSystemTime(){
+        	HttpService.get('rest/center/dashboard/clock').then(function success(resp){
+	        	$scope.systemTime = resp.now;
+	        })
+        }
+        getSystemTime();
+        $interval(getSystemTime,60000);
+        
+        function checkLicense(){
+        	HttpService.get('rest/system/license/check').then(function success(resp){
+        		//resp.pass
+        		var license = document.getElementById('licenseStatus');
+        		if(resp.pass == false){
+        			license.style.background = '#f56954';	//红色
+        			DialogService.showMessage(
+		                '提示',
+		                resp.message,null)
+        		}else{
+        			license.style.background = '#16d37d'	//绿色
+        		}
+        		
+        	})
+        }
+        checkLicense();
 		
 		//Log out 
 		$scope.logout = function () {
@@ -43,13 +77,9 @@ define(['../../common/utils/md5'],function (md5) {
         });
 
 		//$scope.userName = localSession.user.name;
-
-		$scope.addSection = function (section) {
-			$location.path('/' + section.id);
-		};
 		
 		var about = {};
-		HttpService.post('rest/system/info/showAbout').then(function success(resp){					
+		HttpService.get('rest/system/info/showAbout').then(function success(resp){					
 			about = resp;
 			return about;
 		})

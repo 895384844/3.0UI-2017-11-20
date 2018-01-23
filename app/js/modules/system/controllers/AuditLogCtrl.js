@@ -37,41 +37,15 @@ define(['datetimepicker'],function(datetimepicker) {
 			var filter={page_size:pageSize,page_no:currentPage,order_by:['-timestamp']};
             if($scope.query){
             	filter.query = angular.copy($scope.query);
-            	if(filter.query.domainGroup == 'all' || !filter.query.domainGroup){
-            		delete filter.query.domainGroup;
-            	}
-            	if(filter.query.timestamp__ge){
-            		filter.query.timestamp__ge = DateFormat(filter.query.timestamp__ge);
-            	}
-            	if(filter.query.timestamp__lt){
-            		filter.query.timestamp__lt = DateFormat(filter.query.timestamp__lt);
-            	}   
-            	if(filter.query.mobileNetCarrier == ' '){
-            		delete filter.query.mobileNetCarrier
-            	}
             }
            var result = HttpService.post('rest/information/efence/search',filter);
            result.then(function success(data){
-           		if(data.count == 0){
-           			DialogService.showMessage(
-		                '提示',
-		                '没有查询结果！',null);
-		                return;
-           		}else{
-	           		var list = data.items;
-	           		for(var i=0; i<list.length; i++){
-	           			list[i].mobileNetCarrier = mobileNetCarrier[list[i].mobileNetCarrier];
-	           			list[i].timestamp = GetLocalTime(list[i].timestamp) ;
-	           		}
-	           		for(var i=0; i<list.length; i++){
-	           			list[i].mobileNetSystem = mobileNetSystem[list[i].mobileNetSystem];
-	           		}
-           		}
+           		
            })
            return result;
 		};
 
-		/*GridService.create($scope, {
+		GridService.create($scope, {
 			fetchData: true,
 			columnDefs: [
 				{
@@ -151,7 +125,7 @@ define(['datetimepicker'],function(datetimepicker) {
 				]
 			};
 			HttpService.download('action/group/exportxml', filter);
-		};*/
+		};
 
 
 		$scope.search = function() {

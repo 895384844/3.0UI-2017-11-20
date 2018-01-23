@@ -1,0 +1,50 @@
+<div class="content content-flex" ng-controller="MapCtrl" style="background: #fff;position: relative;">
+	<div style="width: 20%; height: 100%; background: #f4f4f4; float: left; border: 1px solid #ccc;padding: 10px;overflow-y: auto;">
+		<script type="text/ng-template" id="nodes_renderers2.html">
+			<div ui-tree-handle class="tree-node tree-node-content" style="cursor: pointer;" ng-click="getList(this)" ng-model="query.adCode" ng-class="{'device-page-active': node.isdefault}">
+			    <a class="btn btn-success" ng-if="node.nodes && node.nodes.length > 0" data-nodrag ng-click="toggle(this)" style="width: 15px;height: 15px;padding: 0;">
+			    	<span class="fa" ng-class="{'fa fa-plus': collapsed, 'fa fa-minus': !collapsed }" style="font-size: 12px;position: relative;bottom: 4px;"></span>
+			    </a>
+			    {{node.name}}
+			</div>
+			<ol ui-tree-nodes="" ng-model="node.nodes" ng-class="{hidden: collapsed}">
+			    <li ng-repeat="node in node.nodes" ui-tree-node ng-include="'nodes_renderers2.html'"></li>
+			</ol>
+		</script>
+		<div ui-tree id="tree-root" data-drag-enabled = false>
+		    <ol class="set-default" ui-tree-nodes ng-model="data" style="line-height: 20px;">
+		        <li ng-repeat="node in data" ui-tree-node ng-include="'nodes_renderers2.html'"></li>
+		    </ol>
+		</div>
+	</div>
+	<div class="deviceList" ng-if="deviceList" style="position: absolute;right: 1px;bottom: 1px;height: 260px;background: #fff;z-index: 90;padding: 15px;">
+		<ul id="myTab" class="nav nav-tabs" >
+			<li ng-class="{'active':$index==0}"  ng-repeat="device in devices">
+				<a data-target="#device_{{device.id}}"  href="javascript:void(0)" data-toggle="tab">
+					 设备{{$index+1}}
+				</a>
+			</li>
+			<a class="close" href="javascript:void(0)" ng-click="close()" style="position:relative;top:0px;right:0">×</a>
+		</ul>
+		<div id="myTabContent" class="tab-content" >
+			<div class="tab-pane" ng-class="{'active':$index==0}" ng-repeat="device in devices" id="device_{{device.id}}">
+				<div style="border-bottom: 1px dashed #ccc;line-height: 40px;">
+					<strong>设备编号：</strong>
+					<span >{{device.deviceID}}</span>
+				</div>
+				<div style="border-bottom: 1px dashed #ccc;line-height: 40px;">
+					<strong>网络制式：</strong>
+					<span>{{device.network}}</span>
+				</div>
+				<div style="border-bottom: 1px dashed #ccc;line-height: 40px;">
+					<strong>最后上报时间：</strong>
+					<span>{{device.lastUpdate}}</span>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+	<div style="width: 79%; background: #f4f4f4; margin-left: 1%; float:left;height: 100%;display: -webkit-flex; -webkit-flex-direction:column;">
+		<baidu-map options="mapOptions" online="isOnline" ak class="map"></baidu-map>
+	</div>
+</div>

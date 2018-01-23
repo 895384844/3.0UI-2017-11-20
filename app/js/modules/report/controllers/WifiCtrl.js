@@ -1,178 +1,204 @@
 define(function () {
-	return ['$scope', 'HttpService', 'AlertService', 'GridService', 'ModalService','DialogService',WifiCtrl];
+	return ['$scope', 'HttpService', 'AlertService', 'GridServiceReport', 'ModalService','DialogService', 'EmptyInput', 'DateFormat', 'delEmptyInput', 'GetLocalTime', WifiCtrl];
 
-	function WifiCtrl($scope, HttpService, AlertService,GridService,ModalService,DialogService) {
-		$scope.getPagingList=function(currentPage, pageSize,sort){
-            var filter={page_size:pageSize,page_no:currentPage};
-            if($scope.search){
-                angular.extend(filter,$scope.search);
-            }
-            if(!!sort){
-            	//filter.sort=sort;
-            }
-           return HttpService.post('system/user/get',filter);
-   		};
-		var add = function () {
-				ModalService.showModal({
-                    templateUrl: 'base/templates/backlist_alarm_notify_policy_form.html',
-                    controller: 'BacklistAlarmNotifyPolicyFormCtrl',
-                    inputs:{
-                        title:'新增转发管理',
-                        userInfo:{}
-                    }
-                }).then(function(modal) {
-                    modal.close.then(function(result) {
-                           GridService.refresh($scope);
-                    });
-                });
-			};
-		var remove=function(){
-			var selection = $scope.gridApi.selection.getSelectedRows();
-		        if( selection == null || selection.length != 1){
-		            DialogService.showConfirm(
-		                '提示',
-		                '请选择一条进行操作！',null)
-					return;
-		        }else{
-		    		DialogService.showConfirm(
-		                '确认信息',
-						'确定要删除吗？',
-		                function() {
-		                    ids=[];
-		                    selection=$scope.gridApi.selection.getSelectedRows();
-		                    for (var i in selection){
-		                        ids.push(selection[i].id);
-		                    }
-		                    HttpService.remove('users/',{ids:ids}).then(function success(data){
-		                        GridService.refresh($scope);
-		                    },
-		                    function failure(errorResponse){
-		                        
-		                    })
-		                    .finally(function(){
-
-		                    });
-		                }, null);
-		        }
-	    	};
-	    	var exports = function(){
-		        var obj = {
-		            terminalName : $scope.target.name,
-		            terminalIMEI : $scope.target.imei,
-		            terminalIMSI : $scope.target.imsi,
-		            dispatcherId : $scope.target.id
-		        };
-		        document.location.href = gridServices.exportAction('/query/TerminalPeopleRelationAction!exportExcel.action',obj);
-		    };
-		    var downLoad = function(){
-		        $http.get('/system/downloadAction!listFileName.action').then(function(resp){
-					if(resp.data){
-		                ModalService.showModal({
-			                templateUrl: 'modals/downLoad.html',
-			                controller: 'downLoadCtrlTargetAlarm',
-			                inputs: { 
-			                    rows: resp.data 
-			                }
-			            }).then(function(modal) {
-			                modal.element.modal();
-			                modal.close.then(function(result) {
-			                });
-			            });
-					}
-				});
-			};
-			var edit = function () {
-				var selection = $scope.gridApi.selection.getSelectedRows();
-		        if( selection == null || selection.length != 1){
-		            DialogService.showConfirm(
-		                '提示',
-		                '请选择一条进行操作！',null)
-					return;
-		        }else{
-					ModalService.showModal({
-	                    templateUrl: 'base/templates/backlist_alarm_notify_policy_edit.html',
-	                    controller: 'BlacklistAlarmNotifyPolicyEditCtrl',
-	                    inputs:{
-	                        title:'修改转发人员',
-	                        userInfo:{}
-	                    }
-	                }).then(function(modal) {
-	                    modal.close.then(function(result) {
-	                           GridService.refresh($scope);
-	                    });
-	                });
-	           }
-			};
-			/*var edit = function(){
-		        if( $scope.rows == null || $scope.rows.length != 1){
-		            alert('请选择其中一条处理！');
-		        }else{
-		            ModalService.showModal({
-		                templateUrl: 'base/templates/blacklist_alarm_notify_policy_edit.html',
-		                controller: 'BlacklistAlarmNotifyPolicyEditCtrl',
-		                inputs: { 
-		                    row: $scope.row
-		                }
-		            }).then(function(modal) {
-		                modal.element.modal();
-		                modal.close.then(function(result) {
-		                    $scope.promise = gridServices.promiseNew('/query/TerminalPeopleRelationAction!getDispatchPage.action',{
-		                        page: $scope.newPage ? $scope.newPage : 1,
-		                        rows: 20,
-		                        sort : 'id',
-		                        order: 'desc'
-		                    });
-		                    $scope.getPage($scope.promise);
-		                });
-		            });
-		        }
-		    };*/
+	function WifiCtrl($scope, HttpService, AlertService,GridServiceReport,ModalService,DialogService, EmptyInput, DateFormat, delEmptyInput, GetLocalTime) {
+		$scope.pageSize = '30';
+		$scope.showLoading = false;
+		var cacheQuery = {};
+		$scope.postData = {};
+		EmptyInput($scope.query);
+		$scope.isActive = true;
+		$scope.isShow = false;
 		
-		GridService.create($scope,{
-				fetchData:true,
-				columnDefs:[
-			        { field: 'name',displayName: '目标名称',maxWidth:400,minWidth:200 },
-			        { field: 'imei',displayName: 'IMEI',maxWidth:400,minWidth:200 },
-			        { field: 'imsi',displayName: 'IMSI',maxWidth:400,minWidth:200 },
-			        { field: 'peopleName',displayName: '转发人姓名',maxWidth:400,minWidth:200 },
-			        { field: 'contactTel',displayName: '转发人电话',maxWidth:400,minWidth:200 }
-			    ],
-			    btnTools:[
-			    	{
-				    	css:'fa fa-fw fa-refresh',
-				    	tooltip:'刷新',
-				    	method:function(){
-				    		GridService.refresh($scope);
-				    	}
-			    	},
-			    	{
-				    	css:'fa fa-fw fa-plus-circle',
-				    	tooltip:'添加',
-				    	method:add
-				    },
-			    	{
-				    	css:'fa fa-fw fa-pencil',
-				    	tooltip:'编辑',
-				    	method:edit
-				    },
-			    	{
-				    	css:'fa fa-fw fa-minus-circle',
-				    	tooltip:'删除',
-				    	method:remove
-			    	},
-			    	{
-				    	css:'fa fa-fw fa-share-square-o',
-				    	tooltip:'导出',
-				    	method:remove
-			    	},
-			    	{
-				    	css:'fa fa-fw fa-download',
-				    	tooltip:'下载',
-				    	method:remove
-			    	}
-			    ]
-
-			});
+		$scope.toogleH = function(){			
+			$scope.isActive = !$scope.isActive;
+		}
+		
+		$scope.clear = function(){
+			$scope.query = {};
+			$scope.isDeviceID = false;
+		}
+		
+		HttpService.get('rest/system/domain/allgroup').then(function success(data) {
+			for(var i=0; i<data.length; i++){
+				data[i].fullPath = data[i].fullPath.split('•');
+				var str = data[i].fullPath[2]+"•"+data[i].fullPath[3]
+				data[i].fullPath = str;
+			}
+			data.splice(0,0,{fullPath:"全部"})
+            $scope.vendorChoice = data;
+        });
+        
+        $scope.groupName = function(scope){
+        	var data = $scope.query.domainGroup * 1;
+        	if($scope.query.domainGroup == 'all' || data == 0 || !data){
+        		$scope.isDeviceID = false;
+        		$scope.isShow = false;
+        	}else{
+        		$scope.isDeviceID = true;
+        		if(window.outerWidth <= 1367){
+        			$scope.isShow = true;
+        		}       		
+        		HttpService.get('rest/device/efence/get',{type:'wifi',group:data}).then(function success(resp){
+        			resp.splice(0,0,{deviceID:"全部"})
+					$scope.deviceID = resp;
+					$scope.query.deviceID = '全部';
+				});
+        	}
+        }
+        
+		$scope.getNoPagingList=function(currentPosition){
+			$scope.showLoading = true;
+            var filter={
+            	pageSize : $scope.pageSize,
+            	query : {} 
+            };
+            if (currentPosition) {
+				for (var property in currentPosition) {
+					filter[property] = currentPosition[property];
+				}
+			}
+        	if($scope.query){
+        		filter.query = angular.copy(catchQuery);
+        		if(filter.query.domainGroup == 'all' || !filter.query.domainGroup){
+            		delete filter.query.domainGroup;
+            		delete filter.query.deviceID;
+            	}
+            	if(filter.query.deviceID){
+            		filter.query.deviceID = filter.query.deviceID.deviceID;
+            		if(filter.query.deviceID == '全部' || !filter.query.deviceID){
+            			delete filter.query.deviceID;
+            		}
+            	}
+            	if(filter.query.timestamp__ge){
+            		filter.query.timestamp__ge = DateFormat(filter.query.timestamp__ge);
+            	}
+            	if(filter.query.timestamp__lt){
+            		filter.query.timestamp__lt = DateFormat(filter.query.timestamp__lt);
+            	} 
+            	if(filter.query.mac){
+            		filter.query.mac = filter.query.mac.toUpperCase();
+            	}
+        	}           
+            var result = HttpService.post('rest/information/wifi/integrative',filter);
+            result.then(function success(resp){
+            	$scope.showLoading = false;
+           		if(!resp.items){
+           			DialogService.showMessage(
+		                '提示',
+		                '没有查询结果！',null);
+		            return;
+           		}else{
+	           		var list = resp.items;
+	           		$scope.postData = resp;
+	           		for(var i=0; i<list.length; i++){
+	           			list[i].timestamp = GetLocalTime(list[i].timestamp);
+	           			list[i].receiveTime = GetLocalTime(list[i].receiveTime);
+	           		}
+           		}    
+            },function error(err){
+            	$scope.showLoading = false;
+            })
+            return result;
+   		};
+   		
+   		$scope.refresh = function(){
+			GridServiceReport.refresh($scope);
+		}
+   		
+   		var field = {
+			'deviceID' : '采集设备编号',
+			'fullPath' : '域组信息',
+			'timestamp' : '采集时间',
+			'mac' : 'Mac地址',
+			'receiveTime' : '报文入库时间'
+		};
+		
+		$scope.exports = function(){
+			$scope.showLoading = true;
+			var myDate = new Date();
+			var times = myDate.toLocaleString();
+			times = times.replace(/\s|:|\//g, "_");
+			var filter = {
+				title: "终端MAC查询-"+times,
+			    fields: field,
+			    fileName: "WifiPageList-"+times+".xlsx",
+			    sheetName: "Sheet1",
+			    pager: {}			    
+			}
+           if($scope.query){
+        		filter.pager.query = angular.copy(catchQuery);
+        		if(filter.pager.query.domainGroup == 'all' || !filter.pager.query.domainGroup){
+            		delete filter.pager.query.domainGroup;
+            		delete filter.pager.query.deviceID;
+            	}
+            	if(filter.pager.query.deviceID){
+            		filter.pager.query.deviceID = filter.pager.query.deviceID.deviceID;
+            		if(filter.pager.query.deviceID == '全部' || !filter.pager.query.deviceID){
+            			delete filter.pager.query.deviceID;
+            		}
+            	}
+            	if(filter.pager.query.timestamp__ge){
+            		filter.pager.query.timestamp__ge = DateFormat(filter.pager.query.timestamp__ge);
+            	}
+            	if(filter.pager.query.timestamp__lt){
+            		filter.pager.query.timestamp__lt = DateFormat(filter.pager.mapQuery.timestamp__lt);
+            	} 
+            	if(filter.pager.query.mac){
+            		filter.pager.query.mac = filter.pager.query.mac.toUpperCase();
+            	}
+        	}  
+			HttpService.post('rest/information/wifi/integrative_export',filter).then(function success(resp) {
+				$scope.showLoading = false;
+            	var filter={fileName: resp.file}
+         	    var anchor = angular.element('<a/>');
+		        anchor.attr({
+		            href: 'EFS/core/system/file/download_file?fileName=' + resp.file
+		        })[0].click();
+			},function error(err){
+				$scope.showLoading = false;
+			})
+		}
+   		
+   		$scope.previousPage = function(){
+			var previous = {};
+			previous.previousTimeStamp = $scope.postData.previousTimeStamp;
+			previous.previousId = $scope.postData.previousId;
+			GridServiceReport.refresh($scope, previous);
+		}
+		$scope.nextPage = function(){
+			var next = {};
+			next.nextTimeStamp = $scope.postData.nextTimeStamp;
+			next.nextId = $scope.postData.nextId;
+			GridServiceReport.refresh($scope, next);
+		}
+		
+		$scope.setPageSize = function(){
+			var query = {};
+			GridServiceReport.refresh($scope, query, $scope.pageSize)
+		}
+		
+		GridServiceReport.create($scope,{
+			fetchData:true,
+			columnDefs:[
+		        { field: 'deviceID',displayName: '采集设备编号',enableHiding: false,enableSorting: false,enableColumnMenu: false},
+		        { field: 'fullPath',displayName: '域组信息',enableHiding: false,enableSorting: false,enableColumnMenu: false},
+		        { field: 'timestamp',displayName: '采集时间',enableHiding: false,enableSorting: false,enableColumnMenu: false},
+		        { field: 'mac',displayName: 'Mac地址',enableHiding: false,enableSorting: false,enableColumnMenu: false},
+				{
+					field: 'receiveTime',
+					displayName: '报文入库时间',
+					enableSorting: false,
+					enableColumnMenu: false
+				}
+		    ]
+		});
+		
+		$scope.search = function(){
+			delEmptyInput($scope.query);
+			catchQuery = angular.copy($scope.query);
+			GridServiceReport.refresh($scope)
+		}
 		
 	}
 })

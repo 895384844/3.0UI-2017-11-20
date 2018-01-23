@@ -1,12 +1,12 @@
 define(function() {
-	return ['$scope', 'i18nService', '$lt', '$filter', 'GridService', 'ModalService', '$element', 'localSession', 'HttpService', 'DialogService', 'SystemService', 'DateFormat','EmptyInput','delEmptyInput', 'groupSelectMore',PartnerAnalysisCtrl];
+	return ['$scope', 'i18nService', '$lt', '$filter', 'GridService', 'ModalService', '$element', 'localSession', 'HttpService', 'DialogService', 'SystemService', 'DateFormat','EmptyInput','delEmptyInput', PartnerAnalysisCtrl];
 
-	function PartnerAnalysisCtrl($scope, i18nService, $lt, $filter, GridService, ModalService, $element, localSession, HttpService, DialogService, SystemService, DateFormat,EmptyInput,delEmptyInput,groupSelectMore) {
+	function PartnerAnalysisCtrl($scope, i18nService, $lt, $filter, GridService, ModalService, $element, localSession, HttpService, DialogService, SystemService, DateFormat,EmptyInput,delEmptyInput) {
 		$scope.btn = {
 	        status : true
 	    }
-		groupSelectMore();
 		$scope.showDel = false;
+		$scope.showLoading = false;
 		EmptyInput($scope.query);
 		$scope.gridItemData = {};
 		EmptyInput($scope.query);
@@ -19,6 +19,17 @@ define(function() {
 		        endTime : ''
 	    	}
 	    ];
+	    var cacheQuery = {};
+	    
+	    var field = {
+			'imei' : 'IMEI',
+			'imsi' : 'IMSI',
+			'attributeName' : '归属地',
+			'resident' : '是否为常住人口',
+			'mobileNetCarrier' : '网络运营商',
+			'percent' : '轨迹相似度'
+		}
+	    
 	    var mobileNetCarrier = {
 			0 : '移动',
 			1 : '联通',
@@ -28,6 +39,11 @@ define(function() {
 		}
 	    
 	    HttpService.get('rest/system/domain/allgroup').then(function success(data) {
+			for(var i=0; i<data.length; i++){
+				data[i].fullPath = data[i].fullPath.split('•');
+				var str = data[i].fullPath[2]+"•"+data[i].fullPath[3]
+				data[i].fullPath = str;
+			}
             $scope.vendorChoice = data;
         });
 	    
@@ -36,33 +52,6 @@ define(function() {
 	    	endTime : ''
 	    }
 		$scope.selectData = {};
-		
-		$scope.forText = function(event,scope){
-        	var adCode = scope.group.adCode;
-        	var target = angular.element(event.target); 
-        	var txt = scope.group.name;
-        	target.parent().prev().text(txt);
-        	var idx = target.parents('.lis2').index();
-        	$scope.query[idx].domainGroup = adCode;
-        }
-        $scope.forText1 = function(event,scope){
-        	var adCode = scope.group.adCode       	
-        	var target = angular.element(event.target); 
-        	var txt = scope.group.name;
-        	target.parent().prev().text(txt);
-        	var options = $('.option');
-        	var idx = target.parents('.lis2').index();
-        	$scope.query[idx].domainGroup = adCode;
-        	for(var i=0; i<options.length; i++){
-        		options[i].style.cssText = 'display:none';       		
-        	}
-        }
-        
-        $scope.selectBox = function(event,scope){
-        	event.stopPropagation();
-        	var target = angular.element(event.target);
-        	target.context.nextElementSibling.style.cssText = 'display:block'
-        }
 		
 		$scope.currentW = true;
 	    $scope.changeW = false;
@@ -73,19 +62,18 @@ define(function() {
 	    
 	    $scope.list = [];	    	    	    
 	    $scope.addCondition = function(){
-	    	if($('.lis').length >= 1){
+	    	if($('.lis2').length >= 1){
 	    		$scope.showDel = true;
 	    	}
-	    	var obj={
-			        domainGroup : '',
-			        startTime : '',
-			        endTime : ''
-		    };
+	    	var obj={addElement:"addElement"};
 			$scope.list.push(obj);
+			if($scope.list.length > 13){
+				$scope.list = $scope.list.slice(0,13);				
+			}
 			$scope.query = $scope.query.slice(0,1);
 			$scope.query = $scope.query.concat($scope.list);
 	    }
-				
+		
 		$scope.delEle=function(idx){
 			if($('.lis2').length <= 2){
 				$scope.showDel = false;
@@ -97,14 +85,14 @@ define(function() {
 		    }
 		}
 
-		$scope.delEle1 = function(event,idx){
+		$scope.delEle1 = function(){
 	    	if($('.lis2').length <= 2){
 				$scope.showDel = false;
 			}
     		$scope.query.splice(0,1);
     		$('#rm1').find('.lis')[0].remove();
-	    	
-	    }
+	    	$scope.query.splice(0,1);
+	    }		
 
 		var add = function() {
 			ModalService.showModal({
@@ -121,6 +109,59 @@ define(function() {
 			});
 		};
 
+		var exports = function(){
+			$scope.showLoading = true;
+			var myDate = new Date();
+			var times = myDate.toLocaleString();
+			times = times.replace(/\s|:|\//g, "_");
+			var filter = {
+				title: "手机侦码伴随分析-"+times,
+			    fields: field,
+			    fileName: "PartnerAnalysisPageList-"+times+".xlsx",
+			    sheetName: "Sheet1",
+			    param: {
+			        //complexQuery: $scope.query
+			    }
+			}
+			if($scope.atype == 'known'){
+				filter.param.complexQuery = angular.copy(cacheQuery);	
+				filter.param.imsi = $scope.imsi+'';
+				filter.param.type = 'know';
+				filter.param.spanTime = $scope.spanTime;
+            	angular.forEach(filter.param.complexQuery, function(data,index,array){
+					if(filter.param.complexQuery[index].startTime){
+        				filter.param.complexQuery[index].startTime = DateFormat(filter.param.complexQuery[index].startTime);
+            		}
+					if(filter.param.complexQuery[index].endTime){
+						filter.param.complexQuery[index].endTime = DateFormat(filter.param.complexQuery[index].endTime);
+					}
+				});
+			}else if($scope.atype == 'unknown'){
+				filter.param.type = 'unknow';
+				filter.param.imsi = $scope.imsi+'';
+				filter.param.spanTime = $scope.spanTime;
+				if($scope.unknow.startTime){
+					var startTime = DateFormat($scope.unknow.startTime);
+					filter.param.startTime = startTime;
+				}
+				if($scope.unknow.endTime){
+					var endTime = DateFormat($scope.unknow.endTime);
+					filter.param.endTime = endTime;
+				}										
+			}
+			HttpService.post('rest/analysis/efence/accompany_export',filter).then(function success(resp) {
+				$scope.showLoading = false;
+            	var filter={fileName: resp.file}
+         	    
+         	    var anchor = angular.element('<a/>');
+		        anchor.attr({
+		            href: 'EFS/core/system/file/download_file?fileName=' + resp.file
+		        })[0].click();
+			},function error(err){
+				$scope.showLoading = false;
+			})
+		}
+		
 		GridService.create($scope, {
 			fetchData: true,
 			columnDefs: [
@@ -128,7 +169,7 @@ define(function() {
             { field: 'imsi',displayName: 'IMSI',enableSorting:false,enableColumnMenu:false  },
             { field: 'attributeName',displayName: '归属地',enableSorting:false,enableColumnMenu: false },
             { field: 'resident',displayName: '是否为常住人口',enableSorting:false,enableColumnMenu:false  },
-            { field: 'mobileNetCarrier',displayName: '终端网络提供商',enableSorting:false,enableColumnMenu: false },
+            { field: 'mobileNetCarrier',displayName: '网络运营商',enableHiding: false,enableSorting:false,enableColumnMenu:false },
             { field: 'percent',displayName: '轨迹相似度',enableHiding: false,enableSorting:false,enableColumnMenu:false },
             { 
             	field: 'operation',
@@ -138,67 +179,40 @@ define(function() {
             	cellTemplate: '<a class="fa fa-fw fa-search btn-edit" href ng-click="grid.appScope.searchDetails(row.entity)" style="margin-left:15px;color:#31708f;" uib-tooltip="详情查询" tooltip-placement="left"></a>'
             	
             }
-			]
+			],
+			btnTools:[
+		    	{
+			    	//css:'fa fa-fw fa-refresh',
+			    	src: 'images/refresh.png',
+			    	tooltip:'刷新',
+			    	method:function(){
+			    		GridService.refresh($scope);
+			    	}
+		    	},
+		    	{
+			    	//css:'fa fa-fw fa-share-square-o',
+			    	src: 'images/exports.png',
+			    	tooltip:'导出',
+			    	method:exports
+		    	}
+		    ]
 		});
 		
-		$scope.export = function() {
-			var filter = {
-				"fields": [
-					"name",
-					"id"
-				]
-			};
-			HttpService.download('action/group/exportxml', filter);
-		};
-
-		$scope.edit = function() {
-			var selection = $scope.gridapi.getSelectedRows();
-			if(selection.length <= 0) {
-				$scope.showNoItemDialog(
-					$lt('提示'),
-					$lt('请选择需要编辑的选项')
-				);
-				return;
-			}
-
-			if(selection.length > 1) {
-				$scope.showNoItemDialog(
-					$lt('提示'),
-					$lt('最多选择一项')
-				);
-				return;
-			}
-			var rid = selection[0];
-			$scope.selectData = $scope.gridapi.getSelectedData(rid);
-			$scope.getgridData = $scope.gridapi.getgridData();
-			var dataArray = $scope.getgridData.items;
-			$.each(dataArray, function(n, data) {
-				if($scope.selectData.id == data.id) {
-					$scope.gridItemData = data;
-					$scope.gridItemData.confirm = $scope.gridItemData.password;
-				}
-			});
-			//$scope.gridItemData.isEdit = 'true';
-			OverlayService.show({
-				title: $lt('编辑用户信息'),
-				template: 'js/modules/warning/templates/warning_blacklist_form.html',
-				scope: $scope
-			});
-		};		
-		
 		$scope.search = function() {
+			cacheQuery = angular.copy($scope.query);
 			$scope.toogleLeftState();
 			delEmptyInput($scope.query);			
 			var postData = {};
 			$scope.gridOptions.paginationCurrentPage = 1;
 			$scope.getPagingList = function(currentPage, pageSize, sort) {
+				$scope.showLoading = true;
 				var filter = {
 					page_size: pageSize,
 					page_no: currentPage
 				};
 				if($scope.query) {							
 					if($scope.atype == 'known'){
-						filter.complexQuery = angular.copy($scope.query);	
+						filter.complexQuery = angular.copy(cacheQuery);	
 						filter.imsi = $scope.imsi+'';
 						filter.type = 'know';
 						filter.spanTime = $scope.spanTime;
@@ -227,8 +241,9 @@ define(function() {
 				}
 				var result = HttpService.post('rest/analysis/efence/accompany', filter);
 				result.then(function success(resp){
+					$scope.showLoading = false;
 					if(resp.count == 0){
-						DialogService.showConfirm(
+						DialogService.showMessage(
 			                '提示',
 			                '没有查询结果！',null)
 						return;
@@ -250,19 +265,18 @@ define(function() {
 					        }).then(function(modal) {
 					            //modal.element.modal();
 					            modal.close.then(function() { 
-					            	GridService.refresh($scope);
+					            	//GridService.refresh($scope);
 					            });
 					        });
 						}
 		           	}
+				},function error(err){
+					$scope.showLoading = false;
 				})
 				return result;
 			};
 			GridService.refresh($scope);
-		};
-		
-		
-		
+		};		
 		
 		$scope.showCondition = function(){
 	        ModalService.showModal({

@@ -5,7 +5,9 @@ define(function () {
 		$scope.query = {};
 		$scope.isActive = true;
 		$scope.isShow = true;
+		$scope.showLoading = false;
 		EmptyInput($scope.query);
+		var cacheQuery = {}
 		
 		var toogle = document.getElementsByClassName('sidebar-toggle')[0];		
 		
@@ -31,9 +33,10 @@ define(function () {
 		})
 		
 		$scope.getPagingList=function(currentPage, pageSize,sort){
+			$scope.showLoading = true;
             var filter={page_size:pageSize,page_no:currentPage};
             if($scope.query){
-            	filter.mapQuery = angular.copy($scope.query);
+            	filter.mapQuery = angular.copy(cacheQuery);
             	if(filter.mapQuery.imsi){
             		filter.mapQuery.imsi = String(filter.mapQuery.imsi);
             	}
@@ -45,22 +48,18 @@ define(function () {
             	}
             }
             var result = HttpService.post('rest/surveillance/targetpolicy/search',filter);
-            result.then(function success(resp){           		
-           		if(resp.count == 0){
-           			DialogService.showMessage(
-		                '提示',
-		                '没有查询结果！',null);
-		            return;
-           		}else{
-           			var list = resp.items;
-	           		for(var i=0; i<list.length; i++){
-	           			list[i].name = list[i].terminal.name;
-	           			list[i].imei = list[i].terminal.imei;
-	           			list[i].imsi = list[i].terminal.imsi;
-	           			list[i].peopleName = list[i].people.name;
-	           			list[i].phone = list[i].people.phone;
-	           		}
+            result.then(function success(resp){   
+            	$scope.showLoading = false;
+       			var list = resp.items;
+           		for(var i=0; i<list.length; i++){
+           			list[i].name = list[i].terminal.name;
+           			list[i].imei = list[i].terminal.imei;
+           			list[i].imsi = list[i].terminal.imsi;
+           			list[i].peopleName = list[i].people.name;
+           			list[i].phone = list[i].people.phone;
            		}
+            },function error(err){
+            	$scope.showLoading = false;
             })
             return result;
    		};
@@ -99,7 +98,7 @@ define(function () {
 		var remove=function(){
 			var selection = $scope.gridApi.selection.getSelectedRows();
 		        if( selection == null || selection.length < 1){
-		            DialogService.showConfirm(
+		            DialogService.showMessage(
 		                '提示',
 		                '请至少选择一条进行操作！',null)
 					return;
@@ -125,36 +124,11 @@ define(function () {
 		                }, null);
 		        }
 	    	};
-    	var exports = function(){
-	        var obj = {
-	            terminalName : $scope.target.name,
-	            terminalIMEI : $scope.target.imei,
-	            terminalIMSI : $scope.target.imsi,
-	            dispatcherId : $scope.target.id
-	        };
-	        document.location.href = gridServices.exportAction('/query/TerminalPeopleRelationAction!exportExcel.action',obj);
-	    };
-	    var downLoad = function(){
-	        $http.get('/system/downloadAction!listFileName.action').then(function(resp){
-				if(resp.data){
-	                ModalService.showModal({
-		                templateUrl: 'modals/downLoad.html',
-		                controller: 'downLoadCtrlTargetAlarm',
-		                inputs: { 
-		                    rows: resp.data 
-		                }
-		            }).then(function(modal) {
-		                modal.element.modal();
-		                modal.close.then(function(result) {
-		                });
-		            });
-				}
-			});
-		};
+    	
 		var edit = function () {
 			var selection = $scope.gridApi.selection.getSelectedRows();
 	        if( selection == null || selection.length != 1){
-	            DialogService.showConfirm(
+	            DialogService.showMessage(
 	                '提示',
 	                '请选择一条进行操作！',null)
 				return;
@@ -187,41 +161,36 @@ define(function () {
 		    ],
 		    btnTools:[
 		    	{
-			    	css:'fa fa-fw fa-refresh',
+			    	//css:'fa fa-fw fa-refresh',
+			    	src: 'images/refresh.png',
 			    	tooltip:'刷新',
 			    	method:function(){
 			    		GridService.refresh($scope);
 			    	}
 		    	},
 		    	{
-			    	css:'fa fa-fw fa-plus-circle',
+			    	//css:'fa fa-fw fa-plus-circle',
+			    	src: 'images/add.png',
 			    	tooltip:'添加',
 			    	method:add
 			    },
 		    	{
-			    	css:'fa fa-fw fa-pencil',
+			    	//css:'fa fa-fw fa-pencil',
+			    	src: 'images/edit.png',
 			    	tooltip:'编辑',
 			    	method:edit
 			    },
 		    	{
-			    	css:'fa fa-fw fa-minus-circle',
+			    	//css:'fa fa-fw fa-minus-circle',
+			    	src: 'images/remove.png',
 			    	tooltip:'删除',
-			    	method:remove
-		    	},
-		    	{
-			    	css:'fa fa-fw fa-share-square-o',
-			    	tooltip:'导出',
-			    	method:remove
-		    	},
-		    	{
-			    	css:'fa fa-fw fa-download',
-			    	tooltip:'下载',
 			    	method:remove
 		    	}
 		    ]
 
 		});
 		$scope.search = function() {
+			cacheQuery = angular.copy($scope.query);
 			delEmptyInput($scope.query);			
 			GridService.refresh($scope);
 		};

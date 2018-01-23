@@ -11,7 +11,9 @@ define([
 	'./controllers/BlackListFormCtrl',
 	'./controllers/BusUserEditCtrl',
 	'./controllers/BlacklistAlarmNotifyPolicyEditCtrl',
-	'./controllers/BlacklistEditCtrl'
+	'./controllers/BlacklistEditCtrl',
+	'./controllers/BlackListImportCtrl',
+	'./controllers/BusUserImportCtrl'
 	
 ], function (angular,
              BusUserCtrl,
@@ -25,7 +27,9 @@ define([
 			 BlackListFormCtrl,
 			 BusUserEditCtrl,
 			 BlacklistAlarmNotifyPolicyEditCtrl,
-			 BlacklistEditCtrl) {
+			 BlacklistEditCtrl,
+			 BlackListImportCtrl,
+			 BusUserImportCtrl) {
 
 	var module = angular.module('webApp.base', []);
 
@@ -41,7 +45,9 @@ define([
 		BlackListFormCtrl: BlackListFormCtrl,
 		BusUserEditCtrl: BusUserEditCtrl,
 		BlacklistAlarmNotifyPolicyEditCtrl: BlacklistAlarmNotifyPolicyEditCtrl,
-		BlacklistEditCtrl: BlacklistEditCtrl
+		BlacklistEditCtrl: BlacklistEditCtrl,
+		BlackListImportCtrl: BlackListImportCtrl,
+		BusUserImportCtrl: BusUserImportCtrl
 	});
 
 });

@@ -1,0 +1,141 @@
+<div class="content content-flex" ng-controller="AccompanyImsiCtrl" style="padding: 0;position: relative;">
+	<!--伴随分析-->
+	<form class="form form-inline " ng-class="{'form-flex':currentW,'form-flex-hide':changeW}" role="form" name="form" height-bind=".grid" id="par_resize" novalidate>
+		<div class="row addBorder" style="position: relative; height:100%">
+			<div class="toogleLeftState " ng-class="{'':currentW,'dis_none':changeW}">
+				<div class="col-lg-12" style="height: 100%;">
+					<div class="inf_box" style="height: 38px;margin-top: 12px;">
+						<div class="toogle-input">
+							<div class="radio" style="margin-bottom: 8px;margin-right: 10px">
+								<label><input type="radio" name="atype" value="known" ng-model="atype" ng-checked="known">已知轨迹</label>
+								<label style="margin-left: 5px"><input type="radio" name="atype" ng-checked="unknown" ng-model="atype" value="unknown" >未知轨迹</label>
+							</div>
+						</div>
+					</div>
+					<div class="inf_box" style="position: relative;">
+						<div style="height:80px;">
+							<div class="toogle-input mb-10" style="width: 35%;">
+								<div class="input-group w100">
+									<span class="input-group-addon add-bg p5" style="padding: 0 8px;">类型</span>
+									<div class="form-control">
+										<input type="radio" id="imsi" name="choose" ng-model="addressType" ng-checked="chooseImsi" value="imsi" /> IMSI
+										<input type="radio" id="mac" name="choose" ng-model="addressType" ng-model="chooseMac" value="mac" /> MAC
+									</div>					
+								</div>
+							</div>
+							<div class="toogle-input mb-10" style="width: 35%;">
+								<div class="input-group w100">
+									<input type="text" class="form-control" maxlength="15" minlength="12" ng-model="num" required>						
+								</div>
+							</div>
+							<div class="toogle-input mb-10" style="width: 35%;">
+								<div class="input-group w100">
+									<span class="input-group-addon add-bg" style="padding: 0 8px;">轨迹点时间偏差</span>
+									<input type="text" class="form-control" ng-model="spanTime" placeholder="单位为秒" required>
+								</div>
+							</div>
+							<div class="toogle-input mb-10" style="width: 35%;" ng-if="atype=='unknown'">
+								<div class="input-group w100">
+									<span class="input-group-addon add-bg p5" style="padding: 0 8px;">开始时间</span>
+									<input class="form-control datetime" placeholder="开始时间" date-time-selector="start" ng-model="unknow.startTime" ignore-empty-value required/>
+								</div>
+							</div>
+							<div class="toogle-input" style="width: 35%;" ng-if="atype=='unknown'">
+								<div class="input-group w100">
+									<span class="input-group-addon add-bg p5" style="padding: 0 8px;">结束时间</span>
+									<input class="form-control datetime" placeholder="结束时间" date-time-selector="start" ng-model="unknow.endTime" ignore-empty-value required/>
+								</div>
+							</div>	
+							<div class="toogle-input" style="width: 28%;">
+								<div class="input-group w100">
+									<button ng-if="atype=='known'" class="btn btn-primary" ng-click="addCondition()" style="float: right;width: 48%;font-size: 12px;">
+										<span class="glyphicon glyphicon-plus"></span>
+										伴随条件
+									</button>
+									<button class="btn btn-primary" ng-disabled="!form.$valid" ng-click="search()" style="width: 48%;float: left;font-size: 12px;">
+										<span class="glyphicon glyphicon-search"></span>
+										查询
+									</button>
+								</div>
+							</div>
+						</div>
+						<div class="qualification" ng-if="atype=='known'" style="margin-top: -10px;-webkit-flex:1; display: -webkit-flex; -webkit-flex-direction:column;">
+							<div class="top-menu">
+								<span>采集点位</span>
+								<span>开始</span>
+								<span>结束</span>
+							</div>
+							<ul id="rm1">
+								<li class="lis lis2">
+									<div class="input-group" style="width: 100%;">
+										<select class="col-lg-5" ignore-empty-value ng-model="query[0].domainGroup" name="name" id="groupID" style="padding: 0;" required>
+									<option value="{{v.adCode}}" ng-repeat="v in vendorChoice">{{v.fullPath}}</option>
+										</select>
+										<input class="val datetime col-lg-3" placeholder="开始时间" date-time-selector="start" ng-model="query[0].startTime" ignore-empty-value required/>
+										<input class="datetime col-lg-3" placeholder="结束时间" date-time-selector="start" ng-model="query[0].endTime" ignore-empty-value required/>
+									</div>
+									<button ng-click="delEle1()" ng-show="showDel" style="margin-right: 14px;"><i class="fa fa-trash"></i></button>
+								</li>
+								<li ng-repeat="person in list" class="lis lis2" style="height: 23px;">
+									<div ng-class="input-group">
+										<select class="col-lg-5" ignore-empty-value ng-model="person.domainGroup" name="name" id="groupID" style="padding: 0;" required>
+									<option value="{{v.adCode}}" ng-repeat="v in vendorChoice">{{v.fullPath}}</option>
+										</select>
+										<input class=" datetime col-lg-3" placeholder="开始时间" date-time-selector="start" ng-model="person.startTime" ignore-empty-value required/>
+										<input class="datetime col-lg-3" placeholder="结束时间" date-time-selector="start" ng-model="person.endTime" ignore-empty-value required/>
+									</div>
+									<button ng-click="delEle($index)" ng-show="showDel" style="margin-right: 14px;"><i class="fa fa-trash"></i></button>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div ng-class="{'toogle-width':currentW,'toogle-width-hide':changeW}" ng-click="toogleLeftState()">
+				<p></p>
+			</div>
+		</div>
+	</form>
+	<div class="right-grid" style="overflow: hidden; display: -webkit-flex;-webkit-flex-direction: column;background:#f4f4f4;">
+		<div class="condition" ng-if="addressType=='imsi' || !addressType" style="border: 1px solid #ccc;border-bottom: none;height: auto;padding-right: 0;">
+			<div ng-class="{true: 'alwaysShow', false: 'toogleShow'}[isActive]">
+				<div class="toogle-input mb-10">
+					<div class="input-group">
+						<span class="input-group-addon add-bg">IMSI</span>
+						<input type="text" class="form-control" ng-model="info.imsi" disabled>
+					</div>
+				</div>	
+				<div class="toogle-input mb-10">
+					<div class="input-group">
+						<span class="input-group-addon add-bg">IMEI</span>
+						<input type="text" class="form-control" ng-model="info.imei" disabled>
+					</div>
+				</div>			
+				<div class="toogle-input mb-10">
+					<div class="input-group w100">
+						<span class="input-group-addon add-bg">归属地</span>
+						<input type="text" class="form-control" ng-model="info.attributeName" disabled>
+					</div>
+				</div>
+				<div class="toogle-input mb-10">
+					<div class="input-group w100">
+						<span class="input-group-addon add-bg">网络运营商</span>
+						<input type="text" class="form-control" ng-model="info.mobileNetCarrier" disabled>
+					</div>
+				</div>
+				<div class="toogle-input mb-10">
+					<div class="input-group w100">
+						<span class="input-group-addon add-bg">常住人口</span>
+						<input type="text" class="form-control" ng-model="info.resident" disabled>
+					</div>
+				</div>
+			</div>			
+		</div>
+		<div ui-grid="gridOptions" style="-webkit-flex:1;" ng-if="addressType=='imsi' || !addressType" ui-grid-pagination ui-grid-selection ui-grid-auto-resize ui-grid-resize-columns ui-grid-move-columns auto-height></div>
+		<!--<div ui-grid="gridOption" ng-if="addressType=='mac'" ui-grid-pagination ui-grid-selection ui-grid-auto-resize ui-grid-resize-columns ui-grid-move-columns auto-height class="grid"></div>-->
+		<div ui-grid="gridOption" ng-if="addressType=='mac'" ui-grid-pagination ui-grid-selection ui-grid-auto-resize ui-grid-resize-columns ui-grid-move-columns auto-height class="grid"></div>
+	</div>
+	<div class="mark-div" ng-if="showLoading">
+		<img src="images/loading_bg.gif" style="width: 128px;height: 128px;margin: 100px auto;display: block;"/>
+	</div>
+</div>

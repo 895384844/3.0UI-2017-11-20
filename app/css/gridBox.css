@@ -1,0 +1,192 @@
+#grid-box{
+	background: #fff;
+	position: relative;
+	display: -webkit-flex;
+	-webkit-flex-direction: column;
+}
+
+#grid-box .grid-content{
+	-webkit-flex: 1;
+	overflow-y: auto;	
+}
+
+#grid-box .no-count{
+	background: url(../images/empty.jpg) center no-repeat;
+	border: 1px solid #ccc;
+}
+
+#grid-box .box:nth-child(odd){
+	width: 49.5%; 
+	border: 1px solid #ccc;
+	float: left;
+	margin-bottom: 10px;
+}
+
+#grid-box .box:nth-child(even){
+	width: 49.5%; 
+	border: 1px solid #ccc;
+	float: right;
+	margin-bottom: 10px;
+}
+
+#grid-box .box.active-box{
+	border: 1px solid #3c8cbf;!important
+}
+
+#grid-box .box.active-box .box-header{
+	border-bottom: 1px solid #3c8cbf;!important
+}
+
+#grid-box .box.active-box .box-header .current-bac{
+	background: #3c8cbf;!important
+}
+
+#grid-box .box .box-header{
+	background: #f9f9f9;
+	position: relative;
+	border-bottom: 1px solid #ccc;
+}
+
+#grid-box .box .box-header .fa-check{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 16px;
+	height: 16px;
+	padding: 2px;
+	font-size: 12px;
+	color: #fff;
+}
+
+#grid-box .box .box-header .current-bac{
+	background: #d2d2d2;
+}
+
+#grid-box i:hover{
+	cursor: pointer;
+}
+
+#grid-box .box .box-title{
+	padding-left: 20px;
+}
+
+#grid-box .w100{
+	height: 30px;
+}
+
+#grid-box .w100 p{
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: inline-block;
+}
+
+/*#grid-box .lists ul>li{
+	float: right;
+}*/
+#grid-box .grid-lists>li{
+	width: 25%;
+	float: right;
+}
+
+#grid-box .dropdown-menu .menu .title-li{
+	font-size: 13px;
+	background: #f7f7f7;
+	line-height: 28px;
+	border-bottom: 1px solid #ccc;
+	margin-bottom: 5px;
+}
+
+#grid-box .grid-lists .dropdown-menu{
+	padding: 0;
+}
+
+#grid-box .dropdown-menu .menu li{
+	padding: 0 10px;
+	line-height: 20px;
+	font-size: 12px;
+}
+
+#grid-box .grid-lists>li>span{
+	display: block;
+	width: 60px;
+	height: 20px;
+	color: #fff;
+	text-align: center;
+	line-height: 20px;
+	border-radius: 4px;
+}
+
+#grid-box .grid-lists .span-yellow{
+	background: #de9c3b;
+	cursor: pointer;
+}
+
+
+#grid-box .grid-lists .span-green{
+	background: #049750;
+	cursor: pointer;
+}
+
+#grid-box .grid-lists .span-sky-blue{
+	background: #00c0ef;
+	cursor: pointer;
+}
+
+#grid-box .grid-lists .span-blue{
+	background: #3b8dbc;
+	cursor: pointer;
+}
+
+#grid-box .grid-lists>li .hide-dropdown-toggle{
+	background: #d2d2d2;!important
+	cursor: auto;
+}
+
+#grid-box .dropdown-menu{
+	left: -95%;
+}
+
+#dialog-tab .nav-tabs{
+	border-bottom: 1px solid #ccc;
+	background: #f7f7f7;
+}
+
+#dialog-tab .nav-tabs>li{
+	height: 36px;
+}
+
+#dialog-tab .nav-tabs>li.active{
+	background: #fff;
+}
+
+#dialog-tab .nav-tabs>li.active>a{
+	height: 36px;
+}
+
+#dialog-tab .add-box{
+	margin: 10px 0;
+	padding: 0;
+}
+
+#dialog-tab .add-input{
+	border: 1px solid #00c0ef;
+}
+
+#dialog-tab .tab-pane .push-btn{
+	height: 34px;
+	width: 34px;
+	color: #fff;
+	font-size: 18px;
+	font-weight: bold;
+	padding: 0;
+	background: #00c0ef;
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	border: none;
+}
+
+#dialog-tab .glyphicon{
+	float: right;
+}

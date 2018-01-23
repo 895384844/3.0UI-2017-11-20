@@ -21,7 +21,7 @@ define(function () {
 			hiddenSections:[],
 			activeSection: {},
 			flatternSection: flatternSection(),
-			maxSections:8,
+			maxSections:7,
 			init: function (maxSections) {
 				var self = this;
 				if (!self.positiveSections.length || !self.activeSection) {
@@ -33,7 +33,7 @@ define(function () {
 						self.activeSection = _.filter(flatternSection(), 'active')[0];
 					}
 				}
-				this.maxSections=maxSections||8;
+				this.maxSections=maxSections||7;
 			},
 			clearSection:function(){
 				var self = this;
@@ -52,9 +52,6 @@ define(function () {
 					}
 					self.activeSection=ps;
 				});
-				/*if(section.data){
-					console.log(self)
-				}*/
 				if (!self.activeSection) {
 					self.positiveSections.push(section);
 					self.activeSection=section;

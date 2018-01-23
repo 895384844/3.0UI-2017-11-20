@@ -1,4 +1,4 @@
-<div class="content content-flex" ng-controller="DeviceListCtrl" style="background: #fff;">
+<div class="content content-flex" ng-controller="DeviceListCtrl" style="background: #fff;position: relative;">
 	<div style="width: 20%; height: 100%; background: #f4f4f4; float: left; border: 1px solid #ccc;padding: 10px;overflow-y: auto;">
 		<script type="text/ng-template" id="nodes_renderers.html">
 			<div ui-tree-handle class="tree-node tree-node-content" style="cursor: pointer;" ng-click="getList(this)" ng-model="query.adCode" ng-class="{'device-page-active': node.isdefault}">
@@ -28,13 +28,13 @@
 				</div>			
 				<div class="toogle-input mb-10">
 					<div class="input-group w100">
-						<span class="input-group-addon add-bg">网络制式</span>
+						<span class="input-group-addon add-bg">设备网络制式</span>
 						<select class="form-control pd-right" ng-model="query.network">
 							<option value="all">全部</option>
 							<option value="0">GSM</option>
 							<option value="1">CDMA</option>
 							<option value="2">W-CDMA</option>
-							<option value="3">TD-CDMA</option>
+							<option value="3">TD-SCDMA</option>
 							<option value="4">FDD-LTE</option>
 							<option value="5">TDD-LTE</option>
 							<option value="6">WIFI</option>
@@ -51,6 +51,20 @@
 			</div>	-->
 			
 		</div>	
-		<div ui-grid="gridOptions" ui-grid-pagination ui-grid-selection ui-grid-auto-resize ui-grid-resize-columns ui-grid-move-columns  class="grid" auto-height></div>
+		<div style="-webkit-flex: 1;display: -webkit-flex;height: 100%;">
+			<ul class="toolbtns" style="width: 66px;">
+				<li ng-click="move()"><img src="images/move.png" alt="" /></li>
+				<li ng-click="creatTask(6,0)"><img src="images/startCapture.png" alt="" /></li>
+				<!--<li ng-click="restartCapture()" style="margin-top: -2px;"><img src="images/restartCapture.png" alt="" /></li>-->
+				<!--<a href='docs/device.xlsx' target="_blank">下载文件</a>-->
+				<li ng-click="creatTask(6,1)" style="margin-top: -2px;"><img src="images/closeCapture.png" alt="" /></li>
+				<li ng-click="creatTask(6,3)"><img src="images/restartSystem.png" alt="" /></li>
+				<li ng-click="set()"><img src="images/set.png" alt="" /></li>
+			</ul>
+			<div ui-grid="gridOptions" ui-grid-pagination ui-grid-selection ui-grid-auto-resize ui-grid-resize-columns ui-grid-move-columns class="grid" auto-height style="height: 100%;"></div>
+		</div>
+	</div>
+	<div class="mark-div" ng-if="showLoading">
+		<img src="images/loading_bg.gif" style="width: 128px;height: 128px;margin: 100px auto;display: block;"/>
 	</div>
 </div>

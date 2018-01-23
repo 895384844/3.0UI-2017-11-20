@@ -12,6 +12,9 @@ define([
 	'modules/device/device_module',
 	'modules/report/report_module',
 	'modules/base/base_module',
+	'modules/map/map_module',
+	'modules/tools/tools_module',
+	'modules/case/case_module',
 	'template'
 ], function (angular, config, moment) {
 	moment.locale('zh-cn');
@@ -49,6 +52,9 @@ define([
 			'webApp.device',
 			'webApp.report',
 			'webApp.base',
+			'webApp.map',
+			'webApp.tools',
+			'webApp.case',
 			'template'
 		])
 		.config(['$routeProvider', 'API_HOST', 'API_URL', '$httpProvider', '$translateProvider', 'localeText',

@@ -1,10 +1,21 @@
 define(['../../common/utils/md5'],function(md5) {
-		return ['$scope', 'HttpService', 'user','SystemService','close', SystemUserEditCtrl];
-		function SystemUserEditCtrl($scope, HttpService,user,SystemService,close) {
+		return ['$scope', 'HttpService', 'user','SystemService','SectionsService','close', SystemUserEditCtrl];
+		function SystemUserEditCtrl($scope, HttpService,user,SystemService,SectionsService,close) {
 			var query = {};
 			$scope.loc = [];
 			query.adCode = '00';
 			$scope.groupID = [];
+			// 最简单数组去重法 
+			function unique1(array){ 
+				var n = []; //一个新的临时数组 
+				//遍历当前数组 
+				for(var i = 0; i < array.length; i++){ 
+					//如果当前数组的第i已经保存进了临时数组，那么跳过， 
+					//否则把当前项push到临时数组里面 
+					if (n.indexOf(array[i]) == -1) n.push(array[i]); 
+				} 
+				return n; 
+			}
 			HttpService.get('rest/system/domain/gettree',query).then(function success(resp){
 		    	$scope.data = [];
 		    	$scope.data.push(resp);
@@ -25,6 +36,21 @@ define(['../../common/utils/md5'],function(md5) {
 			if(!obj.SYSTEM_MANAGEMENT){obj.SYSTEM_MANAGEMENT = '0'};
 			if(!obj.AUDIT_TRAIL){obj.AUDIT_TRAIL = '0'};
 			if(!obj.SYSTEM_TOOL){obj.SYSTEM_TOOL = '0'};
+			if(!obj.CASE_MANAGEMENT){obj.CASE_MANAGEMENT = '1'};
+
+			var permissions = JSON.parse(sessionStorage.getItem('permissions'));
+			var options = [
+				{code: "0", description: "不可见"},
+				{code: "1", description: "可读"},
+				{code: "2", description: "读写"}
+			];
+			$scope.getOptions = function(code) {
+				var a = permissions[code] * 1;
+				var b = obj[code] * 1;
+				var index = Math.max(a, b);
+				var result = options.slice(0, index + 1);
+				return result;
+			}
 			
 			//user.domainList
 			for(var j=0; j<user.domainList.length; j++){
@@ -36,16 +62,7 @@ define(['../../common/utils/md5'],function(md5) {
         		domain[k] = domain[k].substring(domain[k].lastIndexOf("•")+1);
         		$scope.loc.push(domain[k]);
         	}
-			
 			$scope.save = function(){
-				//$scope.user.permissionList = user.permissionList;
-				for (var k in $scope.user.permissionList){
- 					if($scope.user.permissionList[k] == '0'){
- 						delete $scope.user.permissionList[k];
- 					}
-    			}
-				console.log($scope.user.permissionList)
-				
 				$scope.user.domainList = $scope.groupID;
 								
 				if($scope.user.locked == '正常'){
@@ -64,19 +81,8 @@ define(['../../common/utils/md5'],function(md5) {
 					data.adCode = "00"
 				}
 				$scope.groupID.push(data.adCode);
-				$scope.groupID = $scope.groupID.unique3();
-				$scope.loc = $scope.loc.unique3();
-			}
-		    Array.prototype.unique3 = function(){
-				var res = [];
-				var json = {};
-				for(var i = 0; i < this.length; i++){
-					if(!json[this[i]]){
-						res.push(this[i]);
-						json[this[i]] = 1;
-					}
-				}
-				return res;
+				$scope.groupID = unique1($scope.groupID);
+				$scope.loc = unique1($scope.loc);
 			}
 			
 			$scope.removeGroup = function(idx){

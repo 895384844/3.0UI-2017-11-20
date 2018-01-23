@@ -1,7 +1,6 @@
 define(['../../common/utils/md5'],function(md5) {
-		return ['$scope', 'HttpService', 'user','SystemService','close', SystemUserFormCtrl];
-		function SystemUserFormCtrl($scope, HttpService,user,SystemService,close) {
-			$scope.close = close;
+		return ['$scope', 'HttpService', 'user','SystemService','SectionsService','close',SystemUserFormCtrl];
+		function SystemUserFormCtrl($scope, HttpService,user,SystemService,SectionsService,close) {
 			$scope.user = user;				
 			$scope.loc = [];
 			$scope.locations = [];
@@ -9,19 +8,37 @@ define(['../../common/utils/md5'],function(md5) {
 			var query = {};
 			var filter = {};
 			$scope.permission = {
-				device : '1',
-				mes : '1',
-				data : '1',
-				warning : '1',
-				query : '1',
-				maps : '1',
-				domain : '0',
-				user : '0',
-				system : '1',
-				log : '0',
-				tool : '0'				
-			};			
-			
+				DEVICE_MANAGEMENT : '1',
+				INFORMATION_RETRIEVAL : '1',
+				DATA_ANALYSIS : '1',
+				SURVEILLANCE : '1',
+				ALARM : '1',
+				GEOGRAPHIC_INFORMATION : '1',
+				DOMAIN_MANAGEMENT : '0',
+				USER_MANAGEMENT : '0',
+				SYSTEM_MANAGEMENT : '1',
+				AUDIT_TRAIL : '0',
+				SYSTEM_TOOL : '0',
+				CASE_MANAGEMENT : '1'
+			};
+			var permissions = JSON.parse(sessionStorage.getItem('permissions'));
+			var options = [
+				{code: "0", description: "不可见"},
+				{code: "1", description: "可读"},
+				{code: "2", description: "读写"}
+			];
+			$scope.getOptions = function(code) {
+				var index = permissions[code] * 1;
+				var result = options.slice(0, index + 1);
+
+				var defaultValue = $scope.permission[code] * 1;
+				if (defaultValue > index) {
+					$scope.permission[code] = index + '';
+				}
+
+				return result;
+			}
+
 			query.adCode = '00';
 			
 			if(user.domainList){
@@ -46,27 +63,24 @@ define(['../../common/utils/md5'],function(md5) {
 		    	$scope.data.push(resp);
 		    })
 			
-			Array.prototype.unique3 = function(){
-				var res = [];
-				var json = {};
-				for(var i = 0; i < this.length; i++){
-					if(!json[this[i]]){
-						res.push(this[i]);
-						json[this[i]] = 1;
-					}
-				}
-				return res;
+			// 最简单数组去重法 
+			function unique1(array){ 
+				var n = []; //一个新的临时数组 
+				//遍历当前数组 
+				for(var i = 0; i < array.length; i++){ 
+					//如果当前数组的第i已经保存进了临时数组，那么跳过， 
+					//否则把当前项push到临时数组里面 
+					if (n.indexOf(array[i]) == -1) n.push(array[i]); 
+				} 
+				return n; 
 			}
 			
 			$scope.con = function(scope){
 				var data = scope.$modelValue;
 				$scope.loc.push(data.name);
-				if(!data.adCode){
-					data.adCode = "00"
-				}
 				$scope.groupID.push(data.adCode);
-				$scope.groupID = $scope.groupID.unique3();
-				$scope.loc = $scope.loc.unique3();
+				$scope.groupID = unique1($scope.groupID);
+				$scope.loc = unique1($scope.loc);
 			}
 			
 			$scope.removeGroup = function(idx){
@@ -76,31 +90,30 @@ define(['../../common/utils/md5'],function(md5) {
 
 			$scope.sure = function () {
 				var permission = {
-					'DEVICE_MANAGEMENT' : $scope.permission.device,
-					'INFORMATION_RETRIEVAL' : $scope.permission.mes,
-					'DATA_ANALYSIS' : $scope.permission.data,
-					'SURVEILLANCE' : $scope.permission.warning,
-					'ALARM' : $scope.permission.query,
-					'GEOGRAPHIC_INFORMATION' : $scope.permission.maps,
-					'DOMAIN_MANAGEMENT' : $scope.permission.domain,
-					'USER_MANAGEMENT' : $scope.permission.user,
-					'SYSTEM_MANAGEMENT' : $scope.permission.system,
-					'AUDIT_TRAIL' : $scope.permission.log,
-					'SYSTEM_TOOL' : $scope.permission.tool
+					'DEVICE_MANAGEMENT' : $scope.permission.DEVICE_MANAGEMENT,
+					'INFORMATION_RETRIEVAL' : $scope.permission.INFORMATION_RETRIEVAL,
+					'DATA_ANALYSIS' : $scope.permission.DATA_ANALYSIS,
+					'SURVEILLANCE' : $scope.permission.SURVEILLANCE,
+					'ALARM' : $scope.permission.ALARM,
+					'GEOGRAPHIC_INFORMATION' : $scope.permission.GEOGRAPHIC_INFORMATION,
+					'DOMAIN_MANAGEMENT' : $scope.permission.DOMAIN_MANAGEMENT,
+					'USER_MANAGEMENT' : $scope.permission.USER_MANAGEMENT,
+					'SYSTEM_MANAGEMENT' : $scope.permission.SYSTEM_MANAGEMENT,
+					'AUDIT_TRAIL' : $scope.permission.AUDIT_TRAIL,
+					'SYSTEM_TOOL' : $scope.permission.SYSTEM_TOOL,
+					'CASE_MANAGEMENT' : $scope.permission.CASE_MANAGEMENT
 				};
 				
-				for (var k in permission){
- 					if(permission[k] == 0){
- 						delete permission[k];
- 					}
-    			}
-				
 				$scope.user.password = md5[0](user.password).toUpperCase();
-				$scope.user.domainList = $scope.groupID;
+				$scope.user.domainList = $scope.groupID;				
 				$scope.user.permissionList = permission;
 				SystemService.saveOrUpdateUser('rest/system/user/save', $scope.user).then(function success(data) {
 					close();
 				});
 			};
+
+			$scope.close = function(){
+				close();
+			}
 		}
 	});

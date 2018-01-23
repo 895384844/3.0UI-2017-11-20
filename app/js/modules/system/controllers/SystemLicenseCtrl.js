@@ -11,7 +11,7 @@ define(function() {
 			var filter = {
 				page_size: pageSize,
 				page_no: currentPage,
-				order_by: ['importTime']
+				order_by: ['-importTime']
 			};
 			return HttpService.post('rest/system/license/search', filter);
 		};
@@ -74,7 +74,6 @@ define(function() {
 		GridService.create($scope, {
 			fetchData: true,
 			columnDefs: [
-			{ field: 'id',displayName: 'ID',enableSorting:false,enableColumnMenu:false },
 	        { field: 'userName',displayName: '用户名',enableSorting:false,enableColumnMenu:false },
 	        { field: 'startTime',displayName: '时间从',enableHiding:false,enableSorting:false,enableColumnMenu:false },
 	        { field: 'endTime',displayName: '时间到',enableHiding:false,enableSorting:false,enableColumnMenu:false },

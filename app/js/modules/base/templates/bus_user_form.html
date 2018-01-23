@@ -2,26 +2,46 @@
 	<div class="myx-modal-box">
 		<div class="box box-primary">
 			<div class="box-header with-border">
-				<h3 class="box-title">{{title}}</h3><button type="button" class="close" ng-click="close()" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+				<h3 class="box-title">{{title}}</h3>
+				<button type="button" class="close" ng-click="close()" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+              </button>
+			</div>
 			<form class="form-horizontal" role="form" name="form">
-				<div class="box-body">				
-					<div class="form-group"><label class="col-sm-2 control-label">用户名</label>
-						<div class="col-sm-9"><input type="text" name="name" class="form-control" ng-model="person.name" required></div><span class="tips" ng-show="form.name.$error.required">*</span></div>
-					<div class="form-group"><label class="col-sm-2 control-label">电话号码</label>
-						<div class="col-sm-9">
-							<input type="text" name="phone" class="form-control" ng-model="person.phone" maxlength="11" minlength="11" ng-minlength="11" ng-maxlength="11" pattern="1[0-9]{10}" required>
+				<div class="box-body" style="padding-right: 15px;">				
+					<div class="form-group">
+						<label class="col-sm-2 control-label">用户名</label>
+						<div class="col-sm-10">
+							<input type="text" name="name" class="form-control" ng-model="person.name" required>
+						</div>
+						<span class="tips" ng-show="form.name.$error.required">*</span>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">电话号码</label>
+						<div class="col-sm-10">
+							<input type="text" name="phone" class="form-control" ng-model="person.phone" ng-minlength="11" ng-maxlength="11" required>
 						</div>
 						<span class="tips" ng-show="form.phone.$error.required">*</span> 
-						<span class="tips" ng-show="form.phone.$error.number" style="width: 30px; line-height: 13px;">
-							<span class="user-tips">格式有误</span>
-						</span> 
-						<span class="tips" ng-show="form.phone.$error.minlength" style="width: 30px; line-height: 13px;">
-							<span class="user-tips">格式有误</span>
-						</span> 
-						<span class="tips" ng-show="form.phone.$error.maxlength" style="width: 30px; line-height: 13px;">
-							<span class="user-tips">格式有误</span>
-						</span>
 					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">接收开始时间</label>
+						<div class="col-sm-10">
+							<input class="form-control datetime datetimes" placeholder="接收开始时间" date-time-selector="start" ng-model="periodStart" format='HH:00' ignore-empty-value/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">接收结束时间</label>
+						<div class="col-sm-10">
+							<input class="form-control datetime datetimes" placeholder="接收结束时间" date-time-selector="end" ng-model="periodEnd" format='HH:00' ignore-empty-value/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">时间间隔</label>
+						<div class="col-sm-10">
+							<input type="text" name="interval" class="form-control" ng-model="person.interval" placeholder="单位为分钟">
+						</div>
+					</div>
+				</div>
 			</form>
 			<div class="box-footer">
 				<button type="reset" class="btn btn-default" ng-click="clear()">清空</button>

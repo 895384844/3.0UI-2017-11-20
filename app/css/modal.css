@@ -1,0 +1,38 @@
+.box-primary .box-header{
+	padding: 0;
+	position: relative;
+}
+.box-primary .box-header .close{
+	position: absolute;
+	right: 10px;
+	top: 7px;
+}
+.box-header .close span{
+	color: #fff;
+}
+.box-primary .box-header.with-border h3{
+	font-size: 18px;
+	height: 44px;
+	line-height: 44px;
+	padding-left: 20px;
+	background: #4785be;
+	color: #fff;
+	margin-top: 0;
+	display: block;
+}
+.box-primary .form-horizontal{
+	padding-right: 10px;
+}
+.box-primary .box-body{
+	padding-top: 20px;
+}
+.box-primary .box-footer{
+	border: none;
+	text-align: right;
+}
+.box-primary .box-footer button{
+    padding: 6px 30px;
+}
+.box-primary .box-header h6{
+	font-size: 14px;
+}
